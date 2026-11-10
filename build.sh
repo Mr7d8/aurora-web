@@ -10,7 +10,9 @@ DESC="An AI workspace where agents plan, research, design, code and deploy toget
   printf '<!doctype html>\n<html lang="en">\n<head>\n'
   printf '<meta charset="utf-8">\n'
   printf '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-  printf '<meta name="theme-color" content="#050505">\n'
+  # Browser chrome colour per theme; the page script updates both when the user picks Light or Dark explicitly.
+  printf '<meta name="theme-color" content="#16181D" media="(prefers-color-scheme: dark)">\n'
+  printf '<meta name="theme-color" content="#ECEEF1" media="(prefers-color-scheme: light)">\n'
   printf '<meta name="description" content="%s">\n' "$DESC"
   printf '<meta property="og:title" content="%s">\n' "$TITLE"
   printf '<meta property="og:description" content="%s">\n' "$DESC"

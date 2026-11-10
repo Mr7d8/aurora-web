@@ -15,7 +15,8 @@ It's built like an IDE:
 - **Command palette:** press `⌘K` (or `Ctrl K`).
 - **Scenes:** the status bar menu replays individual interactions: handoffs, blocked state, streaming replies, task assignment.
 - **Blocked:** the main run pauses twice. Click **Resolve** for Forge's missing deploy token.
-- **Approve:** click **Approve** for Quill's headline.
+- **Approve:** click **Approve** for Quill's headline. If nobody answers either one within 20 seconds, the run resolves it and carries on.
+- **Theme:** switch light and dark from the top bar, or pick Light, Dark or System in Settings. The choice is saved in your browser.
 - **Reduced motion:** toggle it in the status bar, or follow your system setting.
 
 ## Project layout
