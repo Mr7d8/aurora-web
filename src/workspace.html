@@ -242,8 +242,6 @@ code,.code-i{font-family:var(--mono);font-size:.92em;letter-spacing:0}
 .ish{display:flex;align-items:center;justify-content:space-between;height:30px;padding:0 14px;margin-top:6px;font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-3)}
 .ish span:last-child{font:400 11px var(--mono);letter-spacing:0;color:var(--fg-4)}
 .ag{position:relative;margin:0 6px;border-radius:8px;transition:background .2s}
-.ag.flash{animation:agFlash 1.1s var(--ease)}
-@keyframes agFlash{0%{background:rgba(var(--ink),.07)}100%{background:transparent}}
 .ag::before{content:"";position:absolute;left:-6px;top:0;width:140px;height:70px;pointer-events:none;background:radial-gradient(60% 60% at 18% 30%,color-mix(in srgb,var(--c) 14%,transparent),transparent 70%);opacity:0;transition:opacity .6s}
 .ag.active::before{opacity:1}
 .ag-row{position:relative;display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;height:32px;padding:0 8px;border-radius:8px;transition:background .12s}
@@ -1318,10 +1316,14 @@ function sectionOf(id) { const p = S.agents[id].presence; return p === 'offline'
 function placeAgents(instant) {
   const blocks = [...$$('.ag'), ...$$('#ip-agents .ish'), $('#ip-agents .run-sum')];
   const first = new Map(blocks.map(b => [b, b.getBoundingClientRect()]));
-  for (const id of AGENTS.map(a => a.id)) {
-    const b = $(`.ag[data-ag="${id}"]`), list = $('#l-' + sectionOf(id));
-    list.appendChild(b);
-  }
+  /* Move only the rows that change section. Re-inserting a row restarts its CSS animations
+     (breathing dots, shimmer), so rows that stay put are left alone. Lists stay in AGENTS order. */
+  const rows = AGENTS.map(a => $(`.ag[data-ag="${a.id}"]`));
+  AGENTS.forEach((a, k) => {
+    const b = rows[k], list = $('#l-' + sectionOf(a.id));
+    if (b.parentElement === list) return;
+    list.insertBefore(b, rows.slice(k + 1).find(x => x.parentElement === list) || null);
+  });
   for (const k of ['active','idle','offline']) $('#n-' + k).textContent = $('#l-' + k).children.length;
   if (instant || M.reduced) return;
   for (const b of blocks) {
@@ -1330,7 +1332,14 @@ function placeAgents(instant) {
     if (Math.abs(dy) > 1 && f.height) b.animate([{transform:`translateY(${dy}px)`}, {transform:'none'}], {duration:380, easing:'cubic-bezier(.2,.8,.2,1)'});
   }
 }
-function flashAgent(id) { const b = $(`.ag[data-ag="${id}"]`); if (!b) return; b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); }
+/* One-shot highlight when an agent receives work. A Web Animation rather than a CSS class, so it plays once
+   and keeps going if the row moves to Active mid-fade instead of restarting. */
+function flashAgent(id) {
+  const b = $(`.ag[data-ag="${id}"]`); if (!b) return;
+  if (b.__flash) b.__flash.cancel();
+  const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
+  b.__flash = b.animate([{backgroundColor:`rgba(${ink},.07)`}, {backgroundColor:'transparent'}], {duration:1100, easing:'cubic-bezier(.2,.8,.2,1)'});
+}
 
 /* ── Status bar ── */
 function buildStatusBar() {
