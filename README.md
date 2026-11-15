@@ -24,14 +24,15 @@ It's built like an IDE:
 | Path | What it is |
 | --- | --- |
 | `src/workspace.html` | The source. HTML, CSS and JS in one file, with no document skeleton. |
-| `build.sh` | Wraps the source into a standalone `index.html`. |
-| `index.html` | The built page that gets deployed. |
+| `build.sh` | Wraps the source into a standalone `dist/index.html`. |
+| `vercel.json` | Tells Vercel to run `build.sh` and serve `dist/`. |
 
-To rebuild after editing the source:
+Edit `src/workspace.html` and push. Vercel builds the page on every deploy, so the built file isn't committed.
+
+To preview locally, build and open the result:
 
 ```sh
-sh build.sh
+sh build.sh && open dist/index.html
 ```
 
-The site is fully static. There's no install step and no build step on the host, and every animation runs on plain CSS and `requestAnimationFrame`.
-# orbit-agents
+The site is fully static. There's no install step, and every animation runs on plain CSS and `requestAnimationFrame`.

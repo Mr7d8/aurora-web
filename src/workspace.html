@@ -765,13 +765,24 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   .hero-stage{height:176px}
   .tr{gap:10px}
 }
+/* Touch screens: there's no keyboard to press, so shortcut hints give way to touch wording,
+   and the search button shows its icon where narrow layouts would otherwise leave only ⌘K. */
+.touch-hint{display:none}
+@media (hover:none) and (pointer:coarse){
+  .kbd-hint{display:none!important}
+  .touch-hint{display:inline}
+  .search #search-ic{display:grid;place-items:center;flex:none}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:860px){
+  .search{justify-content:center;width:28px;height:28px;padding:0;border-color:transparent;background:none}
+}
 </style>
 
 <div class="app" id="app">
   <header class="tb">
     <button class="ib" id="nav-toggle" aria-label="Toggle sidebar" title="Toggle sidebar  ⌘B"></button>
     <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Aurora</span><span class="sl hide-xs">/</span><span class="hide-s">aurora-web</span><span class="sl hide-s">/</span><b id="crumb-cur">Build landing page</b></div>
-    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Aurora</span><kbd id="kbd-k">⌘K</kbd></button>
+    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Aurora</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
     <div class="tb-r">
       <button class="pillbtn" id="model-btn" aria-haspopup="menu"><span id="model-ic"></span><span class="lbl" id="model-lbl">Opus 5.5</span><span id="model-chev"></span></button>
       <button class="ib" id="theme-btn" aria-label="Switch theme"></button>
@@ -834,7 +845,7 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   <div class="glass pal" role="dialog" aria-modal="true" aria-label="Command palette">
     <div class="pal-in"><span id="pal-ic"></span><span id="pal-crumb"></span><input id="pal-q" autocomplete="off" spellcheck="false" aria-label="Search commands" aria-controls="pal-list"></div>
     <div class="pal-list" id="pal-list" role="listbox"></div>
-    <div class="pal-f"><span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span><span><kbd>↵</kbd> Open</span><span id="pal-back"><kbd>⌫</kbd> Back</span><span class="sp"></span><span id="pal-count"></span></div>
+    <div class="pal-f"><span class="kbd-hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate</span><span class="kbd-hint"><kbd>↵</kbd> Open</span><span id="pal-back" class="kbd-hint"><kbd>⌫</kbd> Back</span><span class="sp"></span><span id="pal-count"></span></div>
   </div>
 </div>
 
@@ -1272,7 +1283,7 @@ function buildNav() {
   }
   h += `<div class="nav-h"><span>Agents</span><span id="nav-online"></span></div>`;
   h += AGENTS.map(a => `<button class="ra" data-open-agent="${a.id}" title="${a.name} · ${a.role}">${avatar(a.id, 18)}<span class="ra-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button>`).join('');
-  h += `<div class="nav-foot"><button class="ni" data-nav="settings" title="Settings">${ic('settings')}<span>Settings</span><span class="cnt">${MOD.trim()},</span></button><button class="ni" id="acct-btn" title="Account">${ic('user')}<span>Account</span></button></div>`;
+  h += `<div class="nav-foot"><button class="ni" data-nav="settings" title="Settings">${ic('settings')}<span>Settings</span><span class="cnt kbd-hint">${MOD.trim()},</span></button><button class="ni" id="acct-btn" title="Account">${ic('user')}<span>Account</span></button></div>`;
   $('#nav-in').innerHTML = h;
 }
 function navCounts() {
@@ -1865,7 +1876,7 @@ const VIEWS = {
         <button class="hero-atlas" id="hero-atlas" aria-label="Atlas, your orchestrator. Poke to say hi.">${avatar('atlas', big, {attrs:'data-track data-play'})}</button>
       </div>
       <form class="comp home-comp" id="home-comp"><label class="sr" for="home-in">Ask Atlas</label><textarea id="home-in" rows="1" placeholder="Ask Atlas anything, or describe a task…"></textarea>
-        <div class="comp-bar"><span class="pillbtn" style="pointer-events:none">${avatar('atlas', 16)}<span>Atlas routes it to the right agent</span></span><span class="sp"></span><span class="hint">↵ to start</span><button type="submit" class="send" aria-label="Start task">${ic('send')}</button></div></form>
+        <div class="comp-bar"><span class="pillbtn" style="pointer-events:none">${avatar('atlas', 16)}<span>Atlas routes it to the right agent</span></span><span class="sp"></span><span class="hint kbd-hint">↵ to start</span><button type="submit" class="send" aria-label="Start task">${ic('send')}</button></div></form>
       <div class="hchips">${chips.map(([i, t]) => `<button type="button" class="hchip" data-suggest="${esc(t)}">${ic(i)}${esc(t)}</button>`).join('')}</div>
     </section><div id="home-live"></div></div>`;
   },
@@ -1903,7 +1914,7 @@ const VIEWS = {
     <div class="set-row"><div><b>Default model</b><span>Used by new agents and chats unless an agent sets its own.</span></div><button class="btn" data-cmd="switch-model">${ic('cpu')}<span data-model-l>${S.model}</span>${ic('chevD')}</button></div>
     <div class="set-row"><div><b>Agent autonomy</b><span>What agents may do without asking you first.</span></div><div class="segc" id="set-auto"><button aria-pressed="${S.autonomy === 'ask'}" data-auto="ask">Ask first</button><button aria-pressed="${S.autonomy === 'safe'}" data-auto="safe">Safe actions</button><button aria-pressed="${S.autonomy === 'full'}" data-auto="full">Full</button></div></div>
     <div class="set-row"><div><b>Secrets</b><span>DEPLOY_TOKEN, ANALYTICS_KEY · granted per agent</span></div><button class="btn">${ic('key')}Manage</button></div></div>`,
-  '__empty': () => `<div class="empty">${avatar('atlas', 96)}<h2>No open tabs</h2><p>Press <kbd>${MOD.trim()}</kbd> <kbd>K</kbd> to open a task, a file or an agent.</p></div>`,
+  '__empty': () => `<div class="empty">${avatar('atlas', 96)}<h2>No open tabs</h2><p><span class="kbd-hint">Press <kbd>${MOD.trim()}</kbd> <kbd>K</kbd> to open</span><span class="touch-hint">Tap search to open</span> a task, a file or an agent.</p></div>`,
 };
 
 /* ── Home logic: orbiting team, typing narration, pokes, routing ── */
@@ -2123,7 +2134,7 @@ function renderPal(stagger) {
   PAL.items.forEach((c, k) => {
     if (c.g !== g && !(PAL.page !== 'root' && k > 0)) { g = c.g; if (PAL.page === 'root') h += `<div class="pal-g" style="--d:${d++}">${esc(g)}</div>`; }
     const right = c.page ? `<span class="pi-h">${c.h ? esc(c.h) : ''}<span class="pi-arrow">${ic('chevR')}</span></span>`
-      : c.kbd ? `<span class="pi-h">${c.kbd.map(x => `<kbd>${x}</kbd>`).join('')}</span>`
+      : c.kbd ? `<span class="pi-h kbd-hint">${c.kbd.map(x => `<kbd>${x}</kbd>`).join('')}</span>`
       : c.st ? `<span class="pi-h"><span class="stw" data-st="${c.st}"></span></span>`
       : c.h ? `<span class="pi-h">${esc(c.h)}</span>` : '';
     h += `<button class="pi" role="option" id="pi-${k}" data-pi="${k}" style="--d:${d++}">${c.av ? avatar(c.av, 18) : ic(c.icon)}<span class="${c.mono ? 'mono' : ''}" style="${c.mono ? 'font-size:12.5px' : ''}">${esc(c.l)}</span>${c.sub ? `<span style="color:var(--fg-4);font-size:12.5px">${esc(c.sub)}</span>` : ''}${right}</button>`;
@@ -2702,7 +2713,9 @@ function init() {
   ensureView('chat'); ensureView('file:page.tsx'); ensureView('file:research.md');
   Term.el = $('#term');
   seedChat(); paintCompAgent(); edReset();
-  activate('home');
+  /* Phones open straight on the running task: the run takes over that tab 0.7s after load, and with no sidebar
+     or inspector on a phone, the task view is the only place the run shows. Home stays one tap away. */
+  activate(mqNav.matches ? 'task:142' : 'home');
   mountAvatars(); paintAll(document);
   for (const a of AGENTS) paintAgent(a.id);
   updateCrew(); navCounts();
