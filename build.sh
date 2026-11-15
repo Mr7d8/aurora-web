@@ -1,9 +1,11 @@
 #!/bin/sh
 # Wraps src/workspace.html (the Claude Artifact source, which has no document skeleton)
-# into a standalone index.html for static hosting.
+# into a standalone dist/index.html for static hosting. Vercel runs this on every deploy (see vercel.json).
 set -e
 cd "$(dirname "$0")"
 SRC=src/workspace.html
+OUT=dist/index.html
+mkdir -p dist
 TITLE=$(sed -n 's:.*<title>\(.*\)</title>.*:\1:p' "$SRC" | head -1)
 DESC="An AI workspace where agents plan, research, design, code and deploy together."
 {
@@ -26,5 +28,5 @@ DESC="An AI workspace where agents plan, research, design, code and deploy toget
   # Markup and script: everything after that closing style tag.
   sed -n '/^<\/style>/,$p' "$SRC" | sed '1d'
   printf '</body>\n</html>\n'
-} > index.html
-echo "Built index.html from $SRC"
+} > "$OUT"
+echo "Built $OUT from $SRC"
