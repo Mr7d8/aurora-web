@@ -1,23 +1,26 @@
-# Orbit Agent Workspace
+# Wasal Agents
 
-An interactive prototype of an AI workspace where a small team of agents (Atlas, Scout, Sage, Pixel, Quill and Forge) plan, research, design, code and deploy a landing page together.
+A prototype of Wasal's AI agent team, built like an IDE. Seven agents work on their own, then **report, email and assign tasks** to people:
 
-It's built like an IDE:
-- **Home.** A playful Atlas greets you, with the team orbiting around it.
-- **Center.** A tabbed workspace with the task plan and execution log, chat, code and research.
-- **Bottom.** A terminal panel.
-- **Right.** An agent inspector.
-- **Overlays.** The command palette, menus, agent card and dialogs use a glass material.
+| Agent | Role | Delivers |
+| --- | --- | --- |
+| Atlas | Chief of staff | Daily pulse 08:30, readiness reports, task assignments |
+| Scout | Market watch | Competitor digest (web, Instagram, Semrush) |
+| Sage | Data analyst | Weekly business review, homepage report (lakehouse, certified tables) |
+| Pixel | Creative | Homepage banners in French and Arabic, for approval |
+| Quill | CRM and copy | Brevo drafts, win-back emails |
+| Forge | Marketplace ops | Restock tasks in monday.com, seller reminders |
+| Ward | Data quality | 07:00 concordance check |
 
 ## What to try
 
-- **Home:** Atlas follows your cursor, reacts when you hover or click it, and routes whatever you type to the right agent.
-- **Command palette:** press `⌘K` (or `Ctrl K`).
-- **Scenes:** the status bar menu replays individual interactions: handoffs, blocked state, streaming replies, task assignment.
-- **Blocked:** the main run pauses twice. Click **Resolve** for Forge's missing deploy token.
-- **Approve:** click **Approve** for Quill's headline. If nobody answers either one within 20 seconds, the run resolves it and carries on.
-- **Theme:** switch light and dark from the top bar, or pick Light, Dark or System in Settings. The choice is saved in your browser.
-- **Reduced motion:** toggle it in the status bar, or follow your system setting.
+- **The Black Friday run** plays on load: market watch, pace and stock check, banners, teaser email, restocks assigned to account managers, then Atlas writes and emails the report and schedules a daily pulse.
+- **Approve** Quill's customer email, or let it time out: it is parked as a draft, never sent.
+- **Resolve** Forge's missing monday.com access, or let it time out: Forge emails the account managers instead.
+- **Routines, Reports, Outbox, Assigned** show what the agents run and deliver on their own.
+- `⌘K` palette, Scenes menu in the status bar, light and dark themes.
+
+All figures are illustrative demo data, not Wasal's real numbers.
 
 ## Project layout
 

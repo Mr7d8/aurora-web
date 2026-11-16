@@ -7,7 +7,7 @@ SRC=src/workspace.html
 OUT=dist/index.html
 mkdir -p dist
 TITLE=$(sed -n 's:.*<title>\(.*\)</title>.*:\1:p' "$SRC" | head -1)
-DESC="An AI workspace where agents plan, research, design, code and deploy together."
+DESC="Wasal agents that watch the numbers, report, email and assign work."
 {
   printf '<!doctype html>\n<html lang="en">\n<head>\n'
   printf '<meta charset="utf-8">\n'

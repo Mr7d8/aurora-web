@@ -1,4 +1,4 @@
-<title>Orbit Agent Workspace</title>
+<title>Wasal Agents</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap">
@@ -563,6 +563,22 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 .tr .mono{font-size:12px;color:var(--fg-3)}
 .who{display:inline-flex;align-items:center;gap:8px}
 .avs{display:inline-flex}.avs .av{margin-right:-4px}
+/* People: the humans agents report to, email and assign work to. Initials chips, no agent colour. */
+.pp{display:inline-grid;place-items:center;border-radius:50%;flex:none;font-weight:600;letter-spacing:0;color:var(--fg-2);background:var(--chip-bg);box-shadow:inset 0 0 0 1px var(--chip-ring)}
+.asg{display:grid;grid-template-columns:150px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:28px;font-size:12.5px}
+.asg>span:nth-child(2){color:var(--fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.asg em{font:400 11px var(--mono);font-style:normal;color:var(--fg-4)}
+.mail-s{font-weight:500;color:var(--fg);margin-bottom:4px}
+.mail-p{color:var(--fg-3);line-height:1.55}
+.mail-p+.mail-p{margin-top:6px}
+/* Delivered today: what the agents sent and assigned without being asked */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:26px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+.kpi{display:flex;flex-direction:column;gap:1px;padding:10px 12px;background:var(--surface);transition:background .12s}
+.kpi:hover{background:var(--raised)}
+.kpi b{font:500 18px/1.3 var(--mono);color:var(--fg)}
+.kpi span{font-size:11.5px;color:var(--fg-3)}
+.kpi.attn b{color:var(--warn)}
+.auto-l{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--fg-2)}
 .pg-sec{margin-top:26px}
 .pg-sec>.sh{margin-top:0}
 .set-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;min-height:54px;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -762,6 +778,9 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   .home{padding:2px 16px 40px}
   .home .tr{grid-template-columns:minmax(0,1fr) 112px!important}
   .home .tr>span:nth-child(2),.home .tr>span:nth-child(4){display:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .asg{grid-template-columns:minmax(0,1fr) auto}
+  .asg>span:nth-child(2){display:none}
   .hero-stage{height:176px}
   .tr{gap:10px}
 }
@@ -781,8 +800,8 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 <div class="app" id="app">
   <header class="tb">
     <button class="ib" id="nav-toggle" aria-label="Toggle sidebar" title="Toggle sidebar  ⌘B"></button>
-    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Aurora</span><span class="sl hide-xs">/</span><span class="hide-s">aurora-web</span><span class="sl hide-s">/</span><b id="crumb-cur">Build landing page</b></div>
-    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Aurora</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
+    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Wasal</span><span class="sl hide-xs">/</span><span class="hide-s">Marketing</span><span class="sl hide-s">/</span><b id="crumb-cur">BF readiness</b></div>
+    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Wasal</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
     <div class="tb-r">
       <button class="pillbtn" id="model-btn" aria-haspopup="menu"><span id="model-ic"></span><span class="lbl" id="model-lbl">Opus 5.5</span><span id="model-chev"></span></button>
       <button class="ib" id="theme-btn" aria-label="Switch theme"></button>
@@ -796,9 +815,9 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   <main class="center" id="center">
     <div class="tabs" id="tabs" role="tablist" aria-label="Open tabs"></div>
     <div class="views" id="views"></div>
-    <section class="bp" id="bp" aria-label="Terminal">
+    <section class="bp" id="bp" aria-label="Agent console">
       <div class="bp-h">
-        <button class="bp-tab" aria-selected="true">Terminal</button>
+        <button class="bp-tab" aria-selected="true">Console</button>
         <button class="bp-tab" aria-selected="false" data-bp="output">Output</button>
         <button class="bp-tab" aria-selected="false" data-bp="problems">Problems<span class="n" id="prob-n">0</span></button>
         <span class="sp"></span>
@@ -832,8 +851,9 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
     <span class="sp"></span>
     <button class="sbi" id="sb-scenes" aria-haspopup="menu"></button>
     <button class="sbi hide-xs" id="sb-motion"></button>
+    <span class="sbi hide-xs" id="sb-demo" title="Figures in this prototype are illustrative, not Wasal's real numbers"></span>
     <span class="sbi hide-xs mono" id="sb-tok">0 tok</span>
-    <button class="sbi hide-xs" id="sb-term" aria-label="Toggle terminal" title="Terminal  ⌘J"></button>
+    <button class="sbi hide-xs" id="sb-term" aria-label="Toggle console" title="Console  ⌘J"></button>
   </footer>
 </div>
 <div class="m-scrim" id="m-scrim"></div>
@@ -923,22 +943,69 @@ const IC = {
   command:'<path d="M5.8 5.8h4.4v4.4H5.8z"/><path d="M5.8 5.8H4.4a1.4 1.4 0 1 1 1.4-1.4zM10.2 5.8V4.4a1.4 1.4 0 1 1 1.4 1.4zM10.2 10.2h1.4a1.4 1.4 0 1 1-1.4 1.4zM5.8 10.2v1.4a1.4 1.4 0 1 1-1.4-1.4z"/>',
   sun:'<circle cx="8" cy="8" r="2.7"/><path d="M8 1.7v1.4M8 12.9v1.4M1.7 8h1.4M12.9 8h1.4M3.55 3.55l1 1M11.45 11.45l1 1M3.55 12.45l1-1M11.45 4.55l1-1"/>',
   moon:'<path d="M13.3 9.7A5.7 5.7 0 0 1 6.3 2.7a5.7 5.7 0 1 0 7 7z"/>',
+  mail:'<rect x="2" y="3.4" width="12" height="9.2" rx="1.8"/><path d="m2.6 4.6 5.4 4 5.4-4"/>',
+  people:'<circle cx="6" cy="5.8" r="2.2"/><path d="M1.9 13c.6-2 2.2-3 4.1-3s3.5 1 4.1 3"/><path d="M10.6 3.8a2 2 0 0 1 0 3.9M12 10.2c1 .4 1.7 1.3 2.1 2.6"/>',
+  report:'<path d="M4.2 1.8h4.9l3.4 3.4v7.6a1.4 1.4 0 0 1-1.4 1.4H4.2a1.4 1.4 0 0 1-1.4-1.4V3.2a1.4 1.4 0 0 1 1.4-1.4z"/><path d="M5.6 11.6V9.8M8 11.6V7.9M10.4 11.6v-2.6"/>',
 };
 const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 16 16" aria-hidden="true">${IC[n]}</svg>`;
 
 /* ── Agents ── */
 const AGENTS = [
-  {id:'atlas', name:'Atlas', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Files','Messages'], idle:'neutral', tool:'analyze', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', ready:'Ready to plan', week:21, perm:'Can assign work to any agent'},
-  {id:'scout', name:'Scout', role:'Research', model:'Sonnet 5.5', tools:['Web','Files'], idle:'bright', tool:'browse', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', ready:'Ready for research', week:17, perm:'Read-only web and files'},
-  {id:'sage', name:'Sage', role:'Analysis', model:'Opus 5.5', tools:['Files','Python','Docs'], idle:'calm', tool:'analyze', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', ready:'Ready to analyze', week:12, perm:'Read files, run sandboxed Python'},
-  {id:'pixel', name:'Pixel', role:'Design', model:'Sonnet 5.5', tools:['Canvas','Images','Files'], idle:'shy', tool:'design', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', ready:'Ready for design task', week:15, perm:'Write to /design'},
-  {id:'quill', name:'Quill', role:'Writing', model:'Haiku 4.5', tools:['Docs','Files'], idle:'smirk', tool:'write', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', ready:'Ready to write', week:10, perm:'Write to /content, needs approval to publish'},
-  {id:'forge', name:'Forge', role:'Engineering', model:'Opus 5.5', tools:['GitHub','Terminal','Files'], idle:'steady', tool:'code', hi:'#F0C6A6', c:'#DB9665', lo:'#BD7542', ready:'Ready to build', week:19, perm:'Write to repo, run commands, deploy previews'},
-  {id:'ward', name:'Ward', role:'QA and security', model:'Sonnet 5.5', tools:['Terminal','Scanner'], idle:'neutral', tool:'browse', hi:'#E3DAEC', c:'#BBA8D3', lo:'#9983BA', ready:'Back at 18:00', week:6, perm:'Read-only repo, run scanners'},
+  {id:'atlas', name:'Atlas', role:'Chief of staff', model:'Opus 5.5', tools:['Planner','monday.com','Gmail'], idle:'neutral', tool:'analyze', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', ready:'Ready to plan', week:21, perm:'Assigns work to agents and people, emails reports', delivers:'Daily pulse 08:30, BF report, task assignments'},
+  {id:'scout', name:'Scout', role:'Market watch', model:'Sonnet 5.5', tools:['Web','Instagram','Semrush'], idle:'bright', tool:'browse', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', ready:'Watching competitors', week:17, perm:'Read-only web, social and SEO', delivers:'Competitor digest, Mondays and Thursdays'},
+  {id:'sage', name:'Sage', role:'Data analyst', model:'Opus 5.5', tools:['Lakehouse','Python','Sheets'], idle:'calm', tool:'analyze', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', ready:'Ready to analyze', week:12, perm:'Read-only lakehouse, certified tables first', delivers:'Weekly business review, homepage report'},
+  {id:'pixel', name:'Pixel', role:'Creative', model:'Sonnet 5.5', tools:['Canva','Images','Homepage'], idle:'shy', tool:'design', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', ready:'Ready for a banner', week:15, perm:'Drafts banners, publishing to the homepage needs approval', delivers:'Banner proposals, FR and AR'},
+  {id:'quill', name:'Quill', role:'CRM and copy', model:'Haiku 4.5', tools:['Brevo','Gmail','Docs'], idle:'smirk', tool:'write', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', ready:'Ready to write', week:10, perm:'Drafts campaigns, sending to customers needs approval', delivers:'Brevo drafts, win-back emails'},
+  {id:'forge', name:'Forge', role:'Marketplace ops', model:'Opus 5.5', tools:['Odoo','monday.com','Gmail'], idle:'steady', tool:'code', hi:'#F0C6A6', c:'#DB9665', lo:'#BD7542', ready:'Watching stock', week:19, perm:'Reads Odoo, assigns tasks to account managers, emails sellers', delivers:'Restock tasks, seller reminders'},
+  {id:'ward', name:'Ward', role:'Data quality', model:'Sonnet 5.5', tools:['Lakehouse','Controls'], idle:'neutral', tool:'browse', hi:'#E3DAEC', c:'#BBA8D3', lo:'#9983BA', ready:'Back at 07:00', week:6, perm:'Read-only, runs the morning concordance check', delivers:'Alert when a KPI disagrees between tools'},
 ];
 const A = Object.fromEntries(AGENTS.map(a => [a.id, a]));
 const TEAM = ['atlas','scout','sage','pixel','quill','forge'];
 const ACTIVE = new Set(['thinking','working','tool']);
+/* People agents report to, email and assign work to. Names are placeholders for the demo. */
+const PEOPLE = {
+  kam:{name:'Salma A.', role:'Key accounts', ini:'SA'},
+  mid:{name:'Youssef B.', role:'Mid-tail sellers', ini:'YB'},
+  cat:{name:'Imane R.', role:'Catalogue', ini:'IR'},
+  crm:{name:'Karim E.', role:'CRM', ini:'KE'},
+  you:{name:'You', role:'Marketing', ini:'SD'},
+};
+const pp = (k, px = 18) => `<span class="pp" style="width:${px}px;height:${px}px;font-size:${(px * .4).toFixed(1)}px">${PEOPLE[k].ini}</span>`;
+const person = (k, px = 18) => `<span class="who">${pp(k, px)}<span>${PEOPLE[k].name}</span></span>`;
+/* What the agents deliver on their own: emails (Gmail, Brevo), tasks for people (monday.com) and routines that run on a schedule.
+   Seeds are copied on every reset so a replay starts from the same morning. */
+const OUTBOX_SEED = [
+  {agent:'atlas', to:'Marketing team (6)', subject:'Daily pulse · dimanche 16 nov.', status:'sent', ch:'Gmail', t:'08:30'},
+  {agent:'ward', to:'Data team', subject:'Concordance OK · 38 indicators match', status:'sent', ch:'Gmail', t:'07:04'},
+  {agent:'sage', to:'Marketing team (6)', subject:'Homepage performance · S46', status:'sent', ch:'Gmail', t:'Yesterday'},
+  {agent:'forge', to:'4 sellers', subject:'Rappel : 12 produits en rupture', status:'sent', ch:'Gmail', t:'Nov 14'},
+];
+const ASSIGN_SEED = [
+  {task:'Hide 3 rejected products that are still live', who:'cat', by:'forge', due:'Tue 18', status:'open', src:'monday.com'},
+  {task:'Confirm Black Friday prices with 3 key accounts', who:'kam', by:'atlas', due:'Tue 18', status:'open', src:'monday.com'},
+  {task:'Restock 12 products · Mid tail', who:'mid', by:'forge', due:'Nov 15', status:'done', src:'monday.com'},
+];
+const ROUTINE_SEED = [
+  {name:'Daily pulse', agent:'atlas', with:['sage'], when:'Every day · 08:30', delivers:'Email to the marketing team', auto:'full', next:'Tomorrow 08:30', task:'Daily pulse · lundi 17 nov.'},
+  {name:'Stock-out watch', agent:'forge', with:[], when:'Every 2 hours', delivers:'Restock tasks for account managers', auto:'safe', next:'16:00', task:'Stock-out watch · best-sellers'},
+  {name:'Homepage performance', agent:'sage', with:['pixel'], when:'Every day · 09:00', delivers:'Report and a banner swap to approve', auto:'ask', next:'Tomorrow 09:00', task:'Homepage performance · yesterday'},
+  {name:'Weekly business review', agent:'sage', with:['atlas'], when:'Mondays · 09:00', delivers:'Email and Sheets to management', auto:'full', next:'Mon 09:00', task:'Weekly business review · S47'},
+  {name:'Competitor watch', agent:'scout', with:[], when:'Mon and Thu · 10:00', delivers:'Digest email', auto:'full', next:'Thu 10:00', task:'Competitor watch · Black Friday offers'},
+  {name:'Win-back campaign', agent:'quill', with:['sage'], when:'1st of the month', delivers:'Brevo draft to approve', auto:'ask', next:'Dec 1', task:'Win-back email · dormant customers'},
+  {name:'Concordance check', agent:'ward', with:[], when:'Every day · 07:00', delivers:'Alert if a KPI disagrees', auto:'full', next:'Tomorrow 07:00', task:'Concordance check'},
+];
+const AUTO = {full:['ok','Runs alone'], safe:['dot','Acts, asks before customers'], ask:['ask','Drafts, you approve']};
+const OUTBOX = [], ASSIGNMENTS = [], ROUTINES = [];
+let mailN = 0;
+function seedDeliveries() {
+  OUTBOX.length = 0; OUTBOX.push(...OUTBOX_SEED.map(o => ({...o, id: ++mailN})));
+  ASSIGNMENTS.length = 0; ASSIGNMENTS.push(...ASSIGN_SEED.map(o => ({...o})));
+  ROUTINES.length = 0; ROUTINES.push(...ROUTINE_SEED.map(o => ({...o})));
+}
+seedDeliveries();
+function deliveredChanged() { for (const k of ['outbox','assigned','routines','reports']) refreshLive(k); homeLiveSoon(); navCounts(); }
+function sendMail(o) { const m = {t: clock().slice(0, 5), status:'sent', ch:'Gmail', ...o, id: ++mailN}; OUTBOX.unshift(m); deliveredChanged(); return m; }
+function assignTo(o) { ASSIGNMENTS.unshift({status:'open', src:'monday.com', ...o}); deliveredChanged(); }
 const ATTN = new Set(['approval','blocked']);
 const WORD = {available:'Idle', thinking:'Thinking', working:'Working', waiting:'Waiting', approval:'Needs you', complete:'Done', blocked:'Blocked', offline:'Offline'};
 const TOOLS = {
@@ -972,7 +1039,7 @@ const EXPR_KEYS = Object.keys(EXPR.neutral);
 const PRESENCE_FACE = {thinking:'think', working:'focus', approval:'expect', complete:'happy', blocked:'worried', offline:'sleep'};
 const TOOL_FACE = {browse:'curious', code:'focus', analyze:'calm', design:'delight', write:'focus'};
 
-/* Motion per state — deliberately small. amp = share of avatar size. */
+/* Motion per state, deliberately small. amp = share of avatar size. */
 const MOTION = {
   available:{amp:.02,  freq:.2,  breath:.01,  tilt:1,   tiltBias:0,  jitter:0,    blink:[2.8,6.5], glance:'idle', hop:null},
   thinking: {amp:.022, freq:.26, breath:.03,  tilt:1.4, tiltBias:-2, jitter:0,    blink:[3,6],     glance:'up',   hop:null},
@@ -1022,7 +1089,7 @@ function avatar(id, px = 20, o = {}) {
 }
 
 /* ── Store ── */
-const S = {agents:{}, blocked:null, approval:null, chatAgent:'sage', chatRun:0, tokens:0, runStart:0, runEnd:0, taskN:143, model:'Opus 5.5', autonomy:'ask'};
+const S = {agents:{}, blocked:null, approval:null, parked:null, viaEmail:false, reportState:'', reportAt:'', watchDone:false, chatAgent:'sage', chatRun:0, tokens:0, runStart:0, runEnd:0, taskN:143, model:'Opus 5.5', autonomy:'safe'};
 for (const a of AGENTS) S.agents[a.id] = {presence: a.id === 'ward' ? 'offline' : 'available', tool:null, label:null, progress:null, step:null};
 const FIXED = {};
 function stateOf(i) {
@@ -1265,15 +1332,15 @@ function paintAgent(id) {
     blk.classList.toggle('active', ACTIVE.has(a.presence) || ATTN.has(a.presence));
     blk.classList.toggle('idle', !ACTIVE.has(a.presence) && !ATTN.has(a.presence));
     const pr = blk.querySelector('.ag-prog i'); if (pr) pr.style.width = Math.round((a.step ?? 0) * 100) + '%';
-    const stepEl = blk.querySelector('[data-stepv]'); if (stepEl) stepEl.textContent = a.stepText || '—';
+    const stepEl = blk.querySelector('[data-stepv]'); if (stepEl) stepEl.textContent = a.stepText || '-';
   }
   if (CARD.id === id) syncCard();
 }
 
 /* ── Nav ── */
 const NAV = [
-  ['Workspace', [['home','Home','home'],['projects','Projects','folder'],['agents','Agents','agent'],['tasks','Tasks','tasks'],['workflows','Workflows','flow']]],
-  ['Resources', [['files','Files','file'],['conversations','Conversations','chat'],['runs','Runs','runs'],['activity','Activity','activity']]],
+  ['Workspace', [['home','Home','home'],['agents','Agents','agent'],['tasks','Tasks','tasks'],['routines','Routines','clock'],['reports','Reports','report']]],
+  ['Delivered', [['outbox','Outbox','mail'],['assigned','Assigned','people'],['conversations','Conversations','chat'],['runs','Runs','runs'],['activity','Activity','activity']]],
 ];
 function buildNav() {
   let h = '';
@@ -1290,6 +1357,9 @@ function navCounts() {
   const need = TEAM.filter(id => ATTN.has(S.agents[id].presence)).length;
   const c = $('#cnt-tasks'); c.textContent = need ? `${need} need you` : '';
   c.classList.toggle('attn', need > 0);
+  const toApprove = OUTBOX.filter(m => m.status === 'approval').length, ob = $('#cnt-outbox');
+  if (ob) { ob.textContent = toApprove ? `${toApprove} to approve` : ''; ob.classList.toggle('attn', toApprove > 0); }
+  const as = $('#cnt-assigned'); if (as) as.textContent = ASSIGNMENTS.filter(a => a.status === 'open').length || '';
   $('#nav-online').textContent = `${AGENTS.filter(a => S.agents[a.id].presence !== 'offline').length} online`;
 }
 function setNavActive(key) {
@@ -1301,27 +1371,30 @@ function buildInspector() {
   for (const a of AGENTS) {
     const d = document.createElement('div');
     d.className = 'ag idle'; d.dataset.ag = a.id; d.dataset.ac = a.id; d.dataset.openAgent = a.id;
-    d.innerHTML = `<button class="ag-row" data-open-agent="${a.id}">${avatar(a.id, 20)}<span class="ag-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button><div class="ag-sub" data-now="${a.id}"></div><div class="ag-d"><div><div class="ag-body"><p class="ag-now" data-now="${a.id}"></p><dl class="kv"><dt>Model</dt><dd>${a.model}</dd><dt>Tools</dt><dd>${a.tools.join(' · ')}</dd><dt>Step</dt><dd data-stepv>—</dd></dl><div class="ag-prog"><i></i></div></div></div></div>`;
+    d.innerHTML = `<button class="ag-row" data-open-agent="${a.id}">${avatar(a.id, 20)}<span class="ag-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button><div class="ag-sub" data-now="${a.id}"></div><div class="ag-d"><div><div class="ag-body"><p class="ag-now" data-now="${a.id}"></p><dl class="kv"><dt>Model</dt><dd>${a.model}</dd><dt>Tools</dt><dd>${a.tools.join(' · ')}</dd><dt>Step</dt><dd data-stepv>-</dd></dl><div class="ag-prog"><i></i></div></div></div></div>`;
     $('#l-idle').appendChild(d);
   }
   placeAgents(true);
   $('#ip-context').innerHTML = `
     <div class="ish"><span>Task</span></div>
-    <div class="ctx-row">${ic('tasks')}<span>TASK-142 · Build landing page</span><em id="ctx-task">running</em></div>
-    <div class="ish"><span>Repository</span></div>
-    <div class="ctx-row">${ic('folder')}<span>aurora-web</span><em>main</em></div>
-    <div class="ctx-row">${ic('branch')}<span>feat/landing</span><em id="ctx-changes">0 changed</em></div>
+    <div class="ctx-row">${ic('tasks')}<span>TASK-142 · BF readiness</span><em id="ctx-task">running</em></div>
+    <div class="ish"><span>Data</span></div>
+    <div class="ctx-row">${ic('report')}<span>Wasal lakehouse</span><em>certified · read-only</em></div>
+    <div class="ctx-row">${ic('clock')}<span>Last refresh</span><em>today 00:16</em></div>
     <div class="ish"><span>Attached</span><span>4</span></div>
-    <button class="ctx-row" style="width:100%" data-open-tab="file:research.md">${ic('doc')}<span>docs/research.md</span><em>2.4k words</em></button>
-    <div class="ctx-row">${ic('doc')}<span>customer_feedback.pdf</span><em>3,842 rows</em></div>
-    <div class="ctx-row">${ic('doc')}<span>brand-guidelines.pdf</span><em>24 pp</em></div>
-    <button class="ctx-row" style="width:100%" data-open-tab="file:page.tsx">${ic('code')}<span>app/(marketing)/page.tsx</span><em>tsx</em></button>
-    <div class="ish"><span>Secrets</span></div>
-    <div class="ctx-row">${ic('key')}<span>DEPLOY_TOKEN</span><em id="ctx-secret">not granted</em></div>
-    <div class="ctx-row">${ic('key')}<span>ANALYTICS_KEY</span><em class="good">granted</em></div>
-    <div class="ish"><span>Memory</span></div>
-    <div class="ctx-row">${ic('sparkle')}<span>Tone: confident, plain, no hype</span><em></em></div>
-    <div class="ctx-row">${ic('sparkle')}<span>Pricing is per seat, never per agent</span><em></em></div>`;
+    <button class="ctx-row" style="width:100%" data-open-tab="file:market-watch.md">${ic('doc')}<span>docs/market-watch.md</span><em>12 sources</em></button>
+    <div class="ctx-row">${ic('doc')}<span>bf-forecast-2026.xlsx</span><em>14 categories</em></div>
+    <div class="ctx-row">${ic('image')}<span>Brand kit · Canva</span><em>FR · AR</em></div>
+    <button class="ctx-row" style="width:100%" data-open-tab="file:report.md">${ic('report')}<span>reports/bf-readiness.md</span><em id="ctx-report">not started</em></button>
+    <div class="ish"><span>Connectors</span></div>
+    <div class="ctx-row">${ic('people')}<span>monday.com · Forge</span><em id="ctx-secret">not granted</em></div>
+    <div class="ctx-row">${ic('mail')}<span>Gmail · reports and sellers</span><em class="good">granted</em></div>
+    <div class="ctx-row">${ic('mail')}<span>Brevo · customer email</span><em>drafts only</em></div>
+    <div class="ish"><span>Rules</span></div>
+    <div class="ctx-row">${ic('sparkle')}<span>Amounts in MAD, Morocco time</span><em></em></div>
+    <div class="ctx-row">${ic('sparkle')}<span>Judge performance on GMV net and NMV</span><em></em></div>
+    <div class="ctx-row">${ic('sparkle')}<span>Customer sends need your approval</span><em></em></div>
+    <div class="ctx-row">${ic('sparkle')}<span>Quiet hours 20:00 to 08:00</span><em></em></div>`;
 }
 function sectionOf(id) { const p = S.agents[id].presence; return p === 'offline' ? 'offline' : (ACTIVE.has(p) || ATTN.has(p)) ? 'active' : 'idle'; }
 function placeAgents(instant) {
@@ -1354,11 +1427,12 @@ function flashAgent(id) {
 
 /* ── Status bar ── */
 function buildStatusBar() {
-  $('#sb-branch').innerHTML = `${ic('branch')}<span>feat/landing</span>`;
+  $('#sb-branch').innerHTML = `${ic('clock')}<span>Black Friday · J-11</span>`;
   $('#sb-run').innerHTML = `${ic('runs')}<span id="sb-run-t">Run #218</span>`;
   $('#sb-avs').innerHTML = TEAM.map(id => `<span class="sb-av" data-sbav="${id}">${avatar(id, 14)}</span>`).join('');
   $('#sb-scenes').innerHTML = `${ic('play')}<span>Scenes</span>`;
   $('#sb-term').innerHTML = `${ic('panelB')}`;
+  $('#sb-demo').innerHTML = `${ic('report')}<span>Demo data</span>`;
   paintMotionBtn();
 }
 function updateCrew() {
@@ -1380,11 +1454,12 @@ const TABS = [];
 let activeTab = null;
 const VIEW_META = {
   'chat': {title:'Chat', icon:'chat', nav:'conversations'},
-  'file:page.tsx': {title:'page.tsx', icon:'code', nav:'files', ac:'forge'},
-  'file:research.md': {title:'research.md', icon:'doc', nav:'files', ac:'scout'},
-  home:{title:'Home', icon:'home', nav:'home'}, projects:{title:'Projects', icon:'folder', nav:'projects'},
-  agents:{title:'Agents', icon:'agent', nav:'agents'}, tasks:{title:'Tasks', icon:'tasks', nav:'tasks'},
-  workflows:{title:'Workflows', icon:'flow', nav:'workflows'}, files:{title:'Files', icon:'file', nav:'files'},
+  'file:report.md': {title:'bf-readiness.md', icon:'report', nav:'reports', ac:'atlas'},
+  'file:market-watch.md': {title:'market-watch.md', icon:'doc', nav:'reports', ac:'scout'},
+  home:{title:'Home', icon:'home', nav:'home'}, agents:{title:'Agents', icon:'agent', nav:'agents'},
+  tasks:{title:'Tasks', icon:'tasks', nav:'tasks'}, routines:{title:'Routines', icon:'clock', nav:'routines'},
+  reports:{title:'Reports', icon:'report', nav:'reports'}, outbox:{title:'Outbox', icon:'mail', nav:'outbox'},
+  assigned:{title:'Assigned', icon:'people', nav:'assigned'},
   conversations:{title:'Conversations', icon:'chat', nav:'conversations'}, runs:{title:'Runs', icon:'runs', nav:'runs'},
   activity:{title:'Activity', icon:'activity', nav:'activity'}, settings:{title:'Settings', icon:'settings', nav:'settings'},
 };
@@ -1412,7 +1487,7 @@ function openTab(key, focus = true) {
 }
 function activate(key) {
   activeTab = key;
-  if (TAB_STATE[key] && TAB_STATE[key].dirty && key !== 'file:page.tsx') TAB_STATE[key].dirty = false;
+  if (TAB_STATE[key] && TAB_STATE[key].dirty && key !== 'file:report.md') TAB_STATE[key].dirty = false;
   const v = ensureView(key);
   for (const el of $$('.view')) el.classList.toggle('on', el === v);
   if (LIVE_VIEWS.has(key)) { renderView(key, v); }
@@ -1461,11 +1536,11 @@ function paintAll(root) {
 
 /* ── Task views ── */
 const TASKS = [
-  {key:'task:142', id:'TASK-142', title:'Build the Aurora landing page', short:'Build landing page', owner:'atlas', status:'queued', steps:6, updated:'now'},
-  {key:'task:141', id:'TASK-141', title:'Weekly competitor digest', short:'Competitor digest', owner:'scout', status:'done', steps:3, updated:'Yesterday'},
-  {key:'task:140', id:'TASK-140', title:'Migrate auth to OAuth', short:'OAuth migration', owner:'forge', status:'done', steps:7, updated:'Sep 26'},
-  {key:'task:139', id:'TASK-139', title:'Onboarding illustrations', short:'Onboarding art', owner:'pixel', status:'done', steps:4, updated:'Sep 25'},
-  {key:'task:138', id:'TASK-138', title:'Security review · release 2.3', short:'Security review', owner:'ward', status:'done', steps:5, updated:'Sep 25'},
+  {key:'task:142', id:'TASK-142', title:'Black Friday readiness check', short:'BF readiness', owner:'atlas', status:'queued', steps:6, updated:'now'},
+  {key:'task:141', id:'TASK-141', title:'Daily pulse · dimanche 16 nov.', short:'Daily pulse', owner:'atlas', status:'done', steps:3, updated:'Today 08:30'},
+  {key:'task:140', id:'TASK-140', title:'Concordance check · 38 indicators', short:'Concordance check', owner:'ward', status:'done', steps:3, updated:'Today 07:00'},
+  {key:'task:139', id:'TASK-139', title:'Homepage performance · S46', short:'Homepage report', owner:'sage', status:'done', steps:3, updated:'Yesterday'},
+  {key:'task:138', id:'TASK-138', title:'Restock reminders · Mid tail sellers', short:'Restock reminders', owner:'forge', status:'done', steps:3, updated:'Nov 14'},
 ];
 const TSTAT = {queued:['wait','Queued'], running:['dot','Running'], blocked:['err','Blocked'], input:['ask','Needs input'], done:['ok','Completed'], stopped:['off','Stopped']};
 const TV_ALL = [];
@@ -1475,7 +1550,7 @@ function TaskView(task, o = {}) {
   v.innerHTML = `<div class="tv">
     <div class="tv-top"><span class="mono tv-id">${task.id}</span><span class="tstat" data-s="queued">${ind('wait')}<span>Queued</span></span><span class="sp"></span><button class="btn" data-tv-act="pause">${ic('pause')}Pause</button><button class="ib" data-tv-act="more" aria-label="More actions">${ic('more')}</button></div>
     <h1 class="tv-title">${esc(task.title)}</h1>
-    <div class="tv-meta"><span>${avatar(task.owner, 16)}<span>${task.owner === 'atlas' ? 'Orchestrated by' : 'Assigned to'} <b>${A[task.owner].name}</b></span></span><i class="dot"></i><span class="mono">${o.branch || 'feat/landing'}</span><i class="dot"></i><span data-started>Not started</span><i class="dot"></i><span data-agents>${o.agents || '1 agent'}</span><i class="dot"></i><span class="mono" data-elapsed>0:00</span></div>
+    <div class="tv-meta"><span>${avatar(task.owner, 16)}<span>${task.owner === 'atlas' ? 'Orchestrated by' : 'Assigned to'} <b>${A[task.owner].name}</b></span></span><i class="dot"></i><span class="mono">${esc(o.scope || 'Black Friday')}</span><i class="dot"></i><span data-started>Not started</span><i class="dot"></i><span data-agents>${o.agents || '1 agent'}</span><i class="dot"></i><span class="mono" data-elapsed>0:00</span></div>
     <div class="tv-prog" data-prog><i></i></div>
     <div class="sh"><span>Plan</span><span class="mono" data-plan-n></span></div>
     <ol class="plan" data-plan><li class="plan-empty">${ind('think')}<span class="shim">Waiting for a plan</span></li></ol>
@@ -1500,7 +1575,7 @@ function TaskView(task, o = {}) {
     tickElapsed() { if (started) q('[data-elapsed]').textContent = fmtClock(((ended || Date.now()) - started) / 1000); },
     plan(steps) {
       plan = steps.map(s => ({...s, s:'pending', t0:0}));
-      q('[data-plan]').innerHTML = plan.map((p, k) => `<li class="ps" data-s="pending" style="animation-delay:${k * 55}ms"><span class="si"></span><span class="ps-t">${esc(p.title)}</span><span class="ps-who">${avatar(p.agent, 16)}<span>${A[p.agent].name}</span></span><span class="ps-time mono">—</span></li>`).join('');
+      q('[data-plan]').innerHTML = plan.map((p, k) => `<li class="ps" data-s="pending" style="animation-delay:${k * 55}ms"><span class="si"></span><span class="ps-t">${esc(p.title)}</span><span class="ps-who">${avatar(p.agent, 16)}<span>${A[p.agent].name}</span></span><span class="ps-time mono">-</span></li>`).join('');
       mountAvatars(q('[data-plan]')); tv.planCount();
     },
     step(k, s) {
@@ -1511,7 +1586,7 @@ function TaskView(task, o = {}) {
       li.querySelector('.si').innerHTML = s === 'done' ? ic('check') : s === 'blocked' ? ic('warn') : '';
       if (s === 'done') li.querySelector('.ps-time').textContent = fmtDur((Date.now() - (p.t0 || Date.now())) / 1000);
       if (s === 'running') li.querySelector('.ps-time').textContent = '…';
-      if (s === 'pending') li.querySelector('.ps-time').textContent = '—';
+      if (s === 'pending') li.querySelector('.ps-time').textContent = '-';
       tv.planCount();
     },
     planCount() {
@@ -1594,30 +1669,41 @@ function logRow(log, o, scroller) {
 
 /* Tool output details */
 const X = {
-  plan: steps => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>Plan</span><span class="sp"></span><span class="mono">${steps.length} steps · 5 agents</span></div><div class="xd-b"><ol class="xl">${steps.map(s => `<li><span>${esc(s.title)} <span style="color:var(--fg-4)">· ${A[s.agent].name}</span></span></li>`).join('')}</ol></div></div>`,
-  sources: () => `<div class="xd"><div class="xd-h">${ic('globe')}<code>web.search("ai workspace landing page 2026")</code><span class="sp"></span><span class="mono">12 results</span></div><div class="xd-b">${[
-    ['How we rebuilt our homepage around the live product','lumen-labs.example'],['Pricing pages that convert: 2026 benchmark','northwind.example'],
-    ['Agents in the product tour: what worked','fabrikam.example'],['Design teardown: 30 AI tool landing pages','contoso.example'],
-    ['Why we stopped charging per agent','tailspin.example'],['+ 7 more','']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}</div></div>`,
-  read: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>fs.write("docs/research.md")</code><span class="sp"></span><span class="mono">2.4k words</span></div><div class="xd-b"><pre>## Summary
-9 of 12 pages lead with a live product view.
-Pages that name each agent's job hold attention longer.
-8 of 12 price per seat; none price per agent.</pre></div></div>`,
-  analysis: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>python analyze.py --inputs 14</code><span class="sp"></span><span class="mono">4 files · 3,842 rows</span></div><div class="xd-b"><div class="src"><i></i><span>docs/research.md</span><em>2.4k words</em></div><div class="src"><i></i><span>customer_feedback.pdf</span><em>3,842 entries</em></div><div class="src"><i></i><span>interviews/ (8 transcripts)</span><em>61k words</em></div><div class="src"><i></i><span>analytics_q3.csv</span><em>14 MB</em></div><pre style="margin-top:8px">patterns: 3   confidence: high   contradictions: 0</pre></div></div>`,
-  copy: () => `<div class="xd"><div class="xd-h">${ic('pen')}<code>content/landing.md</code><span class="sp"></span><span class="mono">3 options</span></div><div class="xd-b"><ol class="xl"><li>Your team, plus a few tireless agents.</li><li>Hand off the busywork. Keep the decisions.</li><li>Research, design and code, delegated.</li></ol></div></div>`,
-  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>design/hero</code><span class="sp"></span><span class="mono">3 variants · 1440 × 900</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Editorial</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Agent-forward</figcaption></figure></div></div></div>`,
+  plan: steps => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>Plan</span><span class="sp"></span><span class="mono">${steps.length} steps · ${new Set(steps.map(s => s.agent)).size} agents</span></div><div class="xd-b"><ol class="xl">${steps.map(s => `<li><span>${esc(s.title)} <span style="color:var(--fg-4)">· ${A[s.agent].name}</span></span></li>`).join('')}</ol></div></div>`,
+  sources: () => `<div class="xd"><div class="xd-h">${ic('globe')}<code>web.search("black friday maroc 2026")</code><span class="sp"></span><span class="mono">12 results</span></div><div class="xd-b">${[
+    ['Black Week: up to 40% off phones, from Friday 21','marketplace-a.example'],['Homepage countdown and daily flash deals','marketplace-b.example'],
+    ['Free delivery from 299 MAD during Black Friday','retailer-c.example'],['Top “Black Friday Maroc” reels this week','instagram · 24 creators'],
+    ['“black friday maroc” searches rising week on week','semrush'],['+ 7 more','']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}</div></div>`,
+  read: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>fs.write("docs/market-watch.md")</code><span class="sp"></span><span class="mono">1.6k words</span></div><div class="xd-b"><pre>## Summary
+Most competitors open Black Friday a week early, on Friday 21.
+Phones and small appliances lead, up to 40% off.
+Free-delivery thresholds drop to 199-299 MAD.</pre></div></div>`,
+  analysis: () => `<div class="xd"><div class="xd-h">${ic('report')}<code>lakehouse.query × 9</code><span class="sp"></span><span class="mono">certified tables · refreshed 00:16</span></div><div class="xd-b">${[
+    ['Sales pace against the November plan','GMV net'],['Black Friday forecast by category','14 categories'],['Stock-outs by store','top sellers'],
+    ['Customer base: active, dormant, at risk','segments'],['Homepage sections and tiles','clicks · orders']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}<pre style="margin-top:8px">risks: 3   source: gold (certified)   amounts: MAD</pre></div></div>`,
+  copy: () => `<div class="xd"><div class="xd-h">${ic('mail')}<code>brevo · bf-teaser (draft)</code><span class="sp"></span><span class="mono">3 subject lines</span></div><div class="xd-b"><ol class="xl"><li>Black Friday arrive : vos favoris jusqu’à -50 %</li><li>On vous a gardé les meilleures offres</li><li>J-7 : votre liste Black Friday est prête</li></ol></div></div>`,
+  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>design/bf-home</code><span class="sp"></span><span class="mono">3 banners · 1440 × 600 · FR · AR</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Countdown</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Category deals</figcaption></figure><figure><div class="wire c" dir="rtl"><i></i><i></i><i></i><i></i></div><figcaption>C · Arabic first</figcaption></figure></div></div></div>`,
   term: (cmd, lines) => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>${esc(cmd)}</code><span class="sp"></span><span class="mono">exit 0</span></div><div class="xd-b"><pre>${lines}</pre></div></div>`,
-  diff: () => `<div class="xd"><div class="xd-h">${ic('code')}<code>app/(marketing)/page.tsx</code><span class="sp"></span><span class="mono" style="color:var(--ok)">+${ED.added}</span><span class="mono" style="color:var(--err)">−${ED.removed}</span></div><div class="xd-b diff"><div class="c">@@ -8,5 +10,27 @@ export default function Page() {</div><div class="r">-      {/* TODO: landing page */}</div><div class="a">+      &lt;section className="hero"&gt;</div><div class="a">+        &lt;h1&gt;Your team, plus a few tireless agents.&lt;/h1&gt;</div><div class="a">+        &lt;AgentActivity agents={["scout", "sage", "forge"]} live /&gt;</div><div class="c">   …</div><div style="margin-top:8px"><button class="ref" data-open-tab="file:page.tsx">${ic('code')}Open page.tsx</button></div></div></div>`,
-  deployErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>aurora deploy --preview</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><code>DEPLOY_TOKEN</code> is not set for the preview environment. Forge can't deploy until it has a token.</p><div><button class="btn warn" data-resolve>${ic('key')}Resolve</button></div></div></div>`,
+  assign: (list, via) => `<div class="xd"><div class="xd-h">${ic(via === 'Email' ? 'mail' : 'people')}<span>${via === 'Email' ? 'Sent by email (no monday.com access)' : 'monday.com · BF restocks'}</span><span class="sp"></span><span class="mono">${list.length} tasks</span></div><div class="xd-b">${list.map(a => `<div class="asg">${person(a.who, 16)}<span>${esc(a.task)}</span><em>due ${esc(a.due)}</em></div>`).join('')}</div></div>`,
+  email: m => `<div class="xd"><div class="xd-h">${ic('mail')}<span>${esc(m.ch || 'Gmail')}</span><span class="sp"></span><span class="mono">to ${esc(m.to)}</span></div><div class="xd-b"><div class="mail-s">${esc(m.subject)}</div>${(m.body || []).map(p => `<p class="mail-p">${esc(p)}</p>`).join('')}</div></div>`,
+  report: () => `<div class="xd"><div class="xd-h">${ic('report')}<code>reports/bf-readiness.md</code><span class="sp"></span><span class="mono">${ED.added} lines</span></div><div class="xd-b"><button class="ref" data-open-tab="file:report.md">${ic('report')}Open the report</button></div></div>`,
+  mondayErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>monday items create --board "BF restocks"</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p>Forge isn’t connected to the <code>BF restocks</code> board in monday.com, so it can’t assign the restocks yet. If nobody answers, it emails the list to the account managers instead.</p><div><button class="btn warn" data-resolve>${ic('key')}Resolve</button></div></div></div>`,
 };
+/* Demo assignments Forge creates. Counts are illustrative. */
+const RESTOCKS = [
+  {who:'kam', task:'Restock 14 Black Friday best-sellers · Key accounts', due:'Fri 21'},
+  {who:'mid', task:'Restock 17 Black Friday best-sellers · Mid tail', due:'Fri 21'},
+  {who:'cat', task:'Hide 7 ghost products featured on the homepage', due:'Wed 19'},
+];
 
 /* ── Terminal ── */
 const Term = {
   el: null,
-  prompt: '<span class="t-p">forge@aurora-web</span> <span class="t-b">~/aurora-web</span> <span class="t-d">(feat/landing)</span> <span class="t-d">$</span> ',
+  who: null,
+  get prompt() { return `<span class="t-p">${this.who || 'agent'}@wasal</span> <span class="t-b">~/${this.who === 'atlas' ? 'reports' : 'ops'}</span> <span class="t-d">(black-friday)</span> <span class="t-d">$</span> `; },
   line(html) { const s = document.createElement('span'); s.className = 'l'; s.innerHTML = html; this.el.appendChild(s); this.scroll(); return s; },
   scroll() { const b = $('#bp-body'); b.scrollTop = b.scrollHeight; },
-  clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Forge’s shell · commands run by agents appear here</span>'); this.idle(); },
+  clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Agent console · every command an agent runs appears here</span>'); this.idle(); },
   idle() { const c = this.el.querySelector('.cursor'); if (c) c.parentElement.remove(); this.line(this.prompt + '<span class="cursor"></span>'); },
   async cmd(text, r) {
     if (!this.opened) { this.opened = true; showBP(true); }
@@ -1630,53 +1716,53 @@ const Term = {
   },
   async out(lines, r, gap = 90) { for (const l of lines) { this.line(l); await wait(M.reduced ? 10 : gap * rand(.6, 1.4), r); } },
 };
-/* The panel opens on Forge's first command of a run. If you close it after that, new output just marks the status bar toggle. */
-function termPing(kind = 'out') { if ($('#center').classList.contains('bp-on')) return; const b = $('#sb-term'); b.dataset.new = kind; b.setAttribute('aria-label', kind === 'err' ? 'Toggle terminal, new error' : 'Toggle terminal, new output'); }
-function termSeen() { const b = $('#sb-term'); delete b.dataset.new; b.setAttribute('aria-label', 'Toggle terminal'); }
-function setShellWho(on) { $('#bp-who').innerHTML = on ? `${avatar('forge', 14)}<span>forge · zsh</span>` : '<span>zsh</span>'; mountAvatars($('#bp-who')); }
+/* The panel opens on the first command of a run. If you close it after that, new output just marks the status bar toggle. */
+function termPing(kind = 'out') { if ($('#center').classList.contains('bp-on')) return; const b = $('#sb-term'); b.dataset.new = kind; b.setAttribute('aria-label', kind === 'err' ? 'Toggle console, new error' : 'Toggle console, new output'); }
+function termSeen() { const b = $('#sb-term'); delete b.dataset.new; b.setAttribute('aria-label', 'Toggle console'); }
+/* The console belongs to whichever agent is running commands; the idle prompt follows it. */
+function setShellWho(id) {
+  Term.who = id || null;
+  $('#bp-who').innerHTML = id ? `${avatar(id, 14)}<span>${id} · console</span>` : '<span>console</span>'; mountAvatars($('#bp-who'));
+  if (Term.el && Term.el.querySelector('.cursor')) Term.idle();
+}
 
-/* ── Code editor ── */
+/* ── Report editor: Atlas writes the readiness report live, section by section ── */
 const ORIG = [
-  'import type { Metadata } from "next";',
+  '# Black Friday readiness · J-11',
   '',
-  'export const metadata: Metadata = {',
-  '  title: "Aurora — the AI workspace for teams",',
-  '};',
+  '_Prepared by Atlas for the marketing team · dimanche 16 nov. · amounts in MAD_',
   '',
-  'export default function Page() {',
-  '  return (',
-  '    <main className="page">',
-  '      {/* TODO: landing page */}',
-  '    </main>',
-  '  );',
-  '}',
+  '<!-- Atlas fills this in as the agents finish -->',
+  '',
 ];
-const IMPORTS = ['import { Button } from "@/components/button";', 'import { AgentActivity, PlanGrid, Faq } from "@/components/marketing";', 'import { plans, faq } from "./content";'];
-const BODY = [
-  '      <section className="hero">',
-  '        <p className="eyebrow">Aurora 2.0</p>',
-  '        <h1>Your team, plus a few tireless agents.</h1>',
-  '        <p className="lede">',
-  '          Hand off research, design and code to agents that work',
-  '          inside your repo. Every decision stays yours.',
-  '        </p>',
-  '        <div className="actions">',
-  '          <Button href="/signup">Start free</Button>',
-  '          <Button href="/demo" variant="ghost">Watch the demo</Button>',
-  '        </div>',
-  '        <AgentActivity agents={["scout", "sage", "forge"]} live />',
-  '      </section>',
-  '',
-  '      <section className="pricing" aria-labelledby="pricing">',
-  '        <h2 id="pricing">Priced per seat, not per agent</h2>',
-  '        <PlanGrid plans={plans} highlight="team" />',
-  '      </section>',
-  '',
-  '      <section className="faq">',
-  '        <h2>Questions</h2>',
-  '        <Faq items={faq} />',
-  '      </section>',
-];
+/* Built when Atlas starts writing, so the lines match what actually happened in this run. Figures are illustrative. */
+function reportBody() {
+  const mail = S.approval ? 'Sending waits for your approval.' : S.parked ? 'Parked as a draft in the Outbox: nothing was sent.' : 'Approved and scheduled for Thu 20 Nov, 10:00.';
+  const via = S.viaEmail ? 'by email (monday.com access was missing)' : 'in monday.com';
+  return [
+    '## Where we stand',
+    '- GMV net is at **82%** of the expected November pace.',
+    '- **Beauty** is the furthest behind its Black Friday target, at **34%** of pace.',
+    '- **38** forecast SKUs are out of stock, 31 of them with 9 sellers.',
+    '- App orders fell **18%** week on week; web held up.',
+    '',
+    '## What the agents did',
+    `- **Forge** assigned 3 restock tasks ${via}, due Fri 21 Nov.`,
+    '- **Forge** emailed the 9 sellers a restock reminder.',
+    '- **Pixel** made 3 homepage banners in French and Arabic.',
+    `- **Quill** drafted the teaser for 2,900 dormant customers. ${mail}`,
+    '- **Scout** logged 12 competitor offers in `market-watch.md`.',
+    '',
+    '## Decisions for you',
+    '1. Approve the teaser email (Brevo, Thu 10:00).',
+    '2. Pick a banner. **B · Category deals** is recommended.',
+    '3. Give Beauty the homepage flash-deals slot until Friday?',
+    '',
+    '## Next',
+    '- Atlas emails a pulse every morning at 08:30 until 28 Nov.',
+    '- Forge re-checks stock every 2 hours and reassigns what’s still missing.',
+  ];
+}
 const ED = {lines: [], added: 0, removed: 0};
 function hl(src) {
   const re = /(\/\/.*$|\{\/\*.*?\*\/\})|("[^"]*"|'[^']*'|`[^`]*`)|(<\/?[A-Za-z][\w.]*|\/?>)|\b(import|from|export|default|function|return|const|let|type|await|async)\b|([A-Za-z_][\w-]*)(?==)|\b(\d+)\b|([A-Z][A-Za-z]+)(?=[:(])|([{}()[\];,.:])/g;
@@ -1689,23 +1775,39 @@ function hl(src) {
   }
   return out + esc(src.slice(last));
 }
+/* Markdown colouring for the report: headings, comments, list markers, bold, code and numbers. */
+function hlMd(src) {
+  if (/^#{1,6} /.test(src)) return `<span class="tk-k">${esc(src)}</span>`;
+  if (/^<!--|^_.*_$/.test(src)) return `<span class="tk-c">${esc(src)}</span>`;
+  const re = /(^\s*(?:[-*]|\d+\.)\s)|(\*\*[^*]+\*\*)|(`[^`]+`)|(\d[\d,.]*\s?%?)/g;
+  let out = '', last = 0, m;
+  while ((m = re.exec(src))) {
+    out += esc(src.slice(last, m.index));
+    const cls = m[1] ? 'p' : m[2] ? 'f' : m[3] ? 's' : 'n';
+    out += `<span class="tk-${cls}">${esc(m[0])}</span>`;
+    last = m.index + m[0].length;
+  }
+  return out + esc(src.slice(last));
+}
 function edReset() { ED.lines = ORIG.map(t => ({t, k:''})); ED.added = ED.removed = 0; edRender(); }
 function edRender() {
   const box = $('#ed'); if (!box) return;
-  box.innerHTML = ED.lines.map((l, n) => `<div class="ln ${l.k}"><span class="ln-n">${n + 1}</span><span class="ln-g"></span><span class="ln-c">${hl(l.t) || ' '}</span></div>`).join('');
+  box.innerHTML = ED.lines.map((l, n) => `<div class="ln ${l.k}"><span class="ln-n">${n + 1}</span><span class="ln-g"></span><span class="ln-c">${hlMd(l.t) || ' '}</span></div>`).join('');
 }
 function edLineEl(n) { return $('#ed') && $('#ed').children[n]; }
 async function edStream(r, onCount) {
   const chip = $('#edit-chip');
-  tabState('file:page.tsx', {dirty:true, editing:true, ac:'forge'});
+  tabState('file:report.md', {dirty:true, editing:true, ac:'atlas'});
   if (chip) chip.classList.add('on');
+  const cr = $('#ctx-report'); if (cr) cr.textContent = 'writing';
+  S.reportState = 'writing'; refreshLive('reports');
   const insertAt = async (idx, text) => {
     ED.lines.splice(idx, 0, {t:text, k:'add'}); ED.added++;
     const box = $('#ed');
     if (box) {
       const cur = box.querySelector('.ln.cur'); if (cur) cur.classList.remove('cur');
-      const div = document.createElement('div'); div.className = 'ln add new cur'; div.dataset.ac = 'forge';
-      div.innerHTML = `<span class="ln-n"></span><span class="ln-g"></span><span class="ln-c">${hl(text) || ' '}</span>`;
+      const div = document.createElement('div'); div.className = 'ln add new cur'; div.dataset.ac = 'atlas';
+      div.innerHTML = `<span class="ln-n"></span><span class="ln-g"></span><span class="ln-c">${hlMd(text) || ' '}</span>`;
       box.insertBefore(div, box.children[idx] || null);
       renumber();
     }
@@ -1714,33 +1816,34 @@ async function edStream(r, onCount) {
   };
   const renumber = () => { $$('#ed .ln-n').forEach((n, k) => n.textContent = k + 1); };
   const updChip = () => { const c = $('#edit-chip-n'); if (c) c.innerHTML = `<span class="a">+${ED.added}</span> <span class="r">−${ED.removed}</span>`; };
-  for (let k = 0; k < IMPORTS.length; k++) await insertAt(1 + k, IMPORTS[k]);
   await wait(300, r);
-  const todo = ED.lines.findIndex(l => l.t.includes('TODO'));
+  const todo = ED.lines.findIndex(l => l.t.startsWith('<!--'));
   ED.lines[todo].k = 'del'; ED.removed++;
   const tl = edLineEl(todo); if (tl) tl.className = 'ln del';
   updChip(); onCount && onCount();
   await wait(700, r);
   ED.lines.splice(todo, 1);
   if (tl) tl.remove(); renumber();
-  for (let k = 0; k < BODY.length; k++) await insertAt(todo + k, BODY[k]);
+  const body = reportBody();
+  for (let k = 0; k < body.length; k++) await insertAt(todo + k, body[k]);
   const cur = $('#ed .ln.cur'); if (cur) cur.classList.remove('cur');
   if (chip) chip.classList.remove('on');
-  tabState('file:page.tsx', {editing:false});
-  const cc = $('#ctx-changes'); if (cc) cc.textContent = '3 changed';
+  tabState('file:report.md', {editing:false});
+  if (cr) cr.textContent = `${ED.added} lines`;
+  S.reportState = 'written'; refreshLive('reports');
 }
 
 /* ── Chat ── */
 const CHAT_REPLY = {
-  atlas:{tool:null, blocks:[{p:"I'll fold that into TASK-142. **Forge** picks it up after the deploy, and I'll post here when it's done."}]},
-  scout:{tool:['globe','Searched web','6 results · 2.8s','Searching web'], blocks:[{p:'Six recent launches say the same thing: every one shows the product **moving** above the fold, never a static screenshot.'}, {p:'I can add links and a one-line summary for each to research.md.'}]},
-  sage:{tool:['doc','Analyzed 14 documents','3,842 entries · 4.1s','Analyzing 14 documents'], blocks:[{p:'Three patterns hold across the research:'}, {ol:['**Show agents working.** 9 of 12 pages lead with a live product view.', '**Name each job.** Pages that label who does what hold attention longer.', '**Price per seat.** 8 of 12 avoid charging for agents separately.']}]},
-  pixel:{tool:['image','Generated 3 variants','hero · 1440 × 900 · 6.2s','Generating variants'], blocks:[{p:'Variant **B (product-first)** fits the research best: the live agent activity strip sits right under the headline.'}]},
-  quill:{tool:['pen','Drafted 3 options','content/landing.md','Drafting options'], blocks:[{p:'Plainer option for the headline: **“Hand off the busywork. Keep the decisions.”** Want it swapped in?'}]},
-  forge:{tool:['terminal','Ran pnpm test','42 passed · 1.2s','Running pnpm test'], blocks:[{p:'Tests are green. The hero reads from `content.ts`, so copy changes won’t need a code review.'}, {code:'// app/(marketing)/content.ts\nexport const plans = [\n  { id: "team", seat: 18, agents: "unlimited" },\n];', file:'content.ts'}]},
+  atlas:{tool:null, blocks:[{p:"I'll fold that into TASK-142 and put it in tonight's readiness email. If it needs a person, I'll assign it in monday.com and tell you who has it."}]},
+  scout:{tool:['globe','Scanned 12 competitor pages','Black Friday offers · 2.8s','Scanning competitor pages'], blocks:[{p:'Most competitors open Black Friday a week early, on Friday 21. Phones and small appliances lead, up to **40% off**, and two run a countdown on their homepage.'}, {p:'I can flag the offers that undercut our best-sellers and add them to market-watch.md.'}]},
+  sage:{tool:['report','Queried 9 tables','certified · refreshed 00:16','Querying the lakehouse'], blocks:[{p:'Three things matter for Black Friday:'}, {ol:['**Pace.** GMV net is at 82% of the expected November pace.', '**Beauty is behind.** It runs at 34% of its Black Friday target, the furthest of the big categories.', '**Stock.** 38 forecast SKUs are out of stock, and 9 sellers hold 31 of them.']}, {p:'All figures are GMV net in MAD from certified tables.'}]},
+  pixel:{tool:['image','Generated 3 banners','homepage · FR · AR · 6.2s','Generating banners'], blocks:[{p:'Banner **B (category deals)** fits best: the four Black Friday categories sit above the fold. The Arabic version mirrors the layout right to left.'}]},
+  quill:{tool:['mail','Drafted 3 subject lines','brevo · draft','Drafting subject lines'], blocks:[{p:'Plainer subject for the teaser: **« Black Friday arrive : vos favoris jusqu’à -50 % »**. It stays a draft in Brevo until you approve the send.'}]},
+  forge:{tool:['terminal','Checked Odoo stock','38 SKUs · 9 sellers · 2.6s','Checking Odoo stock'], blocks:[{p:'9 sellers have Black Friday best-sellers out of stock. I assigned the restocks to their account managers in monday.com, due Friday, and emailed each seller a reminder.'}, {p:'I re-check every 2 hours and reassign anything still missing.'}]},
   ward:null,
 };
-const SAGE_FIND = [{p:'I read the 12 sources Scout collected plus 2 internal documents. Three patterns hold:'}, {ol:['**Show agents working.** 9 of 12 pages lead with a live product view instead of a static screenshot.', '**Name each job.** Pages that say who does what (research, design, code) keep visitors reading longer.', '**Price per seat, not per agent.** 8 of 12 avoid charging for agents separately, and customer feedback backs this 3 to 1.']}, {p:'Recommendations are in `recommendations.md`. I’ve passed them to **Pixel** and **Quill**.'}];
+const SAGE_FIND = [{p:'I checked November against the Black Friday forecast in 9 certified tables, refreshed at 00:16. Three risks:'}, {ol:['**Beauty is behind.** It runs at 34% of its expected pace, the furthest of the top categories.', '**38 forecast SKUs are out of stock.** 9 sellers hold 31 of them.', '**Dormant customers are the cheapest lift.** 2,900 bought before but not in the last 90 days.']}, {p:'I’ve sent the stock list to **Forge**, the segment to **Quill** and the category ranking to **Pixel**.'}];
 function chatHTML() {
   return `<div class="chat"><div class="chat-scroll" id="chat-scroll"><div class="chat-col" id="chat-col"></div></div>
     <form class="comp" id="comp"><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" placeholder="Ask Sage, or type @ to add context"></textarea>
@@ -1831,9 +1934,9 @@ async function streamReply(id, blocks, o = {}) {
   chatScroll();
 }
 function seedChat() {
-  chatCol().innerHTML = `<div class="chat-head">${ic('chat')}<b>Landing page</b><span>·</span><span>TASK-142</span><span class="sp"></span><span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span></div>`;
-  addUser('Build the landing page for Aurora’s launch. Use the research in /docs and ship a preview today.', '14:01');
-  staticAgent('atlas', [{p:'I’ll run this as **TASK-142** with five agents. Scout researches, Sage turns it into recommendations, Pixel and Quill handle design and copy, and Forge builds and deploys the preview.'}, {refs:`<button class="ref" data-open-tab="task:142">${ic('tasks')}TASK-142</button><button class="ref" data-open-tab="file:research.md">${ic('doc')}docs/</button>`}], {time:'14:01', thought:'Thought for 3s', thoughtText:'Research first so design and copy share the same evidence. Copy needs approval before it ships. Deploy needs a token; check secrets before the last step.'});
+  chatCol().innerHTML = `<div class="chat-head">${ic('chat')}<b>Black Friday</b><span>·</span><span>TASK-142</span><span class="sp"></span><span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span></div>`;
+  addUser('Black Friday is in 11 days. Check where we stand, fix what you can, and email the team a report tonight.', '14:01');
+  staticAgent('atlas', [{p:'I’ll run this as **TASK-142** with five agents. Scout checks competitors, Sage checks pace and stock against the forecast, Pixel and Quill prepare the banners and the teaser email, and Forge assigns restocks to the account managers. I’ll email the report when they’re done.'}, {refs:`<button class="ref" data-open-tab="task:142">${ic('tasks')}TASK-142</button><button class="ref" data-open-tab="file:market-watch.md">${ic('doc')}market-watch.md</button>`}], {time:'14:01', thought:'Thought for 3s', thoughtText:'Numbers first, so the banners and the email work from the same facts. Customer emails need approval before they go out. Forge needs monday.com to assign tasks; email is the fallback if nobody grants it.'});
   mountAvatars(chatCol());
 }
 function sendChat(text) {
@@ -1841,7 +1944,7 @@ function sendChat(text) {
   addUser(text);
   if (S.agents[id].presence === 'offline' || !CHAT_REPLY[id]) {
     const m = agentMsg(id); m.el.classList.add('answering');
-    buildWords(m.text, [{p:`${A[id].name} is offline until 18:00. Your message will be waiting.`}]).forEach(w => w.classList.add('on'));
+    buildWords(m.text, [{p:`${A[id].name} is offline until 07:00, when the concordance check runs. Your message will be waiting.`}]).forEach(w => w.classList.add('on'));
     return;
   }
   const c = CHAT_REPLY[id];
@@ -1849,25 +1952,29 @@ function sendChat(text) {
 }
 
 /* ── Views ── */
-const LIVE_VIEWS = new Set(['home','tasks','agents','activity','runs']);
+const LIVE_VIEWS = new Set(['home','tasks','agents','activity','runs','outbox','assigned','routines','reports']);
 function refreshLive(key) { const v = $(`.view[data-view="${key}"]`); if (v && v.classList.contains('on')) renderView(key, v); }
 function tbl(cols, rows) {
   const tpl = cols.map(c => c[1]).join(' ');
   return `<div class="tbl" role="table"><div class="tr th" role="row" style="grid-template-columns:${tpl}">${cols.map(c => `<span>${c[0]}</span>`).join('')}</div>${rows.map(r => `<${r.btn ? 'button' : 'div'} class="tr" role="row" style="grid-template-columns:${tpl}" ${r.attrs || ''}>${r.cells.map(c => `<span>${c}</span>`).join('')}</${r.btn ? 'button' : 'div'}>`).join('')}</div>`;
 }
 const who = (id, px = 16) => `<span class="who">${avatar(id, px)}<span>${A[id].name}</span></span>`;
+const MSTAT = {sent:['ok','Sent'], approval:['ask','Needs approval'], scheduled:['wait','Scheduled'], draft:['off','Draft']};
+const mailCell = s => { const [k, l] = MSTAT[s]; return `<span class="stw" data-p="${s === 'approval' ? 'approval' : ''}">${ind(k)}<span>${l}</span></span>`; };
+const autoCell = k => { const [i, l] = AUTO[k]; return `<span class="auto-l">${ind(i)}<span>${l}</span></span>`; };
+const agentOrYou = id => id === 'you' ? person('you', 16) : who(id);
 const statusCell = s => { const [k, l] = TSTAT[s]; return `<span class="stw" data-p="${s === 'blocked' ? 'blocked' : s === 'input' ? 'approval' : s === 'running' ? 'working' : ''}">${ind(k)}<span>${l}</span></span>`; };
 const VIEWS = {
   'chat': chatHTML,
-  'file:page.tsx': () => `<div class="ed-bar">${ic('code')}<span>app</span><span class="sl">›</span><span>(marketing)</span><span class="sl">›</span><b>page.tsx</b></div><div class="glass edit-chip" id="edit-chip" data-ac="forge">${avatar('forge', 18)}<span>Forge is editing</span><span class="mono" id="edit-chip-n"></span></div><div class="ed" id="ed"></div>`,
-  'file:research.md': () => `<article class="doc"><h1>Landing page research</h1><div class="doc-meta">${avatar('scout', 16)}<span>Written by Scout</span><span>·</span><span class="mono">docs/research.md</span><span>·</span><span>12 sources</span></div>
-    <h2>Summary</h2><p>Across twelve recent launches of AI workspace products, the pages that performed best showed the product working instead of describing it. Three patterns repeat.</p>
-    <ul><li><strong>Show agents working.</strong> 9 of 12 pages lead with a live product view above the fold.</li><li><strong>Name each job.</strong> Pages that say which agent does research, design or code keep visitors reading longer.</li><li><strong>Price per seat.</strong> 8 of 12 price per seat; none charge per agent.</li></ul>
-    <h2>What to avoid</h2><p>Abstract illustrations of “AI”, feature grids without a working example, and pricing that makes buyers count agents.</p>
-    <h2>Sources</h2><ul><li>How we rebuilt our homepage around the live product · lumen-labs.example</li><li>Pricing pages that convert: 2026 benchmark · northwind.example</li><li>Agents in the product tour: what worked · fabrikam.example</li><li>Design teardown: 30 AI tool landing pages · contoso.example</li><li>Why we stopped charging per agent · tailspin.example</li></ul></article>`,
+  'file:report.md': () => `<div class="ed-bar">${ic('report')}<span>reports</span><span class="sl">›</span><span>black-friday</span><span class="sl">›</span><b>bf-readiness.md</b></div><div class="glass edit-chip" id="edit-chip" data-ac="atlas">${avatar('atlas', 18)}<span>Atlas is writing</span><span class="mono" id="edit-chip-n"></span></div><div class="ed" id="ed"></div>`,
+  'file:market-watch.md': () => `<article class="doc"><h1>Black Friday market watch</h1><div class="doc-meta">${avatar('scout', 16)}<span>Written by Scout</span><span>·</span><span class="mono">docs/market-watch.md</span><span>·</span><span>12 sources</span></div>
+    <h2>Summary</h2><p>Most Moroccan competitors open Black Friday a week early this year and run it as a “Black Week”. The pages that look strongest show a few clear category deals instead of a wall of products.</p>
+    <ul><li><strong>Early start.</strong> Most open on Friday 21, a week before Black Friday.</li><li><strong>Phones and small appliances lead.</strong> Headline discounts reach 40%.</li><li><strong>Delivery is part of the offer.</strong> Free-delivery thresholds drop to 199 to 299 MAD.</li></ul>
+    <h2>What it means for Wasal</h2><ul><li>Open our own countdown by Thursday 20 so the teaser email lands first.</li><li>Lead with categories where sellers have stock, not with the deepest discount.</li><li>Say the delivery promise in the banner, in French and Arabic.</li></ul>
+    <h2>Sources</h2><ul><li>Black Week landing page · marketplace-a.example</li><li>Daily flash deals and countdown · marketplace-b.example</li><li>Delivery offer page · retailer-c.example</li><li>Top “Black Friday Maroc” reels · Instagram, 24 creators</li><li>Search trend for “black friday maroc” · Semrush</li></ul><p style="margin-top:18px;font-size:12px;color:var(--fg-4)">Demo content. Sources and figures are illustrative.</p></article>`,
   home: () => {
     const big = innerWidth < 620 ? 72 : 84;
-    const chips = [['globe','Research competitor pricing pages'],['image','Design an onboarding empty state'],['terminal','Fix the flaky checkout test'],['doc','Summarize this week’s customer feedback']];
+    const chips = [['report','Why did app orders drop this week?'],['people','Remind sellers with best-sellers out of stock'],['image','Make a Black Friday banner in Arabic'],['mail','Draft a win-back email for dormant customers']];
     return `<div class="home"><section class="hero" aria-label="Atlas">
       <div class="hero-stage" id="hero-stage">
         <div class="hero-aura" data-ac="atlas"></div>
@@ -1880,40 +1987,37 @@ const VIEWS = {
       <div class="hchips">${chips.map(([i, t]) => `<button type="button" class="hchip" data-suggest="${esc(t)}">${ic(i)}${esc(t)}</button>`).join('')}</div>
     </section><div id="home-live"></div></div>`;
   },
-  projects: () => `<div class="pg"><div class="pg-h"><div><h1>Projects</h1><p>3 projects in Aurora</p></div></div>${tbl([['Project','minmax(0,1fr)'],['Branch','150px'],['Agents','120px'],['Updated','110px']], [
-    {cells:['<span class="pri-c">aurora-web</span>', '<span class="mono">feat/landing</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
-    {cells:['<span class="pri-c">aurora-docs</span>', '<span class="mono">main</span>', `<span class="avs">${['quill','sage'].map(id => avatar(id, 16)).join('')}</span>`, '2 days ago']},
-    {cells:['<span class="pri-c">aurora-brand</span>', '<span class="mono">main</span>', `<span class="avs">${['pixel'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 21']}])}</div>`,
-  agents: () => `<div class="pg"><div class="pg-h"><div><h1>Agents</h1><p>7 agents · models and tools are set per agent</p></div><button class="btn" data-cmd="create-agent">${ic('plus')}Create agent</button></div>${tbl([['Agent','170px'],['State','130px'],['Now','minmax(0,1fr)'],['Model','100px'],['Tools','170px']], AGENTS.map(a => ({btn:true, attrs:`data-open-agent="${a.id}"`, cells:[`<span class="who">${avatar(a.id, 20)}<span class="pri-c">${a.name}</span><span style="color:var(--fg-4)">${a.role}</span></span>`, `<span class="stw" data-st="${a.id}"></span>`, `<span data-now="${a.id}"></span>`, `<span class="mono">${a.model}</span>`, a.tools.join(' · ')]})))}</div>`,
+  agents: () => `<div class="pg"><div class="pg-h"><div><h1>Agents</h1><p>7 agents · each has its own tools, limits and reports</p></div><button class="btn" data-cmd="create-agent">${ic('plus')}Create agent</button></div>${tbl([['Agent','170px'],['State','130px'],['Now','minmax(0,1fr)'],['Model','100px'],['Tools','170px']], AGENTS.map(a => ({btn:true, attrs:`data-open-agent="${a.id}"`, cells:[`<span class="who">${avatar(a.id, 20)}<span class="pri-c">${a.name}</span><span style="color:var(--fg-4)">${a.role}</span></span>`, `<span class="stw" data-st="${a.id}"></span>`, `<span data-now="${a.id}"></span>`, `<span class="mono">${a.model}</span>`, a.tools.join(' · ')]})))}</div>`,
   tasks: () => `<div class="pg"><div class="pg-h"><div><h1>Tasks</h1><p>${TASKS.length} tasks · ${TASKS.filter(t => t.status === 'running').length} running</p></div><button class="btn pri" data-cmd="new-task">${ic('plus')}New task</button></div>${tbl([['ID','86px'],['Task','minmax(0,1fr)'],['Owner','130px'],['Status','130px'],['Steps','64px'],['Updated','96px']], TASKS.map(t => ({btn:true, attrs:`data-open-tab="${t.key}"`, cells:[`<span class="mono">${t.id}</span>`, `<span class="pri-c">${esc(t.title)}</span>`, who(t.owner), statusCell(t.status), `<span class="mono">${t.done ?? (t.status === 'done' ? t.steps : 0)}/${t.steps}</span>`, t.updated]})))}</div>`,
-  workflows: () => `<div class="pg"><div class="pg-h"><div><h1>Workflows</h1><p>Reusable pipelines. Running one creates a task.</p></div></div>${tbl([['Workflow','minmax(0,1fr)'],['Agents','130px'],['Steps','64px'],['Last run','110px'],['','72px']], [
-    {cells:['<span class="pri-c">Landing page pipeline</span>', `<span class="avs">${TEAM.slice(0, 6).map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">6</span>', 'Running', '<button class="btn" data-scene="run">Run</button>']},
-    {cells:['<span class="pri-c">Weekly research digest</span>', `<span class="avs">${['scout','sage'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">3</span>', 'Yesterday', '<button class="btn" data-cmd="new-task">Run</button>']},
-    {cells:['<span class="pri-c">Release notes</span>', `<span class="avs">${['quill','forge'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">4</span>', 'Sep 24', '<button class="btn" data-cmd="new-task">Run</button>']},
-    {cells:['<span class="pri-c">Security review</span>', `<span class="avs">${['ward'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">5</span>', 'Sep 25', '<button class="btn" data-cmd="new-task">Run</button>']}])}</div>`,
-  files: () => `<div class="pg"><div class="pg-h"><div><h1>Files</h1><p>aurora-web · feat/landing</p></div></div>${tbl([['Path','minmax(0,1fr)'],['Changed by','130px'],['Size','80px']], [
-    {btn:true, attrs:'data-open-tab="file:page.tsx"', cells:[`<span class="who">${ic('code')}<span class="pri-c">app/(marketing)/page.tsx</span></span>`, who('forge'), '<span class="mono">1.9 KB</span>']},
-    {btn:true, attrs:'data-open-tab="file:research.md"', cells:[`<span class="who">${ic('doc')}<span class="pri-c">docs/research.md</span></span>`, who('scout'), '<span class="mono">14 KB</span>']},
-    {cells:[`<span class="who">${ic('doc')}<span>docs/recommendations.md</span></span>`, who('sage'), '<span class="mono">4 KB</span>']},
-    {cells:[`<span class="who">${ic('doc')}<span>content/landing.md</span></span>`, who('quill'), '<span class="mono">2 KB</span>']},
-    {cells:[`<span class="who">${ic('image')}<span>design/hero/variant-b.png</span></span>`, who('pixel'), '<span class="mono">812 KB</span>']},
-    {cells:[`<span class="who">${ic('code')}<span>components/marketing/index.ts</span></span>`, '<span style="color:var(--fg-4)">—</span>', '<span class="mono">3 KB</span>']}])}</div>`,
+  routines: () => `<div class="pg"><div class="pg-h"><div><h1>Routines</h1><p>Agents run these on their own and deliver the result. Customer sends always wait for you.</p></div></div>${tbl([['Routine','minmax(0,1fr)'],['Agents','90px'],['Schedule','150px'],['Delivers','minmax(0,1fr)'],['Autonomy','190px'],['Next run','120px'],['','64px']], ROUTINES.map((r, k) => ({cells:[`<span class="pri-c">${esc(r.name)}</span>${r.isNew ? ' <span class="mono" style="color:var(--ok)">new</span>' : ''}`, `<span class="avs">${[r.agent, ...r.with].map(id => avatar(id, 16)).join('')}</span>`, esc(r.when), `<span style="color:var(--fg-3)">${esc(r.delivers)}</span>`, autoCell(r.auto), `<span class="mono">${esc(r.next)}</span>`, r.agent === 'ward' ? '' : `<button class="btn" data-routine="${k}">Run</button>`]})))}</div>`,
+  reports: () => `<div class="pg"><div class="pg-h"><div><h1>Reports</h1><p>What the agents wrote, and who they sent it to</p></div></div>${tbl([['Report','minmax(0,1fr)'],['By','120px'],['Sent to','170px'],['When','120px']], [
+    {btn:true, attrs:'data-open-tab="file:report.md"', cells:['<span class="pri-c">Black Friday readiness · J-11</span>', who('atlas'), 'Marketing team (6)', S.reportState === 'sent' ? `Today ${S.reportAt}` : S.reportState === 'writing' ? '<span class="shim">Writing…</span>' : S.reportState === 'written' ? 'Sending…' : '<span style="color:var(--fg-4)">Tonight</span>']},
+    {btn:true, attrs:'data-open-tab="file:market-watch.md"', cells:['<span class="pri-c">Black Friday market watch</span>', who('scout'), 'Atlas', S.watchDone ? 'Today' : '<span style="color:var(--fg-4)">In progress</span>']},
+    {cells:['<span class="pri-c">Daily pulse · dimanche 16 nov.</span>', who('atlas'), 'Marketing team (6)', 'Today 08:30']},
+    {cells:['<span class="pri-c">Concordance check · 38 indicators</span>', who('ward'), 'Data team', 'Today 07:04']},
+    {cells:['<span class="pri-c">Homepage performance · S46</span>', who('sage'), 'Marketing team (6)', 'Yesterday']},
+    {cells:['<span class="pri-c">Weekly business review · S46</span>', who('sage'), 'Management (4)', 'Mon 10 Nov']}])}</div>`,
+  outbox: () => `<div class="pg"><div class="pg-h"><div><h1>Outbox</h1><p>Every email the agents sent or want to send. Customer emails wait here for your approval.</p></div></div>${tbl([['Subject','minmax(0,1fr)'],['To','170px'],['From','110px'],['Via','70px'],['Status','150px'],['When','80px'],['','92px']], OUTBOX.map(m => ({cells:[`<span class="pri-c">${esc(m.subject)}</span>`, esc(m.to), who(m.agent), `<span class="mono">${m.ch}</span>`, mailCell(m.status), `<span class="mono">${esc(m.when || m.t)}</span>`, m.status === 'approval' ? `<button class="btn pri" data-approve-mail="${m.id}">Approve</button>` : '']})))}</div>`,
+  assigned: () => `<div class="pg"><div class="pg-h"><div><h1>Assigned</h1><p>Work the agents handed to people, with a due date and a follow-up</p></div></div>${tbl([['Task','minmax(0,1fr)'],['Assignee','150px'],['Assigned by','120px'],['Due','80px'],['Via','100px'],['Status','90px']], ASSIGNMENTS.map(a => ({cells:[`<span class="pri-c">${esc(a.task)}</span>`, person(a.who, 16), agentOrYou(a.by), `<span class="mono">${esc(a.due)}</span>`, `<span class="mono">${esc(a.src)}</span>`, a.status === 'done' ? `<span class="stw">${ind('ok')}<span>Done</span></span>` : `<span class="stw" data-p="working">${ind('wait')}<span>Open</span></span>`]})))}</div>`,
   conversations: () => `<div class="pg"><div class="pg-h"><div><h1>Conversations</h1><p>Threads with agents in this workspace</p></div></div>${tbl([['Thread','minmax(0,1fr)'],['With','150px'],['Updated','96px']], [
-    {btn:true, attrs:'data-open-tab="chat"', cells:['<span class="pri-c">Landing page</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
-    {cells:['<span class="pri-c">Q3 signup numbers</span>', `<span class="avs">${['atlas','forge'].map(id => avatar(id, 16)).join('')}</span>`, 'Yesterday']},
-    {cells:['<span class="pri-c">Brand refresh feedback</span>', `<span class="avs">${['pixel','quill'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 23']}])}</div>`,
+    {btn:true, attrs:'data-open-tab="chat"', cells:['<span class="pri-c">Black Friday</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
+    {cells:['<span class="pri-c">Why did app orders dip on Tuesday?</span>', `<span class="avs">${['atlas','sage'].map(id => avatar(id, 16)).join('')}</span>`, 'Yesterday']},
+    {cells:['<span class="pri-c">Homepage banner feedback</span>', `<span class="avs">${['pixel','quill'].map(id => avatar(id, 16)).join('')}</span>`, 'Nov 12']}])}</div>`,
   runs: () => `<div class="pg"><div class="pg-h"><div><h1>Runs</h1><p>Every workflow and task execution</p></div></div>${tbl([['Run','72px'],['Task','minmax(0,1fr)'],['Status','130px'],['Duration','84px'],['Tokens','84px']], [
-    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Build the Aurora landing page</span>', statusCell(TASKS[0].status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
-    {cells:['<span class="mono">#217</span>', 'Weekly competitor digest', statusCell('done'), '<span class="mono">3:12</span>', '<span class="mono">31.4k</span>']},
-    {cells:['<span class="mono">#216</span>', 'Migrate auth to OAuth', statusCell('done'), '<span class="mono">18:40</span>', '<span class="mono">212k</span>']},
-    {cells:['<span class="mono">#215</span>', 'Onboarding illustrations', statusCell('done'), '<span class="mono">9:05</span>', '<span class="mono">64.0k</span>']}])}</div>`,
-  activity: () => `<div class="pg"><div class="pg-h"><div><h1>Activity</h1><p>Everything agents did in Aurora today</p></div></div>${ACTIVITY.length ? tbl([['Time','60px'],['Agent','130px'],['Event','minmax(0,1fr)']], ACTIVITY.slice().reverse().map(e => ({cells:[`<span class="mono">${e.t}</span>`, e.agent === 'you' ? 'You' : who(e.agent), esc(e.text)]}))) : '<p class="plan-empty">No activity yet today.</p>'}</div>`,
+    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Black Friday readiness check</span>', statusCell(TASKS.find(t => t.key === 'task:142').status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
+    {cells:['<span class="mono">#217</span>', 'Daily pulse · routine', statusCell('done'), '<span class="mono">1:48</span>', '<span class="mono">22.1k</span>']},
+    {cells:['<span class="mono">#216</span>', 'Concordance check · routine', statusCell('done'), '<span class="mono">0:52</span>', '<span class="mono">9.6k</span>']},
+    {cells:['<span class="mono">#215</span>', 'Homepage performance · routine', statusCell('done'), '<span class="mono">2:31</span>', '<span class="mono">31.0k</span>']}])}</div>`,
+  activity: () => `<div class="pg"><div class="pg-h"><div><h1>Activity</h1><p>Everything agents did at Wasal today</p></div></div>${ACTIVITY.length ? tbl([['Time','60px'],['Agent','130px'],['Event','minmax(0,1fr)']], ACTIVITY.slice().reverse().map(e => ({cells:[`<span class="mono">${e.t}</span>`, e.agent === 'you' ? 'You' : who(e.agent), esc(e.text)]}))) : '<p class="plan-empty">No activity yet today.</p>'}</div>`,
   settings: () => `<div class="pg" style="max-width:720px"><div class="pg-h"><div><h1>Settings</h1><p>Workspace preferences</p></div></div>
     <div class="set-row"><div><b>Theme</b><span>Light, dark, or match your system setting. Saved in this browser.</span></div><div class="segc" id="set-theme" role="group" aria-label="Theme">${[['light','Light'],['dark','Dark'],['system','System']].map(([k, l]) => `<button aria-pressed="${THEME.pref === k}" data-theme-pref="${k}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div><b>Reduce motion</b><span>Stops floating, bouncing and moving indicators. States still change and stay readable.</span></div><button class="tog" role="switch" id="set-rm" aria-checked="${M.reduced}" aria-label="Reduce motion"></button></div>
     <div class="set-row"><div><b>Default model</b><span>Used by new agents and chats unless an agent sets its own.</span></div><button class="btn" data-cmd="switch-model">${ic('cpu')}<span data-model-l>${S.model}</span>${ic('chevD')}</button></div>
-    <div class="set-row"><div><b>Agent autonomy</b><span>What agents may do without asking you first.</span></div><div class="segc" id="set-auto"><button aria-pressed="${S.autonomy === 'ask'}" data-auto="ask">Ask first</button><button aria-pressed="${S.autonomy === 'safe'}" data-auto="safe">Safe actions</button><button aria-pressed="${S.autonomy === 'full'}" data-auto="full">Full</button></div></div>
-    <div class="set-row"><div><b>Secrets</b><span>DEPLOY_TOKEN, ANALYTICS_KEY · granted per agent</span></div><button class="btn">${ic('key')}Manage</button></div></div>`,
+    <div class="set-row"><div><b>Agent autonomy</b><span>What agents may do without asking you first. Emails to customers always wait for approval.</span></div><div class="segc" id="set-auto"><button aria-pressed="${S.autonomy === 'ask'}" data-auto="ask">Ask first</button><button aria-pressed="${S.autonomy === 'safe'}" data-auto="safe">Safe actions</button><button aria-pressed="${S.autonomy === 'full'}" data-auto="full">Full</button></div></div>
+    <div class="set-row"><div><b>Reports</b><span>Daily pulse at 08:30, weekly review on Monday 09:00, both to the marketing team.</span></div><button class="btn">${ic('mail')}Recipients</button></div>
+    <div class="set-row"><div><b>Quiet hours</b><span>No emails or pings to people between 20:00 and 08:00, Morocco time. Agents keep working and queue what they send.</span></div><button class="tog" role="switch" aria-checked="true" aria-label="Quiet hours" data-quiet></button></div>
+    <div class="set-row"><div><b>If nobody answers</b><span>After 20 seconds in this demo (2 hours in real use): drafts are parked, never sent, and blocked steps use a fallback such as email.</span></div><span class="mono" style="color:var(--fg-3)">Park and fall back</span></div>
+    <div class="set-row"><div><b>Connectors</b><span>Wasal lakehouse (read-only), Gmail, Brevo, monday.com, Canva, Odoo · granted per agent</span></div><button class="btn">${ic('key')}Manage</button></div></div>`,
   '__empty': () => `<div class="empty">${avatar('atlas', 96)}<h2>No open tabs</h2><p><span class="kbd-hint">Press <kbd>${MOD.trim()}</kbd> <kbd>K</kbd> to open</span><span class="touch-hint">Tap search to open</span> a task, a file or an agent.</p></div>`,
 };
 
@@ -1965,11 +2069,12 @@ function poke() {
 }
 function routeAgent(text) {
   const s = text.toLowerCase();
-  if (/research|competitor|find|search|sources|compare/.test(s)) return 'scout';
-  if (/analy|summar|feedback|data|insight|metric/.test(s)) return 'sage';
-  if (/design|visual|illustrat|layout|mock|empty state|icon|hero/.test(s)) return 'pixel';
-  if (/write|copy|headline|blog|release notes|announce/.test(s)) return 'quill';
-  return 'forge';
+  if (/concurren|competitor|market watch|instagram|tiktok|trend|tendance|seo|semrush/.test(s)) return 'scout';
+  if (/banni|banner|visuel|visual|design|creative|créa|homepage|image|story|arab/.test(s)) return 'pixel';
+  if (/e-?mail|campagne|campaign|push|sms|newsletter|copy|texte|win-?back|brevo/.test(s)) return 'quill';
+  if (/stock|rupture|vendeur|seller|catalogue|catalog|sku|odoo|restock|livraison|delivery/.test(s)) return 'forge';
+  if (/gmv|nmv|vente|sales|order|commande|analy|chiffre|kpi|pace|cohort|churn|data|donn|why|pourquoi|drop|baisse|conversion/.test(s)) return 'sage';
+  return 'atlas';
 }
 function homeSubmit() {
   const inp = $('#home-in'), v = inp.value.trim();
@@ -1987,7 +2092,19 @@ function renderHomeLive() {
   const box = $('#home-live'); if (!box) return;
   const need = TEAM.filter(id => ATTN.has(S.agents[id].presence));
   const recent = ACTIVITY.slice(-5).reverse();
-  box.innerHTML = `${need.length ? `<div class="pg-sec"><div class="sh"><span>Needs you</span><span class="mono">${need.length}</span></div>${tbl([['Agent','150px'],['Waiting on','minmax(0,1fr)'],['','110px']], need.map(id => ({cells:[who(id), `<span data-now="${id}"></span>`, S.agents[id].presence === 'blocked' ? '<button class="btn warn" data-resolve>Resolve</button>' : '<button class="btn" data-approve>Approve</button>']})))}</div>` : ''}
+  const today = m => /^\d\d:\d\d$/.test(m.t);
+  const sent = OUTBOX.filter(m => today(m) && m.status !== 'approval' && m.status !== 'draft').length;
+  const toApprove = OUTBOX.filter(m => m.status === 'approval').length;
+  const open = ASSIGNMENTS.filter(a => a.status === 'open').length;
+  const rows = need.map(id => ({cells:[who(id), `<span data-now="${id}"></span>`, S.agents[id].presence === 'blocked' ? '<button class="btn warn" data-resolve>Resolve</button>' : '<button class="btn" data-approve>Approve</button>']}));
+  if (S.parked) rows.push({cells:[who(S.parked.agent), 'Teaser email parked as a draft in the Outbox', '<button class="btn" data-approve>Approve</button>']});
+  box.innerHTML = `<div class="kpis" role="group" aria-label="Delivered today">
+      <button class="kpi" data-open-tab="outbox"><b>${sent}</b><span>Emails sent today</span></button>
+      <button class="kpi" data-open-tab="assigned"><b>${open}</b><span>Open tasks for people</span></button>
+      <button class="kpi" data-open-tab="routines"><b>${ROUTINES.length}</b><span>Routines on autopilot</span></button>
+      <button class="kpi${toApprove ? ' attn' : ''}" data-open-tab="outbox"><b>${toApprove}</b><span>Waiting for your approval</span></button>
+    </div>
+    ${rows.length ? `<div class="pg-sec"><div class="sh"><span>Needs you</span><span class="mono">${rows.length}</span></div>${tbl([['Agent','150px'],['Waiting on','minmax(0,1fr)'],['','110px']], rows)}</div>` : ''}
     <div class="pg-sec"><div class="sh"><span>Tasks</span><span class="sh-tools"><button data-open-tab="tasks">View all</button></span></div>${tbl([['Task','minmax(0,1fr)'],['Owner','130px'],['Status','130px'],['Steps','64px']], TASKS.slice(0, 4).map(t => ({btn:true, attrs:`data-open-tab="${t.key}"`, cells:[`<span class="pri-c">${esc(t.title)}</span>`, who(t.owner), statusCell(t.status), `<span class="mono">${t.done ?? (t.status === 'done' ? t.steps : 0)}/${t.steps}</span>`]})))}</div>
     <div class="pg-sec"><div class="sh"><span>Recent activity</span><span class="sh-tools"><button data-open-tab="activity">View all</button></span></div>${recent.length ? recent.map(e => `<div class="act-row"><span class="mono">${e.t}</span>${e.agent === 'you' ? '<span class="m-me" style="width:18px;height:18px;font-size:7.5px">SD</span>' : avatar(e.agent, 18)}<span>${esc(e.text)}</span></div>`).join('') : '<p class="plan-empty">Nothing yet today.</p>'}</div>`;
   mountAvatars(box); paintAll(box);
@@ -2006,7 +2123,7 @@ function openCard(id) {
   el.innerHTML = `<button class="ib ac-x" id="ac-x" aria-label="Close">${ic('x')}</button>
     <div class="ac-h">${avatar(id, 64)}<div><h2>${a.name}</h2><p>${a.role} agent</p><div class="stw" data-st="${id}"></div></div></div>
     <div class="ac-sec"><div class="lab">Now</div><p class="ac-now" data-now="${id}"></p></div>
-    <div class="ac-sec"><dl class="kv"><dt>Model</dt><dd>${a.model}</dd><dt>Tools</dt><dd>${a.tools.join(' · ')}</dd><dt>Permissions</dt><dd title="${esc(a.perm)}">${esc(a.perm)}</dd><dt>This week</dt><dd>${a.week} tasks</dd></dl></div>
+    <div class="ac-sec"><dl class="kv"><dt>Model</dt><dd>${a.model}</dd><dt>Tools</dt><dd>${a.tools.join(' · ')}</dd><dt>Permissions</dt><dd title="${esc(a.perm)}">${esc(a.perm)}</dd><dt>Delivers</dt><dd title="${esc(a.delivers)}">${esc(a.delivers)}</dd><dt>This week</dt><dd>${a.week} tasks</dd></dl></div>
     <div class="ac-sec"><div class="lab">Recent</div><ol class="ac-recent" id="ac-recent"></ol></div>
     <div class="ac-sec"><div class="lab">Preview a state</div><div class="ac-states" id="ac-states">${STATE_CHIPS.map(([s, l]) => `<button data-set-state="${s}" data-ac="${id}" aria-pressed="false">${ind(s === 'tool' ? TOOLS[a.tool].ind : PRES_IND[s])}${l}</button>`).join('')}</div></div>
     <div class="ac-f"><button class="btn" data-msg="${id}">${ic('chat')}Message</button><button class="btn pri" data-assign="${id}" ${id === 'ward' ? 'disabled' : ''}>${ic('plus')}Assign task</button></div>`;
@@ -2025,7 +2142,7 @@ function syncCard() {
 function closeCard() { CARD.id = null; $('#acard').dataset.open = 'false'; }
 function previewState(id, s) {
   if (s === 'complete') { React.celebrate(id); return setAgent(id, {presence:'complete', label:'Completed'}); }
-  if (s === 'blocked') { React.jolt(id); return setAgent(id, {presence:'blocked', label:'Blocked — missing API key'}); }
+  if (s === 'blocked') { React.jolt(id); return setAgent(id, {presence:'blocked', label:'Blocked · missing a connector'}); }
   if (s === 'tool') { React.launch(id); return setAgent(id, {presence:'tool', tool:A[id].tool}); }
   if (ACTIVE.has(s) && !ACTIVE.has(S.agents[id].presence)) React.launch(id);
   setAgent(id, {presence:s, label: s === 'approval' ? 'Waiting for your approval' : null});
@@ -2081,20 +2198,22 @@ const PAL = {page:'root', items:[], idx:0, open:false, prev:null};
 function palItems(page) {
   if (page === 'agents') return AGENTS.map(a => ({g:'Agents', l:a.name, sub:a.role, av:a.id, st:a.id, run:() => openCard(a.id)}));
   if (page === 'models') return ['Opus 5.5','Sonnet 5.5','Haiku 4.5'].map(mdl => ({g:'Models', l:mdl, icon:'cpu', h: S.model === mdl ? 'Current' : '', run:() => setModel(mdl)}));
-  if (page === 'files') return [['file:page.tsx','app/(marketing)/page.tsx','code'],['file:research.md','docs/research.md','doc'],['','docs/recommendations.md','doc'],['','content/landing.md','doc'],['','components/marketing/index.ts','code']].map(([k, l, i]) => ({g:'Files', l, icon:i, mono:true, run:() => k ? openTab(k) : toast({html:`<b>${esc(l)}</b> is read-only in this preview`, ms:2200, icon:'file'})}));
-  if (page === 'workflows') return [['Landing page pipeline','6 steps',() => play('run')],['Weekly research digest','3 steps',() => openNewTask('scout')],['Release notes','4 steps',() => openNewTask('quill')]].map(([l, h, run]) => ({g:'Workflows', l, icon:'flow', h, run}));
+  if (page === 'files') return [['file:report.md','reports/bf-readiness.md','report'],['file:market-watch.md','docs/market-watch.md','doc'],['','exports/oos-skus.csv','file'],['','design/bf-home/banner-b.png','image'],['','brevo/bf-teaser.html','mail']].map(([k, l, i]) => ({g:'Files', l, icon:i, mono:true, run:() => k ? openTab(k) : toast({html:`<b>${esc(l)}</b> is read-only in this preview`, ms:2200, icon:'file'})}));
+  if (page === 'workflows') return [{l:'Black Friday readiness check', h:'6 steps', run:() => play('run')}, ...ROUTINES.filter(r => r.agent !== 'ward').map(r => ({l:r.name, h:r.when, run:() => runRoutine(ROUTINES.indexOf(r))}))].map(o => ({g:'Routines', icon:'clock', ...o}));
   return [
     {g:'Suggestions', l:'New Task', icon:'plus', kbd:['N'], run:() => openNewTask()},
     {g:'Suggestions', l:'Open Agent', icon:'agent', page:'agents'},
-    {g:'Suggestions', l:'Run Workflow', icon:'flow', page:'workflows'},
-    {g:'Suggestions', l:'Search Project', icon:'search', h:'aurora-web', run:() => openTab('files')},
+    {g:'Suggestions', l:'Run Routine', icon:'clock', page:'workflows'},
+    {g:'Suggestions', l:'Open Outbox', icon:'mail', run:() => openTab('outbox')},
+    {g:'Suggestions', l:'Open Assigned', icon:'people', run:() => openTab('assigned')},
     {g:'Suggestions', l:'Search Files', icon:'file', page:'files'},
     {g:'Suggestions', l:'Create Agent', icon:'sparkle', run:() => toast({html:'<b>Create agent</b> opens the agent builder', sub:'Not part of this prototype.', ms:2400, icon:'sparkle'})},
     {g:'Suggestions', l:'Switch Model', icon:'cpu', h:S.model, page:'models'},
     {g:'Suggestions', l:'Open Settings', icon:'settings', kbd:[MOD.trim(), ','], run:() => openTab('settings')},
-    {g:'Navigate', l:'Go to Task · Build landing page', icon:'tasks', run:() => openTab('task:142')},
+    {g:'Navigate', l:'Go to Task · Black Friday readiness', icon:'tasks', run:() => openTab('task:142')},
+    {g:'Navigate', l:'Go to Report · bf-readiness.md', icon:'report', run:() => openTab('file:report.md')},
     {g:'Navigate', l:'Go to Chat', icon:'chat', run:() => openTab('chat')},
-    {g:'Navigate', l:'Toggle Terminal', icon:'panelB', kbd:[MOD.trim(), 'J'], run:toggleBP},
+    {g:'Navigate', l:'Toggle Console', icon:'panelB', kbd:[MOD.trim(), 'J'], run:toggleBP},
     {g:'Navigate', l:'Toggle Inspector', icon:'panelR', kbd:[MOD.trim(), 'I'], run:toggleInsp},
     {g:'Navigate', l:'Toggle Sidebar', icon:'sidebar', kbd:[MOD.trim(), 'B'], run:toggleNav},
     {g:'Navigate', l:M.reduced ? 'Use full motion' : 'Reduce motion', icon:'motion', run:() => setReduced(!M.reduced, true)},
@@ -2111,7 +2230,7 @@ function openPalette(page = 'root', q = '') {
 }
 function setPalPage(page, q = '', stagger) {
   PAL.page = page;
-  const names = {agents:'Agents', models:'Models', files:'Files', workflows:'Workflows'};
+  const names = {agents:'Agents', models:'Models', files:'Files', workflows:'Routines'};
   $('#pal-crumb').innerHTML = page === 'root' ? '' : `<span class="crumbchip">${esc(names[page])}</span>`;
   $('#pal-back').style.display = page === 'root' ? 'none' : '';
   const inp = $('#pal-q'); inp.value = q;
@@ -2171,11 +2290,11 @@ function openDialog(html, focusSel) {
   setTimeout(() => { const f = focusSel && $(focusSel); if (f) f.focus(); }, 60);
 }
 function closeDialog() { $('#dlg-ov').dataset.open = 'false'; }
-let ntAgent = 'forge';
+let ntAgent = 'sage';
 function openNewTask(id) {
   if (id && S.agents[id].presence !== 'offline') ntAgent = id;
-  openDialog(`<form id="nt-form"><div class="dlg-h"><div><h2>New task</h2><p>Describe the outcome. The agent plans the steps and asks before anything irreversible.</p></div></div>
-    <div class="dlg-b"><div class="fld"><label for="nt-title">Task</label><input id="nt-title" value="Audit the pricing page for accessibility issues" autocomplete="off"></div>
+  openDialog(`<form id="nt-form"><div class="dlg-h"><div><h2>New task</h2><p>Describe the outcome. The agent plans the steps, delivers by email or as tasks for people, and asks before anything goes to customers.</p></div></div>
+    <div class="dlg-b"><div class="fld"><label for="nt-title">Task</label><input id="nt-title" value="Why did app orders drop this week?" autocomplete="off"></div>
     <div class="fld"><span class="lab">Assign to</span><div class="apick" role="radiogroup" aria-label="Agent">${AGENTS.map(a => { const off = S.agents[a.id].presence === 'offline'; const busy = ACTIVE.has(S.agents[a.id].presence); return `<button type="button" role="radio" data-nt="${a.id}" aria-checked="${a.id === ntAgent}" ${off ? 'disabled' : ''}>${avatar(a.id, 18)}<span>${a.name}</span>${off ? '<small>Offline</small>' : busy ? '<small>Busy</small>' : ''}</button>`; }).join('')}</div></div></div>
     <div class="dlg-f"><button type="button" class="btn" data-dismiss>Cancel</button><button type="submit" class="btn pri" id="nt-go">Assign to ${A[ntAgent].name}</button></div></form>`, '#nt-title');
 }
@@ -2187,8 +2306,8 @@ function pickNT(id) {
 }
 function openResolve() {
   if (!S.blocked) return;
-  openDialog(`<div class="dlg-h">${avatar('forge', 36)}<div><h2>Forge needs a deploy token</h2><p>The preview deploy stopped because <code>DEPLOY_TOKEN</code> isn’t set. Give Forge access to the workspace secret and it will retry the deploy.</p></div></div>
-    <div class="dlg-b"><div class="opt"><span class="opt-ic">${ic('key')}</span><div><b>Workspace secret · DEPLOY_TOKEN</b><span>Added by you on Sep 12 · preview environments only</span></div></div></div>
+  openDialog(`<div class="dlg-h">${avatar('forge', 36)}<div><h2>Forge needs monday.com</h2><p>Forge found the restocks but can’t create them on the <code>BF restocks</code> board. Grant it the workspace’s monday.com connection and it assigns them to the account managers. If you skip this, it emails them the list instead.</p></div></div>
+    <div class="dlg-b"><div class="opt"><span class="opt-ic">${ic('people')}</span><div><b>Connector · monday.com</b><span>Connected by you on Nov 3 · boards: BF restocks, Sellers</span></div></div></div>
     <div class="dlg-f"><button class="btn" data-dismiss>Not now</button><button class="btn pri" id="grant">Grant access and retry</button></div>`, '#grant');
 }
 
@@ -2217,7 +2336,8 @@ const wait = (ms, run) => new Promise((res, rej) => setTimeout(() => (run != nul
 const waitFor = (fn, run) => new Promise((res, rej) => { const iv = setInterval(() => { if (run != null && run !== RUN) { clearInterval(iv); rej(CANCEL); } else if (fn()) { clearInterval(iv); res(); } }, 120); });
 const later = (fn, ms, run) => setTimeout(() => { if (run == null || run === RUN) fn(); }, ms);
 const guard = p => p.catch(e => { if (e !== CANCEL) console.error(e); });
-/* Demo fallback: a blocked deploy or a pending approval nobody answers resolves itself so the run can finish. */
+/* If nobody answers within this time, agents don't stall: a customer email is parked as a draft (never sent),
+   and a missing connector falls back to email. 20 seconds keeps the demo moving; in real use it would be hours. */
 const AUTO_RESOLVE_MS = 20000;
 
 /* Assignment reaction: idle → anticipation → small lift + surprise → status appears → work */
@@ -2239,25 +2359,27 @@ async function handoff(tv, from, to, what, meta, r, note) {
   await wait(260, r);
 }
 const PLAN = [
-  {title:'Research competitor landing pages', agent:'scout'},
-  {title:'Synthesize findings into recommendations', agent:'sage'},
-  {title:'Generate hero and pricing designs', agent:'pixel'},
-  {title:'Write headline and page copy', agent:'quill'},
-  {title:'Implement page in Next.js', agent:'forge'},
-  {title:'Run tests and deploy preview', agent:'forge'},
+  {title:'Scan competitor Black Friday offers', agent:'scout'},
+  {title:'Check pace and stock against the forecast', agent:'sage'},
+  {title:'Design homepage banners in French and Arabic', agent:'pixel'},
+  {title:'Draft the teaser email for dormant customers', agent:'quill'},
+  {title:'Assign restocks to account managers', agent:'forge'},
+  {title:'Write and email the readiness report', agent:'atlas'},
 ];
 let MAIN = null;
 function resetWorld() {
-  S.chatRun++; S.blocked = null; S.approval = null;
+  S.chatRun++; S.blocked = null; S.approval = null; S.parked = null; S.viaEmail = false;
+  S.reportState = ''; S.reportAt = ''; S.watchDone = false;
   closeDialog(); dropToasts('blocked'); dropToasts('approval');
   for (const a of AGENTS) setAgent(a.id, {presence: a.id === 'ward' ? 'offline' : 'available'});
   MAIN.clear(); MAIN.status('queued');
-  Term.clear(); setShellWho(false);
-  edReset(); tabState('file:page.tsx', {dirty:false, editing:false}); tabState('file:research.md', {dirty:false});
+  Term.clear(); setShellWho(null);
+  edReset(); tabState('file:report.md', {dirty:false, editing:false}); tabState('file:market-watch.md', {dirty:false});
   const cs = $('#ctx-secret'); if (cs) { cs.textContent = 'not granted'; cs.className = ''; }
-  const cc = $('#ctx-changes'); if (cc) cc.textContent = '0 changed';
+  const cr = $('#ctx-report'); if (cr) cr.textContent = 'not started';
   S.runStart = 0; S.runEnd = 0; S.tokens = 0;
-  TASKS[0].done = 0;
+  TASKS.find(t => t.key === 'task:142').done = 0;
+  seedDeliveries(); deliveredChanged();
 }
 async function runMain(r) {
   resetWorld();
@@ -2273,99 +2395,128 @@ async function runMain(r) {
   p0.done({verb:'Planned task', meta:'6 steps', detail:X.plan(PLAN)});
   setAgent('atlas', {presence:'working', label:'Coordinating 5 agents'});
 
+  /* 1 · Scout: what competitors are doing */
   T.step(0, 'running');
   await handoff(T, 'atlas', 'scout', 'brief.md', null, r);
-  await taskStart('scout', {presence:'tool', tool:'browse', label:'Searching the web'}, r);
+  await taskStart('scout', {presence:'tool', tool:'browse', label:'Scanning competitor offers'}, r);
   T.planCount();
-  const s1 = T.row({agent:'scout', icon:'globe', verb:'Searching web', arg:'"ai workspace landing page 2026"', ind:'scan'});
-  for (const n of [4, 9, 12]) { await wait(850, r); s1.set({meta:`${n} sources`}); patchAgent('scout', {label:`Searching the web · ${n} sources`}); }
-  s1.done({verb:'Searched web', meta:'12 sources', detail:X.sources()});
-  const s2 = T.row({agent:'scout', icon:'doc', verb:'Reading sources', meta:'0 / 12', ind:'bar'});
-  for (let k = 2; k <= 12; k += 2) { await wait(260, r); s2.set({meta:`${k} / 12`, progress:k / 12}); patchAgent('scout', {label:`Reading ${k} of 12 sources`, progress:k / 12}); }
-  s2.done({verb:'Wrote', arg:'docs/research.md', meta:'2.4k words', detail:X.read()});
-  tabState('file:research.md', {dirty:true, ac:'scout'});
+  const s1 = T.row({agent:'scout', icon:'globe', verb:'Searching web', arg:'"black friday maroc 2026"', ind:'scan'});
+  for (const n of [4, 9, 12]) { await wait(850, r); s1.set({meta:`${n} sources`}); patchAgent('scout', {label:`Scanning competitor offers · ${n} sources`}); }
+  s1.done({verb:'Searched web and social', meta:'12 sources', detail:X.sources()});
+  const s2 = T.row({agent:'scout', icon:'doc', verb:'Comparing offers', meta:'0 / 12', ind:'bar'});
+  for (let k = 2; k <= 12; k += 2) { await wait(260, r); s2.set({meta:`${k} / 12`, progress:k / 12}); patchAgent('scout', {label:`Comparing ${k} of 12 offers`, progress:k / 12}); }
+  s2.done({verb:'Wrote', arg:'docs/market-watch.md', meta:'1.6k words', detail:X.read()});
+  tabState('file:market-watch.md', {dirty:true, ac:'scout'}); S.watchDone = true; refreshLive('reports');
   T.step(0, 'done');
-  React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Research completed'});
-  await handoff(T, 'scout', 'sage', 'findings.md', '12 sources', r, 'research');
+  React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Market watch written'});
+  await handoff(T, 'scout', 'sage', 'market-watch.md', '12 sources', r, 'the market watch');
   later(() => setAgent('scout', {presence:'available'}), 1800, r);
 
+  /* 2 · Sage: pace, stock and segments from the lakehouse */
   T.step(1, 'running');
-  await taskStart('sage', {presence:'tool', tool:'analyze', label:'Analyzing 14 documents', progress:0}, r);
+  await taskStart('sage', {presence:'tool', tool:'analyze', label:'Querying 9 tables', progress:0}, r);
   T.planCount();
-  const s3 = T.row({agent:'sage', icon:'doc', verb:'Analyzing documents', meta:'0 / 14', ind:'bar'});
-  guard(streamReply('sage', SAGE_FIND, {drive:false, think:600, tool:['doc','Analyzed 14 documents','3,842 entries · 4.1s'], toolRunning:'Analyzing 14 documents', toolBody:'<p>docs/research.md · customer_feedback.pdf (3,842 entries) · interviews/ (8 transcripts) · analytics_q3.csv</p>', toolMs:2600}));
-  for (let k = 1; k <= 14; k++) { await wait(240, r); s3.set({meta:`${k} / 14`, progress:k / 14}); patchAgent('sage', {label:`Analyzing ${k} of 14 documents`, progress:k / 14}); }
-  s3.done({verb:'Analyzed 14 documents', meta:'3 patterns', detail:X.analysis()});
+  const s3 = T.row({agent:'sage', icon:'report', verb:'Querying the lakehouse', meta:'0 / 9 tables', ind:'bar'});
+  guard(streamReply('sage', SAGE_FIND, {drive:false, think:600, tool:['report','Queried 9 tables','certified · refreshed 00:16'], toolRunning:'Querying the lakehouse', toolBody:'<p>Sales pace · Black Friday forecast by category · stock-outs by store · best-sellers · customer base · homepage sections · cart adds · seller operations · concordance check</p>', toolMs:2600}));
+  for (let k = 1; k <= 9; k++) { await wait(370, r); s3.set({meta:`${k} / 9 tables`, progress:k / 9}); patchAgent('sage', {label:`Querying ${k} of 9 tables`, progress:k / 9}); }
+  s3.done({verb:'Queried 9 tables', meta:'3 risks', detail:X.analysis()});
   T.step(1, 'done');
-  React.celebrate('sage'); setAgent('sage', {presence:'complete', label:'Analysis completed'});
-  await Promise.all([handoff(T, 'sage', 'pixel', 'recommendations.md', null, r), wait(260, r).then(() => handoff(T, 'sage', 'quill', 'messaging.md', null, r))]);
+  React.celebrate('sage'); setAgent('sage', {presence:'complete', label:'3 risks found'});
+  await Promise.all([handoff(T, 'sage', 'pixel', 'top-categories.md', null, r), wait(260, r).then(() => handoff(T, 'sage', 'quill', 'dormant-segment.csv', '2,900 customers', r))]);
   later(() => setAgent('sage', {presence:'available'}), 1800, r);
 
+  /* 3 and 4 · Pixel and Quill in parallel */
   T.step(2, 'running'); T.step(3, 'running');
-  await Promise.all([taskStart('pixel', {presence:'tool', tool:'design', label:'Generating hero variants'}, r), wait(180, r).then(() => taskStart('quill', {presence:'tool', tool:'write', label:'Drafting headline copy'}, r))]);
+  await Promise.all([taskStart('pixel', {presence:'tool', tool:'design', label:'Designing Black Friday banners'}, r), wait(180, r).then(() => taskStart('quill', {presence:'tool', tool:'write', label:'Drafting the teaser email'}, r))]);
   T.planCount();
-  const d1 = T.row({agent:'pixel', icon:'image', verb:'Generating design', arg:'hero · pricing', ind:'gen'});
-  const q1 = T.row({agent:'quill', icon:'pen', verb:'Drafting copy', arg:'headline · subhead', ind:'dot'});
+  const d1 = T.row({agent:'pixel', icon:'image', verb:'Generating banners', arg:'homepage · FR · AR', ind:'gen'});
+  const q1 = T.row({agent:'quill', icon:'mail', verb:'Drafting email', arg:'subject · preheader · FR', ind:'dot'});
   await wait(2400, r);
-  q1.done({verb:'Drafted copy', meta:'3 options', detail:X.copy()});
+  q1.done({verb:'Drafted email', meta:'3 subject lines', detail:X.copy()});
   T.step(3, 'approval');
-  setAgent('quill', {presence:'approval', label:'Waiting for approval · headline'});
-  const ap = T.row({agent:'quill', kind:'approval', icon:'pen', verb:'Needs approval', arg:'“Your team, plus a few tireless agents.”', actions:'<button class="btn pri" data-approve>Approve</button><button class="btn" data-open-tab="chat">Discuss</button>'});
-  const pending = S.approval = {row:ap, tv:T, step:3, agent:'quill'};
-  setTimeout(() => { if (S.approval === pending) approve(true); }, AUTO_RESOLVE_MS);
+  setAgent('quill', {presence:'approval', label:'Waiting for approval · teaser email'});
+  const mail = sendMail({agent:'quill', to:'2,900 dormant customers', subject:'Black Friday arrive : vos favoris jusqu’à -50 %', status:'approval', ch:'Brevo', when:'Thu 10:00'});
+  const ap = T.row({agent:'quill', kind:'approval', icon:'mail', verb:'Needs approval', arg:'Send to 2,900 dormant customers · Thu 10:00', actions:'<button class="btn pri" data-approve>Approve send</button><button class="btn" data-open-tab="outbox">Open Outbox</button>'});
+  const pending = S.approval = {row:ap, tv:T, step:3, agent:'quill', mail};
+  setTimeout(() => { if (S.approval === pending) park(); }, AUTO_RESOLVE_MS);
   sayNow(true);
-  toast({agent:'quill', kind:'approval', html:'<b>Quill</b> needs your approval', sub:'“Your team, plus a few tireless agents.”', action:'Approve', actionCls:'pri', onAction:approve, sticky:true});
+  toast({agent:'quill', kind:'approval', html:'<b>Quill</b> needs your approval', sub:'Teaser email to 2,900 dormant customers · Brevo', action:'Approve', actionCls:'pri', onAction:approve, sticky:true});
   await wait(900, r);
-  d1.done({verb:'Generated 3 variants', meta:'hero · pricing', detail:X.variants()});
+  d1.done({verb:'Generated 3 banners', meta:'FR · AR', detail:X.variants()});
   T.step(2, 'done');
-  React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 variants ready'});
-  await handoff(T, 'pixel', 'forge', 'hero-specs.json', null, r);
+  React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 banners ready to approve'});
+  await handoff(T, 'atlas', 'forge', 'oos-skus.csv', '38 SKUs', r);
   later(() => setAgent('pixel', {presence:'available'}), 1800, r);
 
+  /* 5 · Forge: find who holds the missing stock, assign restocks, remind sellers */
   T.step(4, 'running');
-  setShellWho(true);
-  await taskStart('forge', {presence:'tool', tool:'code', label:'Installing dependencies'}, r);
+  setShellWho('forge');
+  await taskStart('forge', {presence:'tool', tool:'code', label:'Checking Odoo stock'}, r);
   T.planCount();
-  const f1 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm install', ind:'spin'});
-  await Term.cmd('pnpm install', r);
-  await Term.out(['<span class="t-d">Lockfile is up to date, resolution step is skipped</span>', 'Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', '', 'dependencies:', '<span class="t-ok">+</span> @aurora/agent-activity <span class="t-d">0.4.2</span>', '<span class="t-ok">+</span> clsx <span class="t-d">2.1.1</span>', '', 'Done in 3.8s'], r, 150);
+  const f1 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'odoo stock check --skus oos-skus.csv', ind:'spin'});
+  await Term.cmd('odoo stock check --skus oos-skus.csv', r);
+  await Term.out(['<span class="t-d">›</span> Reading 200 SKUs from the Black Friday forecast', '<span class="t-d">›</span> Matching against live stock in Odoo…', '<span class="t-er">38</span> out of stock <span class="t-d">· 9 sellers · 3 owners</span>', '', '  Key accounts    <span class="t-w">14 SKUs</span>  <span class="t-d">4 sellers</span>', '  Mid tail        <span class="t-w">17 SKUs</span>  <span class="t-d">5 sellers</span>', '  Ghost products  <span class="t-w">7</span>        <span class="t-d">listed but not buyable</span>', '', 'Done in 2.6s'], r, 150);
   Term.idle();
-  f1.done({verb:'Ran', meta:'+3 packages', detail:X.term('pnpm install', 'Packages: +3\nDone in 3.8s')});
-  patchAgent('forge', {label:'Implementing hero section'});
-  const f2 = T.row({agent:'forge', icon:'code', verb:'Editing', arg:'app/(marketing)/page.tsx', ind:'dot'});
-  await edStream(r, () => f2.set({meta:`+${ED.added} −${ED.removed}`}));
-  f2.done({verb:'Edited', meta:`+${ED.added} −${ED.removed}`, detail:X.diff()});
-  T.step(4, 'done');
-
-  T.step(5, 'running'); T.planCount();
-  patchAgent('forge', {label:'Running tests'});
-  const f3 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm test', ind:'spin'});
-  await Term.cmd('pnpm test', r);
-  await Term.out(['', ' <span class="t-b">RUN</span>  v3.2.4 <span class="t-d">~/aurora-web</span>', '', ' <span class="t-ok">✓</span> app/(marketing)/page.test.tsx <span class="t-d">(6 tests) 41ms</span>', ' <span class="t-ok">✓</span> components/marketing/plan-grid.test.tsx <span class="t-d">(9 tests) 22ms</span>', ' <span class="t-ok">✓</span> components/marketing/faq.test.tsx <span class="t-d">(4 tests) 12ms</span>', ' <span class="t-ok">✓</span> lib/pricing.test.ts <span class="t-d">(23 tests) 8ms</span>', '', ' <span class="t-d">Test Files</span>  <span class="t-ok">4 passed</span> (4)', '      <span class="t-d">Tests</span>  <span class="t-ok">42 passed</span> (42)', '   <span class="t-d">Duration</span>  1.24s'], r, 170);
-  Term.idle();
-  f3.done({verb:'Ran', meta:'42 passed', detail:X.term('pnpm test', 'Test Files  4 passed (4)\n     Tests  42 passed (42)')});
-  patchAgent('forge', {label:'Deploying preview'});
-  const f4 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-  await Term.cmd('aurora deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Building aurora-web <span class="t-d">(feat/landing)</span>…', '<span class="t-ok">✓</span> Build completed in 18.2s'], r, 420);
-  await wait(500, r);
-  await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.', '<span class="t-d">  Add a token in Workspace › Secrets, or grant the agent access to an existing one.</span>'], r, 140);
+  f1.done({verb:'Checked stock', meta:'38 SKUs · 9 sellers', detail:X.term('odoo stock check --skus oos-skus.csv', '38 out of stock · 9 sellers\nKey accounts 14 · Mid tail 17 · ghost products 7')});
+  patchAgent('forge', {label:'Assigning restocks in monday.com'});
+  const f2 = T.row({agent:'forge', icon:'people', verb:'Assigning tasks', arg:'monday.com · BF restocks', ind:'spin'});
+  await Term.cmd('monday items create --board "BF restocks" --from assignments.csv', r);
+  await Term.out(['<span class="t-er">✗ Error:</span> 401 · Forge is not connected to the board "BF restocks".', '<span class="t-d">  Grant the workspace monday.com connection to Forge, or Forge falls back to email.</span>'], r, 140);
   Term.idle();
   $('#prob-n').textContent = '1'; termPing('err');
-  f4.fail({verb:'Deploy failed', meta:'DEPLOY_TOKEN is not set', detail:X.deployErr()});
-  block(T, 5);
+  f2.fail({verb:'Assign failed', meta:'no monday.com access', detail:X.mondayErr()});
+  block(T, 4);
   await waitFor(() => !S.blocked, r);
   $('#prob-n').textContent = '0';
-  T.status('running');
-  const f5 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-  await Term.cmd('aurora deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Using DEPLOY_TOKEN <span class="t-d">(workspace secret)</span>', '<span class="t-d">›</span> Uploading build output… 214 files', '<span class="t-ok">✓</span> Preview ready: <span class="t-u">https://feat-landing.aurora.example</span> <span class="t-d">(2.9s)</span>'], r, 380);
+  T.status(S.approval ? 'input' : 'running');
+  const via = S.viaEmail ? 'Email' : 'monday.com';
+  const f3 = T.row({agent:'forge', icon: S.viaEmail ? 'mail' : 'people', verb:'Assigning tasks', arg: S.viaEmail ? 'by email · 3 account managers' : 'monday.com · BF restocks', ind:'spin'});
+  if (S.viaEmail) {
+    await Term.cmd('gmail send --template restock-tasks --to account-managers', r);
+    await Term.out(['<span class="t-ok">✓</span> Sent to 3 account managers <span class="t-d">(fallback: no monday.com access)</span>'], r, 300);
+  } else {
+    await Term.cmd('monday items create --board "BF restocks" --from assignments.csv', r);
+    await Term.out(['<span class="t-d">›</span> Using the workspace connection <span class="t-d">(granted to Forge)</span>', '<span class="t-ok">✓</span> Created 3 items · assigned to Salma A., Youssef B., Imane R. · due Fri 21'], r, 300);
+  }
   Term.idle();
-  f5.done({verb:'Deployed preview', arg:'feat-landing.aurora.example', meta:'2.9s'});
-  T.step(5, 'done');
-  React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Preview deployed'});
-  guard(streamReply('forge', [{p:'Preview is live. The hero, pricing and FAQ sections are in `page.tsx`, and all 42 tests pass.'}, {refs:`<button class="ref" data-open-tab="file:page.tsx">${ic('code')}page.tsx +${ED.added} −${ED.removed}</button><span class="ref">${ic('globe')}feat-landing.aurora.example</span>`}], {drive:false, think:500}));
+  for (const a of RESTOCKS) assignTo({...a, by:'forge', src:via});
+  f3.done({verb:'Assigned 3 tasks', meta: S.viaEmail ? 'by email' : 'monday.com · due Fri', detail:X.assign(RESTOCKS, via)});
+  const f4 = T.row({agent:'forge', icon:'mail', verb:'Emailing sellers', arg:'restock reminder · FR', ind:'spin'});
+  await Term.cmd('gmail send --template restock-reminder --to 9-sellers', r);
+  await Term.out(['<span class="t-ok">✓</span> 9 emails sent <span class="t-d">· replies go to each seller’s account manager</span>'], r, 200);
+  Term.idle();
+  const sm = sendMail({agent:'forge', to:'9 sellers', subject:'Black Friday : 31 produits à réapprovisionner', ch:'Gmail'});
+  f4.done({verb:'Emailed 9 sellers', meta:'restock reminder', detail:X.email({...sm, body:['Bonjour, ces produits de votre boutique sont dans nos offres Black Friday mais sont en rupture.', 'Pouvez-vous mettre le stock à jour avant vendredi 21 ? Votre account manager vous accompagne.']})});
+  T.step(4, 'done');
+  React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Restocks assigned'});
   later(() => setAgent('forge', {presence:'available'}), 2000, r);
+
+  /* 6 · Atlas: write the report, email it, and keep watching every morning */
+  T.step(5, 'running'); T.planCount();
+  setAgent('atlas', {presence:'working', label:'Writing the readiness report'});
+  const a1 = T.row({agent:'atlas', icon:'report', verb:'Writing report', arg:'reports/bf-readiness.md', ind:'dot'});
+  await edStream(r, () => a1.set({meta:`${ED.added} lines`}));
+  a1.done({verb:'Wrote report', arg:'reports/bf-readiness.md', meta:`${ED.added} lines`, detail:X.report()});
+  setShellWho('atlas');
+  patchAgent('atlas', {label:'Emailing the report'});
+  const a2 = T.row({agent:'atlas', icon:'mail', verb:'Emailing report', arg:'Marketing team · 6 people', ind:'spin'});
+  await Term.cmd('gmail send reports/bf-readiness.md --to "Marketing team"', r);
+  await Term.out(['<span class="t-ok">✓</span> Sent to 6 people <span class="t-d">· Black Friday J-11 : où on en est</span>'], r, 200);
+  Term.idle();
+  const rm = sendMail({agent:'atlas', to:'Marketing team (6)', subject:'Black Friday J-11 : où on en est', ch:'Gmail'});
+  S.reportState = 'sent'; S.reportAt = rm.t; refreshLive('reports');
+  const cr = $('#ctx-report'); if (cr) cr.textContent = 'emailed';
+  a2.done({verb:'Emailed report', meta:'6 recipients', detail:X.email({...rm, body:['Où on en est à J-11, ce que les agents ont fait aujourd’hui, et 3 décisions pour vous.', 'Le rapport complet est joint. Prochain point demain à 08:30.']})});
+  patchAgent('atlas', {label:'Scheduling the morning pulse'});
+  const a3 = T.row({agent:'atlas', icon:'clock', verb:'Scheduling routine', arg:'Black Friday pulse', ind:'spin'});
+  await Term.cmd('routine create bf-pulse --every "day 08:30" --until 2026-11-28', r);
+  await Term.out(['<span class="t-ok">✓</span> Routine created <span class="t-d">· next run tomorrow 08:30 · runs alone</span>'], r, 200);
+  Term.idle();
+  ROUTINES.unshift({name:'Black Friday pulse', agent:'atlas', with:['sage','forge'], when:'Every day · 08:30 until 28 Nov', delivers:'Email and new restock tasks', auto:'safe', next:'Tomorrow 08:30', task:'Black Friday pulse · J-10', isNew:true});
+  deliveredChanged();
+  a3.done({verb:'Scheduled routine', arg:'Black Friday pulse', meta:'daily 08:30 until 28 Nov'});
+  T.step(5, 'done');
+  guard(streamReply('atlas', [{p:'The readiness report is in the team’s inbox. Forge assigned 3 restocks, and I’ll send a pulse every morning at 08:30 until Black Friday.'}, {p: S.approval ? 'One thing is waiting for you: the teaser email.' : S.parked ? 'Quill’s teaser email is parked as a draft in the Outbox. Nothing went out.' : 'The teaser email is scheduled for Thursday at 10:00.'}, {refs:`<button class="ref" data-open-tab="file:report.md">${ic('report')}bf-readiness.md</button><button class="ref" data-open-tab="outbox">${ic('mail')}Outbox</button><button class="ref" data-open-tab="assigned">${ic('people')}Assigned</button>`}], {drive:false, think:500}));
   if (S.approval) {
     T.status('input');
     setAgent('atlas', {presence:'waiting', label:'Waiting for your approval'});
@@ -2374,8 +2525,8 @@ async function runMain(r) {
   await wait(400, r);
   T.status('done'); S.runEnd = Date.now();
   T.row({agent:'atlas', kind:'note', icon:'check', verb:'Completed task', meta:'6 of 6 steps', done:true});
-  React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'Task completed'});
-  toast({agent:'atlas', kind:'done', html:'<b>Build landing page</b> is complete', sub:`6 steps · 5 agents · ${$('#rs-time').textContent}`});
+  React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'Report emailed'});
+  toast({agent:'atlas', kind:'done', html:'<b>Black Friday readiness</b> is done', sub:`Report emailed · 3 tasks assigned · ${$('#rs-time').textContent}`});
   await wait(2600, r);
   for (const id of TEAM) if (['complete','waiting'].includes(S.agents[id].presence)) setAgent(id, {presence:'available'});
 }
@@ -2383,52 +2534,82 @@ function block(T, stepIdx) {
   const b = S.blocked = {tv:T, step:stepIdx, agent:'forge'};
   setTimeout(() => { if (S.blocked === b) resolveBlock(true); }, AUTO_RESOLVE_MS);
   React.jolt('forge');
-  setAgent('forge', {presence:'blocked', label:'Blocked — DEPLOY_TOKEN is not set'});
+  setAgent('forge', {presence:'blocked', label:'Blocked · no access to monday.com'});
   T.step(stepIdx, 'blocked'); T.status('blocked');
   heroReact('worried'); sayNow(true);
-  toast({agent:'forge', kind:'blocked', html:'<b>Forge</b> is blocked', sub:'Missing API key · DEPLOY_TOKEN is not set', action:'Resolve', actionCls:'warn', onAction:openResolve, sticky:true});
+  toast({agent:'forge', kind:'blocked', html:'<b>Forge</b> is blocked', sub:'No access to the monday.com board · BF restocks', action:'Resolve', actionCls:'warn', onAction:openResolve, sticky:true});
   navCounts();
 }
+/* Granting access retries in monday.com. Nobody answering doesn't stall the run: Forge emails the account managers instead. */
 function resolveBlock(auto) {
   const b = S.blocked; if (!b) return;
-  S.blocked = null; closeDialog(); dropToasts('blocked');
-  const cs = $('#ctx-secret'); if (cs) { cs.textContent = 'granted to Forge'; cs.className = 'good'; }
+  S.blocked = null; S.viaEmail = !!auto; closeDialog(); dropToasts('blocked');
+  const cs = $('#ctx-secret'); if (cs) { cs.textContent = auto ? 'email fallback' : 'granted to Forge'; cs.className = auto ? '' : 'good'; }
   React.relief('forge');
-  setAgent('forge', {presence:'tool', tool:'code', label:'Retrying deploy'});
+  setAgent('forge', {presence:'tool', tool:'code', label: auto ? 'Emailing the restock list' : 'Retrying in monday.com'});
   b.tv.step(b.step, 'running');
-  b.tv.row({agent:'you', kind:'note', icon: auto ? 'clock' : 'key', verb: auto ? 'Auto-granted' : 'Granted', arg:'DEPLOY_TOKEN → Forge', meta: auto ? 'no reply in 20s' : '', done:true});
-  if (auto) toast({icon:'clock', html:'<b>Resolved automatically</b>', sub:'No reply in 20 seconds, so Forge got DEPLOY_TOKEN and the run continues.', ms:3600});
+  if (auto) b.tv.row({agent:'forge', kind:'note', icon:'mail', verb:'Fell back to email', arg:'restock list → 3 account managers', meta:'no reply in 20s', done:true});
+  else b.tv.row({agent:'you', kind:'note', icon:'key', verb:'Granted', arg:'monday.com → Forge', done:true});
+  if (auto) toast({agent:'forge', html:'<b>Forge</b> used email instead', sub:'No reply in 20 seconds, so the restock list goes to the account managers by email.', ms:3800});
   heroReact('happy'); sayNow(true);
   for (const btn of $$('[data-resolve]')) btn.disabled = true;
 }
-function approve(auto) {
+/* Approving schedules the send. It works on a live request and on one Quill already parked in the Outbox. */
+function approve() {
+  const ap = S.approval || S.parked; if (!ap) return;
+  const live = ap === S.approval;
+  S.approval = null; S.parked = null; dropToasts('approval');
+  ap.mail.status = 'scheduled'; ap.mail.when = 'Thu 10:00';
+  if (live) {
+    ap.row.done({verb:'Approved by you', meta:'scheduled Thu 10:00'});
+    ap.tv.step(ap.step, 'done');
+    React.celebrate(ap.agent); setAgent(ap.agent, {presence:'complete', label:'Email scheduled'});
+    setTimeout(() => { if (S.agents[ap.agent].presence === 'complete') setAgent(ap.agent, {presence:'available'}); }, 2200);
+    if (ap.tv.task.status === 'input') ap.tv.status('running');
+  } else {
+    ap.tv.row({agent:'you', kind:'note', icon:'check', verb:'Approved', arg:'teaser email', meta:'scheduled Thu 10:00', done:true});
+    React.celebrate(ap.agent);
+  }
+  toast({agent:ap.agent, kind:'done', html:'<b>Teaser email</b> scheduled', sub:'Brevo · 2,900 customers · Thu 20 Nov, 10:00', ms:3200});
+  deliveredChanged(); sayNow(true);
+}
+/* Nobody answered: Quill keeps the email as a draft and the run moves on. Nothing reaches customers without a yes. */
+function park() {
   const ap = S.approval; if (!ap) return;
-  S.approval = null; dropToasts('approval');
-  ap.row.done(auto ? {verb:'Auto-approved', meta:'no reply in 20s'} : {verb:'Approved by you', meta:'headline'});
-  if (auto) toast({agent:ap.agent, html:'<b>Headline approved automatically</b>', sub:'No reply in 20 seconds, so Quill’s copy went ahead.', ms:3600});
+  S.approval = null; S.parked = ap; dropToasts('approval');
+  ap.row.done({verb:'Parked as draft', meta:'waiting in Outbox, not sent'});
   ap.tv.step(ap.step, 'done');
-  React.celebrate(ap.agent); setAgent(ap.agent, {presence:'complete', label:'Copy approved'});
+  setAgent(ap.agent, {presence:'complete', label:'Draft parked in the Outbox'});
   setTimeout(() => { if (S.agents[ap.agent].presence === 'complete') setAgent(ap.agent, {presence:'available'}); }, 2200);
   if (ap.tv.task.status === 'input') ap.tv.status('running');
-  navCounts(); sayNow(true);
+  toast({agent:ap.agent, html:'<b>Quill</b> parked the email as a draft', sub:'No reply in 20 seconds. Nothing was sent; approve it from the Outbox.', ms:4200});
+  deliveredChanged(); sayNow(true);
+}
+function approveMail(id) {
+  const m = OUTBOX.find(x => x.id === id); if (!m) return;
+  const ap = S.approval || S.parked;
+  if (ap && ap.mail === m) return approve();
+  m.status = 'scheduled'; m.when = m.when || 'Tomorrow 10:00';
+  toast({agent:m.agent, kind:'done', html:`<b>${esc(m.subject)}</b> scheduled`, sub:`${m.ch} · ${m.to}`, ms:2800});
+  deliveredChanged();
 }
 
 /* New task → its own tab with a short plan */
 const MINI = {
-  browse:[['Search sources','globe','Searched web','8 sources'],['Read and compare','doc','Read 8 sources','1.1k words'],['Write summary','pen','Wrote summary','docs/notes.md']],
-  code:[['Inspect repository','terminal','Ran','rg "pricing" -l · 6 files'],['Implement changes','code','Edited','4 files · +61 −12'],['Run tests','terminal','Ran','pnpm test · 42 passed']],
-  analyze:[['Collect inputs','doc','Read 5 documents','1,204 rows'],['Analyze','doc','Analyzed inputs','2 findings'],['Summarize','pen','Wrote summary','findings.md']],
-  design:[['Gather references','image','Collected references','9 images'],['Generate variants','image','Generated 3 variants','1440 × 900'],['Export','image','Exported','design/pricing/']],
-  write:[['Outline','pen','Outlined','5 sections'],['Draft','pen','Drafted','620 words'],['Polish','pen','Edited for tone','−14%']],
+  browse:[['Search competitor pages','globe','Searched web','9 sources'],['Compare offers','doc','Compared offers','4 undercut us'],['Email the digest','mail','Emailed digest','to you', {mail:{to:'You', prefix:'Digest : '}}]],
+  code:[['Check Odoo stock','terminal','Checked stock','11 SKUs · 4 sellers'],['Find the owners','people','Matched owners','2 account managers'],['Assign follow-ups','people','Assigned 2 tasks','monday.com · due Fri', {assign:[{who:'kam', task:'Restock 6 SKUs · Key accounts', due:'Fri 21'}, {who:'mid', task:'Restock 5 SKUs · Mid tail', due:'Fri 21'}]}]],
+  analyze:[['Query the lakehouse','report','Queried 4 tables','certified · 00:16'],['Analyze','doc','Analyzed','2 findings'],['Email the report','mail','Emailed report','to you', {mail:{to:'You', prefix:'Rapport : '}}]],
+  design:[['Load the brand kit','image','Loaded brand kit','Canva · 14 assets'],['Generate variants','image','Generated 3 variants','FR · AR'],['Send for approval','mail','Sent for approval','to you', {mail:{to:'You', prefix:'À valider : '}}]],
+  write:[['Pick the segment','report','Picked segment','2,900 customers'],['Draft FR and AR','pen','Drafted','2 languages'],['Save a Brevo draft','mail','Saved draft','Brevo · not sent', {mail:{to:'2,900 customers', ch:'Brevo', status:'draft', prefix:''}}]],
 };
 /* r is the run token, as in runMain: replaying the run (or any scene that resets the world) bumps RUN,
    so every wait below rejects and the quick task stops instead of driving agents the new run now owns. */
-async function assignTask(id, title, r = RUN) {
+async function assignTask(id, title, r = RUN, o = {}) {
   if (r !== RUN) return;
   const num = S.taskN++;
   const t = {key:`task:${num}`, id:`TASK-${num}`, title, short: title.length > 26 ? title.slice(0, 24) + '…' : title, owner:id, status:'queued', steps:3, updated:'now'};
   TASKS.unshift(t);
-  const tv = TaskView(t, {agents:'1 agent', branch: A[id].tool === 'code' ? `fix/${num}` : 'main'});
+  const tv = TaskView(t, {agents:'1 agent', scope: o.routine ? 'Routine' : 'Ad hoc'});
   openTab(t.key);
   tv.row({agent:'you', kind:'note', icon:'plus', verb:'Created task', arg:t.id, done:true});
   let cur = null, curStep = -1;
@@ -2450,9 +2631,13 @@ async function assignTask(id, title, r = RUN) {
       await wait(rand(1800, 2600), r);
       cur.done({verb:doneVerb, meta}); cur = null;
       tv.step(k, 'done'); curStep = -1;
+      /* The last step delivers: an email in the Outbox or tasks for people in Assigned */
+      const del = steps[k][4];
+      if (del && del.mail) sendMail({agent:id, to:del.mail.to, subject:del.mail.prefix + title, ch:del.mail.ch || 'Gmail', status:del.mail.status || 'sent'});
+      if (del && del.assign) for (const a of del.assign) assignTo({...a, by:id});
     }
     tv.status('done');
-    tv.row({agent:id, kind:'note', icon:'check', verb:'Completed task', meta:'3 of 3 steps', done:true});
+    tv.row({agent:id, kind:'note', icon:'check', verb:'Completed task', meta:'3 of 3 steps · delivered', done:true});
     React.celebrate(id); setAgent(id, {presence:'complete', label:'Task completed'});
     toast({agent:id, kind:'done', html:`<b>${A[id].name}</b> completed ${esc(t.id)}`, sub:title});
     await wait(2200, r);
@@ -2467,65 +2652,75 @@ async function assignTask(id, title, r = RUN) {
     tv.row({agent:'you', kind:'note', icon:'stop', verb:'Stopped', arg:t.id, meta:'run replayed', done:true});
   }
 }
+/* A routine is a task the agent starts on its own schedule; "Run" starts one now. */
+function runRoutine(k) {
+  const rt = ROUTINES[k]; if (!rt || rt.agent === 'ward') return;
+  const after = rt.next; rt.next = 'Running now'; deliveredChanged();
+  toast({agent:rt.agent, html:`<b>${esc(rt.name)}</b> started`, sub:`${A[rt.agent].name} runs it and delivers: ${rt.delivers.toLowerCase()}`, ms:2600});
+  guard(assignTask(rt.agent, rt.task, RUN, {routine:true}).then(() => { rt.next = after; deliveredChanged(); }));
+}
 
 /* ── Prototype scenes ── */
 const SCENES = [
-  ['run','Replay the full run'], ['idle','Idle and blinking'], ['assign','Assign a task'], ['stream','Thinking → streaming reply'],
-  ['tool','Tool execution'], ['handoff','Agent handoff'], ['blocked','Blocked state'], ['complete','Task completion'],
+  ['run','Replay the Black Friday run'], ['routine','A routine runs on its own'], ['idle','Idle and blinking'], ['assign','Assign a task'], ['stream','Thinking → streaming reply'],
+  ['tool','Tool execution'], ['handoff','Agent handoff'], ['blocked','Blocked, then email fallback'], ['complete','Task completion'],
   ['multi','Several agents working'], ['palette','Command palette'], ['inspector','Agent inspector'], ['reduced','Toggle reduced motion'],
 ];
 const SCENE_FNS = {
   run: r => runMain(r),
   async idle(r) { openTab('task:142'); await wait(400, r); TEAM.forEach((id, k) => setTimeout(() => React.blink(id), k * 110)); },
-  async assign(r) { openNewTask('pixel'); await wait(300, r); $('#nt-title').value = 'Design three hero variants for the pricing page'; await wait(1300, r); const b = $('#nt-go'); b.classList.add('pressed'); await wait(150, r); b.classList.remove('pressed'); $('#nt-form').requestSubmit(); },
-  async stream(r) { openTab('chat'); S.chatAgent = 'sage'; paintCompAgent(); await wait(300, r); addUser('What did the research show?'); await wait(300, r); streamReply('sage', CHAT_REPLY.sage.blocks, {tool:CHAT_REPLY.sage.tool, toolRunning:'Analyzing 14 documents'}); },
+  async routine(r) { openTab('routines'); await wait(900, r); runRoutine(ROUTINES.findIndex(x => x.name === 'Stock-out watch')); },
+  async assign(r) { openNewTask('pixel'); await wait(300, r); $('#nt-title').value = 'Make a Black Friday banner for Beauty, in Arabic'; await wait(1300, r); const b = $('#nt-go'); b.classList.add('pressed'); await wait(150, r); b.classList.remove('pressed'); $('#nt-form').requestSubmit(); },
+  async stream(r) { openTab('chat'); S.chatAgent = 'sage'; paintCompAgent(); await wait(300, r); addUser('Where do we stand for Black Friday?'); await wait(300, r); streamReply('sage', CHAT_REPLY.sage.blocks, {tool:CHAT_REPLY.sage.tool, toolRunning:'Analyzing 14 documents'}); },
   async tool(r) {
-    openTab('task:142'); setShellWho(true);
-    setAgent('forge', {presence:'tool', tool:'code', label:'Installing dependencies'});
-    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm install', ind:'spin'});
-    await Term.cmd('pnpm install', r);
-    await Term.out(['Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', 'Done in 3.8s'], r, 260);
-    Term.idle(); f.done({verb:'Ran', meta:'+3 packages', detail:X.term('pnpm install', 'Packages: +3\nDone in 3.8s')});
-    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Dependencies installed'});
+    openTab('task:142'); setShellWho('forge');
+    setAgent('forge', {presence:'tool', tool:'code', label:'Checking Odoo stock'});
+    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'odoo stock check --skus oos-skus.csv', ind:'spin'});
+    await Term.cmd('odoo stock check --skus oos-skus.csv', r);
+    await Term.out(['<span class="t-d">›</span> Matching 200 SKUs against live stock…', '<span class="t-er">38</span> out of stock <span class="t-d">· 9 sellers</span>', 'Done in 2.6s'], r, 260);
+    Term.idle(); f.done({verb:'Checked stock', meta:'38 SKUs · 9 sellers', detail:X.term('odoo stock check --skus oos-skus.csv', '38 out of stock · 9 sellers')});
+    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Stock checked'});
     later(() => setAgent('forge', {presence:'available'}), 1800, r);
   },
   async handoff(r) {
     openTab('task:142');
-    setAgent('scout', {presence:'tool', tool:'browse', label:'Wrapping up research'});
+    setAgent('scout', {presence:'tool', tool:'browse', label:'Wrapping up the market watch'});
     await wait(900, r);
-    await handoff(MAIN, 'scout', 'sage', 'findings.md', '12 sources', r, 'research');
-    React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Research completed'});
+    await handoff(MAIN, 'scout', 'sage', 'market-watch.md', '12 sources', r, 'the market watch');
+    React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Market watch written'});
     later(() => setAgent('scout', {presence:'available'}), 1600, r);
-    await taskStart('sage', {presence:'tool', tool:'analyze', label:'Analyzing findings.md', progress:.2}, r);
+    await taskStart('sage', {presence:'tool', tool:'analyze', label:'Checking pace against the forecast', progress:.2}, r);
     await wait(3000, r); setAgent('sage', {presence:'available'});
   },
   async blocked(r) {
-    openTab('task:142'); setShellWho(true);
-    setAgent('forge', {presence:'tool', tool:'code', label:'Deploying preview'});
-    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-    await Term.cmd('aurora deploy --preview', r);
-    await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.'], r);
+    openTab('task:142'); setShellWho('forge');
+    setAgent('forge', {presence:'tool', tool:'code', label:'Assigning restocks'});
+    const f = MAIN.row({agent:'forge', icon:'people', verb:'Assigning tasks', arg:'monday.com · BF restocks', ind:'spin'});
+    await Term.cmd('monday items create --board "BF restocks" --from assignments.csv', r);
+    await Term.out(['<span class="t-er">✗ Error:</span> 401 · Forge is not connected to the board "BF restocks".'], r);
     Term.idle();
-    f.fail({verb:'Deploy failed', meta:'DEPLOY_TOKEN is not set', detail:X.deployErr()});
-    S.blocked = null; block(MAIN, 5);
+    f.fail({verb:'Assign failed', meta:'no monday.com access', detail:X.mondayErr()});
+    S.blocked = null; block(MAIN, 4);
     await waitFor(() => !S.blocked, r);
     await wait(1400, r);
-    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Preview deployed'});
+    for (const a of RESTOCKS) assignTo({...a, by:'forge', src: S.viaEmail ? 'Email' : 'monday.com'});
+    MAIN.row({agent:'forge', icon: S.viaEmail ? 'mail' : 'people', verb:'Assigned 3 tasks', meta: S.viaEmail ? 'by email' : 'monday.com', detail:X.assign(RESTOCKS, S.viaEmail ? 'Email' : 'monday.com'), done:true});
+    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Restocks assigned'});
     later(() => setAgent('forge', {presence:'available'}), 1800, r);
   },
   async complete(r) {
     openTab('task:142');
-    setAgent('pixel', {presence:'tool', tool:'design', label:'Finishing variants'});
-    const d = MAIN.row({agent:'pixel', icon:'image', verb:'Generating design', arg:'pricing', ind:'gen'});
+    setAgent('pixel', {presence:'tool', tool:'design', label:'Finishing the banners'});
+    const d = MAIN.row({agent:'pixel', icon:'image', verb:'Generating banners', arg:'homepage · FR · AR', ind:'gen'});
     await wait(2000, r);
-    d.done({verb:'Generated 3 variants', meta:'pricing', detail:X.variants()});
-    React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 variants ready'});
-    toast({agent:'pixel', kind:'done', html:'<b>Pixel</b> finished the pricing variants', sub:'design/pricing · 3 variants'});
+    d.done({verb:'Generated 3 banners', meta:'FR · AR', detail:X.variants()});
+    React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 banners ready to approve'});
+    toast({agent:'pixel', kind:'done', html:'<b>Pixel</b> finished the Black Friday banners', sub:'design/bf-home · 3 banners · FR · AR'});
     await wait(2200, r); setAgent('pixel', {presence:'available'});
   },
   async multi(r) {
     openTab('task:142');
-    const plan = [['scout','browse','Researching pricing pages'], ['sage','analyze','Analyzing 14 documents'], ['pixel','design','Generating hero variants'], ['quill','write','Drafting subhead options'], ['forge','code','Running the test suite']];
+    const plan = [['scout','browse','Scanning competitor offers'], ['sage','analyze','Querying 9 tables'], ['pixel','design','Generating banners'], ['quill','write','Drafting the teaser email'], ['forge','code','Checking Odoo stock']];
     for (const [id, tool, label] of plan) { guard(taskStart(id, {presence:'tool', tool, label, progress:.4}, r)); await wait(240, r); }
     setAgent('atlas', {presence:'working', label:'Coordinating 5 agents'});
     await wait(6000, r);
@@ -2536,8 +2731,8 @@ const SCENE_FNS = {
 };
 function play(k) {
   closeMenu(); closePalette(); closeDialog();
-  if (!['palette','inspector','reduced','assign','stream'].includes(k)) closeCard();
-  if (['palette','inspector','reduced','assign','stream'].includes(k)) { guard(SCENE_FNS[k](RUN)); return; }
+  if (!['palette','inspector','reduced','assign','stream','routine'].includes(k)) closeCard();
+  if (['palette','inspector','reduced','assign','stream','routine'].includes(k)) { guard(SCENE_FNS[k](RUN)); return; }
   const r = ++RUN;
   if (k !== 'run') resetWorld();
   guard(SCENE_FNS[k](r));
@@ -2620,6 +2815,9 @@ function wire() {
     if (d.assign) { closeCard(); return openNewTask(d.assign); }
     if (d.resolve !== undefined) return openResolve();
     if (d.approve !== undefined) return approve();
+    if (d.approveMail) return approveMail(+d.approveMail);
+    if (d.routine) return runRoutine(+d.routine);
+    if (d.quiet !== undefined) { const on = el.getAttribute('aria-checked') !== 'true'; el.setAttribute('aria-checked', on); return toast({icon:'clock', html: on ? '<b>Quiet hours</b> are on' : '<b>Quiet hours</b> are off', sub: on ? 'Agents queue emails and pings between 20:00 and 08:00.' : 'Agents may email people at any hour.', ms:2400}); }
     if (d.nt) return pickNT(d.nt);
     if (d.dismiss !== undefined) { closeDialog(); closePalette(); return; }
     if (d.scene) return play(d.scene);
@@ -2637,8 +2835,8 @@ function wire() {
     if (el.id === 'grant') return resolveBlock();
     if (el.dataset.tvAct === 'expand' || el.dataset.tvAct === 'collapse') { const on = el.dataset.tvAct === 'expand'; for (const ev of $$('.ev.x', el.closest('.view'))) { ev.classList.toggle('open', on); ev.querySelector('.ev-row').setAttribute('aria-expanded', on); } return; }
     if (el.dataset.tvAct === 'pause') return toast({html:'Pausing stops agents after their current step', sub:'Disabled in this preview so the run can finish.', ms:2600, icon:'pause'});
-    if (el.dataset.tvAct === 'more') return openMenu(el, [{label:'Copy task link', icon:'copy', run:() => {}}, {label:'Open in chat', icon:'chat', run:() => openTab('chat')}, {label:'View run #218', icon:'runs', run:() => openTab('runs')}, {sep:true}, {label:'Replay run', icon:'retry', run:() => play('run')}, {label:'Cancel task', icon:'stop', danger:true, run:() => toast({html:'Cancel is disabled in this preview', ms:2000, icon:'stop'})}], {alignRight:true});
-    if (el.dataset.bp) return toast({html:`${el.dataset.bp === 'output' ? 'Output' : 'Problems'} panel`, sub:'Terminal is the only live panel in this preview.', ms:2000, icon:'panelB'});
+    if (el.dataset.tvAct === 'more') return openMenu(el, [{label:'Copy task link', icon:'copy', run:() => {}}, {label:'Open in chat', icon:'chat', run:() => openTab('chat')}, {label:'Open the report', icon:'report', run:() => openTab('file:report.md')}, {label:'View run #218', icon:'runs', run:() => openTab('runs')}, {sep:true}, {label:'Replay run', icon:'retry', run:() => play('run')}, {label:'Cancel task', icon:'stop', danger:true, run:() => toast({html:'Cancel is disabled in this preview', ms:2000, icon:'stop'})}], {alignRight:true});
+    if (el.dataset.bp) return toast({html:`${el.dataset.bp === 'output' ? 'Output' : 'Problems'} panel`, sub:'The console is the only live panel in this preview.', ms:2000, icon:'panelB'});
   });
   $('#tabs').addEventListener('keydown', e => { const t = e.target.closest('.tab'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); activate(t.dataset.tab); } });
   $('#tabs').addEventListener('auxclick', e => { const t = e.target.closest('.tab'); if (t && e.button === 1) closeTab(t.dataset.tab); });
@@ -2655,7 +2853,7 @@ function wire() {
   $('#sb-motion').onclick = () => setReduced(!M.reduced, true);
   $('#sb-scenes').onclick = e => { e.stopPropagation(); MENU.open ? closeMenu() : scenesMenu($('#sb-scenes')); };
   $('#sb-crew').onclick = () => { if (mqInsp.matches) toggleInsp(); else { $('#app').classList.remove('no-insp'); $('[data-ipane="agents"]').click(); } };
-  $('#me-btn').onclick = e => { e.stopPropagation(); openMenu($('#me-btn'), [{head:true, label:'Signed in to Aurora'}, {label:'Settings', icon:'settings', run:() => openTab('settings')}, {label:'Keyboard shortcuts', icon:'command', run:() => openPalette()}, {sep:true}, {label:'Sign out', icon:'arrowR', run:() => toast({html:'Sign out is disabled in this preview', ms:1800, icon:'user'})}], {alignRight:true}); };
+  $('#me-btn').onclick = e => { e.stopPropagation(); openMenu($('#me-btn'), [{head:true, label:'Signed in to Wasal'}, {label:'Settings', icon:'settings', run:() => openTab('settings')}, {label:'Keyboard shortcuts', icon:'command', run:() => openPalette()}, {sep:true}, {label:'Sign out', icon:'arrowR', run:() => toast({html:'Sign out is disabled in this preview', ms:1800, icon:'user'})}], {alignRight:true}); };
   document.addEventListener('submit', e => {
     if (e.target.id === 'comp') { e.preventDefault(); const inp = $('#chat-in'); const v = inp.value.trim(); if (!v) return; inp.value = ''; inp.style.height = ''; sendChat(v); }
     if (e.target.id === 'home-comp') { e.preventDefault(); homeSubmit(); }
@@ -2668,7 +2866,7 @@ function wire() {
     e.stopPropagation();
     if (b.id === 'comp-agent') openMenu(b, [{head:true, label:'Ask'}, ...AGENTS.map(a => ({label:a.name, av:a.id, check:S.chatAgent === a.id, run:() => { S.chatAgent = a.id; paintCompAgent(); }}))], {up:true});
     if (b.id === 'comp-model') modelMenu(b);
-    if (b.id === 'comp-ctx') openMenu(b, [{head:true, label:'Add context'}, {label:'docs/research.md', icon:'doc', run:() => {}}, {label:'app/(marketing)/page.tsx', icon:'code', run:() => {}}, {label:'TASK-142', icon:'tasks', run:() => {}}], {up:true});
+    if (b.id === 'comp-ctx') openMenu(b, [{head:true, label:'Add context'}, {label:'docs/market-watch.md', icon:'doc', run:() => {}}, {label:'reports/bf-readiness.md', icon:'report', run:() => {}}, {label:'Lakehouse · sales pace', icon:'report', run:() => {}}, {label:'TASK-142', icon:'tasks', run:() => {}}], {up:true});
   }, true);
   $('#pal-q').addEventListener('input', () => renderPal(false));
   $('#pal-q').addEventListener('keydown', e => {
@@ -2708,9 +2906,9 @@ function init() {
   setReduced(mqRM.matches, false);
   THEME.pref = readThemePref(); applyTheme();
   buildNav(); buildInspector(); buildStatusBar(); wire();
-  MAIN = TaskView(TASKS[0], {agents:'5 agents'});
-  TABS.push('home'); TABS.push('task:142'); TABS.push('chat'); TABS.push('file:page.tsx'); TABS.push('file:research.md');
-  ensureView('chat'); ensureView('file:page.tsx'); ensureView('file:research.md');
+  MAIN = TaskView(TASKS[0], {agents:'6 agents', scope:'Black Friday · J-11'});
+  TABS.push('home'); TABS.push('task:142'); TABS.push('chat'); TABS.push('file:report.md'); TABS.push('file:market-watch.md');
+  ensureView('chat'); ensureView('file:report.md'); ensureView('file:market-watch.md');
   Term.el = $('#term');
   seedChat(); paintCompAgent(); edReset();
   /* Phones open straight on the running task: the run takes over that tab 0.7s after load, and with no sidebar
