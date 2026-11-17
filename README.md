@@ -1,4 +1,4 @@
-# Orbit Agent Workspace
+# Agents OS
 
 An interactive prototype of an AI workspace where a small team of agents (Atlas, Scout, Sage, Pixel, Quill and Forge) plan, research, design, code and deploy a landing page together.
 
