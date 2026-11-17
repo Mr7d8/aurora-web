@@ -718,9 +718,6 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   .acard{right:12px}
   .search{width:min(340px,34vw)}
 }
-@media (max-width:1000px){
-  .crumb .hide-s{display:none}
-}
 @media (max-width:860px){
   :root{--nav-w:52px}
   .nav-h,.ni span:not(.cnt),.ra-n,.ra .stw,.ni .cnt{display:none}
@@ -781,7 +778,7 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 <div class="app" id="app">
   <header class="tb">
     <button class="ib" id="nav-toggle" aria-label="Toggle sidebar" title="Toggle sidebar  ⌘B"></button>
-    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Agents OS</span><span class="sl hide-xs">/</span><span class="hide-s">agents-os-web</span><span class="sl hide-s">/</span><b id="crumb-cur">Build landing page</b></div>
+    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Agents OS</span><span class="sl hide-xs">/</span><b id="crumb-cur">Build landing page</b></div>
     <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Agents OS</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
     <div class="tb-r">
       <button class="pillbtn" id="model-btn" aria-haspopup="menu"><span id="model-ic"></span><span class="lbl" id="model-lbl">Opus 5.5</span><span id="model-chev"></span></button>
