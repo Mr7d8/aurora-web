@@ -1,4 +1,4 @@
-<title>Orbit Agent Workspace</title>
+<title>Agents OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap">
@@ -6,7 +6,7 @@
 /* Resolve the theme before first paint: saved choice (light / dark / system), else the system setting. */
 (() => {
   let p = 'system';
-  try { p = localStorage.getItem('aurora-theme') || 'system'; } catch (e) {}
+  try { p = localStorage.getItem('agents-os-theme') || 'system'; } catch (e) {}
   const t = p === 'light' || p === 'dark' ? p : matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   document.documentElement.dataset.theme = t;
 })();
@@ -781,8 +781,8 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 <div class="app" id="app">
   <header class="tb">
     <button class="ib" id="nav-toggle" aria-label="Toggle sidebar" title="Toggle sidebar  ⌘B"></button>
-    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Aurora</span><span class="sl hide-xs">/</span><span class="hide-s">aurora-web</span><span class="sl hide-s">/</span><b id="crumb-cur">Build landing page</b></div>
-    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Aurora</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
+    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Agents OS</span><span class="sl hide-xs">/</span><span class="hide-s">agents-os-web</span><span class="sl hide-s">/</span><b id="crumb-cur">Build landing page</b></div>
+    <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Agents OS</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
     <div class="tb-r">
       <button class="pillbtn" id="model-btn" aria-haspopup="menu"><span id="model-ic"></span><span class="lbl" id="model-lbl">Opus 5.5</span><span id="model-chev"></span></button>
       <button class="ib" id="theme-btn" aria-label="Switch theme"></button>
@@ -1309,7 +1309,7 @@ function buildInspector() {
     <div class="ish"><span>Task</span></div>
     <div class="ctx-row">${ic('tasks')}<span>TASK-142 · Build landing page</span><em id="ctx-task">running</em></div>
     <div class="ish"><span>Repository</span></div>
-    <div class="ctx-row">${ic('folder')}<span>aurora-web</span><em>main</em></div>
+    <div class="ctx-row">${ic('folder')}<span>agents-os-web</span><em>main</em></div>
     <div class="ctx-row">${ic('branch')}<span>feat/landing</span><em id="ctx-changes">0 changed</em></div>
     <div class="ish"><span>Attached</span><span>4</span></div>
     <button class="ctx-row" style="width:100%" data-open-tab="file:research.md">${ic('doc')}<span>docs/research.md</span><em>2.4k words</em></button>
@@ -1461,7 +1461,7 @@ function paintAll(root) {
 
 /* ── Task views ── */
 const TASKS = [
-  {key:'task:142', id:'TASK-142', title:'Build the Aurora landing page', short:'Build landing page', owner:'atlas', status:'queued', steps:6, updated:'now'},
+  {key:'task:142', id:'TASK-142', title:'Build the Agents OS landing page', short:'Build landing page', owner:'atlas', status:'queued', steps:6, updated:'now'},
   {key:'task:141', id:'TASK-141', title:'Weekly competitor digest', short:'Competitor digest', owner:'scout', status:'done', steps:3, updated:'Yesterday'},
   {key:'task:140', id:'TASK-140', title:'Migrate auth to OAuth', short:'OAuth migration', owner:'forge', status:'done', steps:7, updated:'Sep 26'},
   {key:'task:139', id:'TASK-139', title:'Onboarding illustrations', short:'Onboarding art', owner:'pixel', status:'done', steps:4, updated:'Sep 25'},
@@ -1608,13 +1608,13 @@ Pages that name each agent's job hold attention longer.
   variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>design/hero</code><span class="sp"></span><span class="mono">3 variants · 1440 × 900</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Editorial</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Agent-forward</figcaption></figure></div></div></div>`,
   term: (cmd, lines) => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>${esc(cmd)}</code><span class="sp"></span><span class="mono">exit 0</span></div><div class="xd-b"><pre>${lines}</pre></div></div>`,
   diff: () => `<div class="xd"><div class="xd-h">${ic('code')}<code>app/(marketing)/page.tsx</code><span class="sp"></span><span class="mono" style="color:var(--ok)">+${ED.added}</span><span class="mono" style="color:var(--err)">−${ED.removed}</span></div><div class="xd-b diff"><div class="c">@@ -8,5 +10,27 @@ export default function Page() {</div><div class="r">-      {/* TODO: landing page */}</div><div class="a">+      &lt;section className="hero"&gt;</div><div class="a">+        &lt;h1&gt;Your team, plus a few tireless agents.&lt;/h1&gt;</div><div class="a">+        &lt;AgentActivity agents={["scout", "sage", "forge"]} live /&gt;</div><div class="c">   …</div><div style="margin-top:8px"><button class="ref" data-open-tab="file:page.tsx">${ic('code')}Open page.tsx</button></div></div></div>`,
-  deployErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>aurora deploy --preview</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><code>DEPLOY_TOKEN</code> is not set for the preview environment. Forge can't deploy until it has a token.</p><div><button class="btn warn" data-resolve>${ic('key')}Resolve</button></div></div></div>`,
+  deployErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>agents-os deploy --preview</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><code>DEPLOY_TOKEN</code> is not set for the preview environment. Forge can't deploy until it has a token.</p><div><button class="btn warn" data-resolve>${ic('key')}Resolve</button></div></div></div>`,
 };
 
 /* ── Terminal ── */
 const Term = {
   el: null,
-  prompt: '<span class="t-p">forge@aurora-web</span> <span class="t-b">~/aurora-web</span> <span class="t-d">(feat/landing)</span> <span class="t-d">$</span> ',
+  prompt: '<span class="t-p">forge@agents-os-web</span> <span class="t-b">~/agents-os-web</span> <span class="t-d">(feat/landing)</span> <span class="t-d">$</span> ',
   line(html) { const s = document.createElement('span'); s.className = 'l'; s.innerHTML = html; this.el.appendChild(s); this.scroll(); return s; },
   scroll() { const b = $('#bp-body'); b.scrollTop = b.scrollHeight; },
   clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Forge’s shell · commands run by agents appear here</span>'); this.idle(); },
@@ -1640,7 +1640,7 @@ const ORIG = [
   'import type { Metadata } from "next";',
   '',
   'export const metadata: Metadata = {',
-  '  title: "Aurora — the AI workspace for teams",',
+  '  title: "Agents OS: the AI workspace for teams",',
   '};',
   '',
   'export default function Page() {',
@@ -1654,7 +1654,7 @@ const ORIG = [
 const IMPORTS = ['import { Button } from "@/components/button";', 'import { AgentActivity, PlanGrid, Faq } from "@/components/marketing";', 'import { plans, faq } from "./content";'];
 const BODY = [
   '      <section className="hero">',
-  '        <p className="eyebrow">Aurora 2.0</p>',
+  '        <p className="eyebrow">Agents OS 2.0</p>',
   '        <h1>Your team, plus a few tireless agents.</h1>',
   '        <p className="lede">',
   '          Hand off research, design and code to agents that work',
@@ -1832,7 +1832,7 @@ async function streamReply(id, blocks, o = {}) {
 }
 function seedChat() {
   chatCol().innerHTML = `<div class="chat-head">${ic('chat')}<b>Landing page</b><span>·</span><span>TASK-142</span><span class="sp"></span><span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span></div>`;
-  addUser('Build the landing page for Aurora’s launch. Use the research in /docs and ship a preview today.', '14:01');
+  addUser('Build the landing page for the Agents OS launch. Use the research in /docs and ship a preview today.', '14:01');
   staticAgent('atlas', [{p:'I’ll run this as **TASK-142** with five agents. Scout researches, Sage turns it into recommendations, Pixel and Quill handle design and copy, and Forge builds and deploys the preview.'}, {refs:`<button class="ref" data-open-tab="task:142">${ic('tasks')}TASK-142</button><button class="ref" data-open-tab="file:research.md">${ic('doc')}docs/</button>`}], {time:'14:01', thought:'Thought for 3s', thoughtText:'Research first so design and copy share the same evidence. Copy needs approval before it ships. Deploy needs a token; check secrets before the last step.'});
   mountAvatars(chatCol());
 }
@@ -1880,10 +1880,10 @@ const VIEWS = {
       <div class="hchips">${chips.map(([i, t]) => `<button type="button" class="hchip" data-suggest="${esc(t)}">${ic(i)}${esc(t)}</button>`).join('')}</div>
     </section><div id="home-live"></div></div>`;
   },
-  projects: () => `<div class="pg"><div class="pg-h"><div><h1>Projects</h1><p>3 projects in Aurora</p></div></div>${tbl([['Project','minmax(0,1fr)'],['Branch','150px'],['Agents','120px'],['Updated','110px']], [
-    {cells:['<span class="pri-c">aurora-web</span>', '<span class="mono">feat/landing</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
-    {cells:['<span class="pri-c">aurora-docs</span>', '<span class="mono">main</span>', `<span class="avs">${['quill','sage'].map(id => avatar(id, 16)).join('')}</span>`, '2 days ago']},
-    {cells:['<span class="pri-c">aurora-brand</span>', '<span class="mono">main</span>', `<span class="avs">${['pixel'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 21']}])}</div>`,
+  projects: () => `<div class="pg"><div class="pg-h"><div><h1>Projects</h1><p>3 projects in Agents OS</p></div></div>${tbl([['Project','minmax(0,1fr)'],['Branch','150px'],['Agents','120px'],['Updated','110px']], [
+    {cells:['<span class="pri-c">agents-os-web</span>', '<span class="mono">feat/landing</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
+    {cells:['<span class="pri-c">agents-os-docs</span>', '<span class="mono">main</span>', `<span class="avs">${['quill','sage'].map(id => avatar(id, 16)).join('')}</span>`, '2 days ago']},
+    {cells:['<span class="pri-c">agents-os-brand</span>', '<span class="mono">main</span>', `<span class="avs">${['pixel'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 21']}])}</div>`,
   agents: () => `<div class="pg"><div class="pg-h"><div><h1>Agents</h1><p>7 agents · models and tools are set per agent</p></div><button class="btn" data-cmd="create-agent">${ic('plus')}Create agent</button></div>${tbl([['Agent','170px'],['State','130px'],['Now','minmax(0,1fr)'],['Model','100px'],['Tools','170px']], AGENTS.map(a => ({btn:true, attrs:`data-open-agent="${a.id}"`, cells:[`<span class="who">${avatar(a.id, 20)}<span class="pri-c">${a.name}</span><span style="color:var(--fg-4)">${a.role}</span></span>`, `<span class="stw" data-st="${a.id}"></span>`, `<span data-now="${a.id}"></span>`, `<span class="mono">${a.model}</span>`, a.tools.join(' · ')]})))}</div>`,
   tasks: () => `<div class="pg"><div class="pg-h"><div><h1>Tasks</h1><p>${TASKS.length} tasks · ${TASKS.filter(t => t.status === 'running').length} running</p></div><button class="btn pri" data-cmd="new-task">${ic('plus')}New task</button></div>${tbl([['ID','86px'],['Task','minmax(0,1fr)'],['Owner','130px'],['Status','130px'],['Steps','64px'],['Updated','96px']], TASKS.map(t => ({btn:true, attrs:`data-open-tab="${t.key}"`, cells:[`<span class="mono">${t.id}</span>`, `<span class="pri-c">${esc(t.title)}</span>`, who(t.owner), statusCell(t.status), `<span class="mono">${t.done ?? (t.status === 'done' ? t.steps : 0)}/${t.steps}</span>`, t.updated]})))}</div>`,
   workflows: () => `<div class="pg"><div class="pg-h"><div><h1>Workflows</h1><p>Reusable pipelines. Running one creates a task.</p></div></div>${tbl([['Workflow','minmax(0,1fr)'],['Agents','130px'],['Steps','64px'],['Last run','110px'],['','72px']], [
@@ -1891,7 +1891,7 @@ const VIEWS = {
     {cells:['<span class="pri-c">Weekly research digest</span>', `<span class="avs">${['scout','sage'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">3</span>', 'Yesterday', '<button class="btn" data-cmd="new-task">Run</button>']},
     {cells:['<span class="pri-c">Release notes</span>', `<span class="avs">${['quill','forge'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">4</span>', 'Sep 24', '<button class="btn" data-cmd="new-task">Run</button>']},
     {cells:['<span class="pri-c">Security review</span>', `<span class="avs">${['ward'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">5</span>', 'Sep 25', '<button class="btn" data-cmd="new-task">Run</button>']}])}</div>`,
-  files: () => `<div class="pg"><div class="pg-h"><div><h1>Files</h1><p>aurora-web · feat/landing</p></div></div>${tbl([['Path','minmax(0,1fr)'],['Changed by','130px'],['Size','80px']], [
+  files: () => `<div class="pg"><div class="pg-h"><div><h1>Files</h1><p>agents-os-web · feat/landing</p></div></div>${tbl([['Path','minmax(0,1fr)'],['Changed by','130px'],['Size','80px']], [
     {btn:true, attrs:'data-open-tab="file:page.tsx"', cells:[`<span class="who">${ic('code')}<span class="pri-c">app/(marketing)/page.tsx</span></span>`, who('forge'), '<span class="mono">1.9 KB</span>']},
     {btn:true, attrs:'data-open-tab="file:research.md"', cells:[`<span class="who">${ic('doc')}<span class="pri-c">docs/research.md</span></span>`, who('scout'), '<span class="mono">14 KB</span>']},
     {cells:[`<span class="who">${ic('doc')}<span>docs/recommendations.md</span></span>`, who('sage'), '<span class="mono">4 KB</span>']},
@@ -1903,11 +1903,11 @@ const VIEWS = {
     {cells:['<span class="pri-c">Q3 signup numbers</span>', `<span class="avs">${['atlas','forge'].map(id => avatar(id, 16)).join('')}</span>`, 'Yesterday']},
     {cells:['<span class="pri-c">Brand refresh feedback</span>', `<span class="avs">${['pixel','quill'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 23']}])}</div>`,
   runs: () => `<div class="pg"><div class="pg-h"><div><h1>Runs</h1><p>Every workflow and task execution</p></div></div>${tbl([['Run','72px'],['Task','minmax(0,1fr)'],['Status','130px'],['Duration','84px'],['Tokens','84px']], [
-    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Build the Aurora landing page</span>', statusCell(TASKS[0].status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
+    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Build the Agents OS landing page</span>', statusCell(TASKS[0].status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
     {cells:['<span class="mono">#217</span>', 'Weekly competitor digest', statusCell('done'), '<span class="mono">3:12</span>', '<span class="mono">31.4k</span>']},
     {cells:['<span class="mono">#216</span>', 'Migrate auth to OAuth', statusCell('done'), '<span class="mono">18:40</span>', '<span class="mono">212k</span>']},
     {cells:['<span class="mono">#215</span>', 'Onboarding illustrations', statusCell('done'), '<span class="mono">9:05</span>', '<span class="mono">64.0k</span>']}])}</div>`,
-  activity: () => `<div class="pg"><div class="pg-h"><div><h1>Activity</h1><p>Everything agents did in Aurora today</p></div></div>${ACTIVITY.length ? tbl([['Time','60px'],['Agent','130px'],['Event','minmax(0,1fr)']], ACTIVITY.slice().reverse().map(e => ({cells:[`<span class="mono">${e.t}</span>`, e.agent === 'you' ? 'You' : who(e.agent), esc(e.text)]}))) : '<p class="plan-empty">No activity yet today.</p>'}</div>`,
+  activity: () => `<div class="pg"><div class="pg-h"><div><h1>Activity</h1><p>Everything agents did in Agents OS today</p></div></div>${ACTIVITY.length ? tbl([['Time','60px'],['Agent','130px'],['Event','minmax(0,1fr)']], ACTIVITY.slice().reverse().map(e => ({cells:[`<span class="mono">${e.t}</span>`, e.agent === 'you' ? 'You' : who(e.agent), esc(e.text)]}))) : '<p class="plan-empty">No activity yet today.</p>'}</div>`,
   settings: () => `<div class="pg" style="max-width:720px"><div class="pg-h"><div><h1>Settings</h1><p>Workspace preferences</p></div></div>
     <div class="set-row"><div><b>Theme</b><span>Light, dark, or match your system setting. Saved in this browser.</span></div><div class="segc" id="set-theme" role="group" aria-label="Theme">${[['light','Light'],['dark','Dark'],['system','System']].map(([k, l]) => `<button aria-pressed="${THEME.pref === k}" data-theme-pref="${k}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div><b>Reduce motion</b><span>Stops floating, bouncing and moving indicators. States still change and stay readable.</span></div><button class="tog" role="switch" id="set-rm" aria-checked="${M.reduced}" aria-label="Reduce motion"></button></div>
@@ -2087,7 +2087,7 @@ function palItems(page) {
     {g:'Suggestions', l:'New Task', icon:'plus', kbd:['N'], run:() => openNewTask()},
     {g:'Suggestions', l:'Open Agent', icon:'agent', page:'agents'},
     {g:'Suggestions', l:'Run Workflow', icon:'flow', page:'workflows'},
-    {g:'Suggestions', l:'Search Project', icon:'search', h:'aurora-web', run:() => openTab('files')},
+    {g:'Suggestions', l:'Search Project', icon:'search', h:'agents-os-web', run:() => openTab('files')},
     {g:'Suggestions', l:'Search Files', icon:'file', page:'files'},
     {g:'Suggestions', l:'Create Agent', icon:'sparkle', run:() => toast({html:'<b>Create agent</b> opens the agent builder', sub:'Not part of this prototype.', ms:2400, icon:'sparkle'})},
     {g:'Suggestions', l:'Switch Model', icon:'cpu', h:S.model, page:'models'},
@@ -2328,7 +2328,7 @@ async function runMain(r) {
   T.planCount();
   const f1 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm install', ind:'spin'});
   await Term.cmd('pnpm install', r);
-  await Term.out(['<span class="t-d">Lockfile is up to date, resolution step is skipped</span>', 'Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', '', 'dependencies:', '<span class="t-ok">+</span> @aurora/agent-activity <span class="t-d">0.4.2</span>', '<span class="t-ok">+</span> clsx <span class="t-d">2.1.1</span>', '', 'Done in 3.8s'], r, 150);
+  await Term.out(['<span class="t-d">Lockfile is up to date, resolution step is skipped</span>', 'Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', '', 'dependencies:', '<span class="t-ok">+</span> @agents-os/agent-activity <span class="t-d">0.4.2</span>', '<span class="t-ok">+</span> clsx <span class="t-d">2.1.1</span>', '', 'Done in 3.8s'], r, 150);
   Term.idle();
   f1.done({verb:'Ran', meta:'+3 packages', detail:X.term('pnpm install', 'Packages: +3\nDone in 3.8s')});
   patchAgent('forge', {label:'Implementing hero section'});
@@ -2341,13 +2341,13 @@ async function runMain(r) {
   patchAgent('forge', {label:'Running tests'});
   const f3 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm test', ind:'spin'});
   await Term.cmd('pnpm test', r);
-  await Term.out(['', ' <span class="t-b">RUN</span>  v3.2.4 <span class="t-d">~/aurora-web</span>', '', ' <span class="t-ok">✓</span> app/(marketing)/page.test.tsx <span class="t-d">(6 tests) 41ms</span>', ' <span class="t-ok">✓</span> components/marketing/plan-grid.test.tsx <span class="t-d">(9 tests) 22ms</span>', ' <span class="t-ok">✓</span> components/marketing/faq.test.tsx <span class="t-d">(4 tests) 12ms</span>', ' <span class="t-ok">✓</span> lib/pricing.test.ts <span class="t-d">(23 tests) 8ms</span>', '', ' <span class="t-d">Test Files</span>  <span class="t-ok">4 passed</span> (4)', '      <span class="t-d">Tests</span>  <span class="t-ok">42 passed</span> (42)', '   <span class="t-d">Duration</span>  1.24s'], r, 170);
+  await Term.out(['', ' <span class="t-b">RUN</span>  v3.2.4 <span class="t-d">~/agents-os-web</span>', '', ' <span class="t-ok">✓</span> app/(marketing)/page.test.tsx <span class="t-d">(6 tests) 41ms</span>', ' <span class="t-ok">✓</span> components/marketing/plan-grid.test.tsx <span class="t-d">(9 tests) 22ms</span>', ' <span class="t-ok">✓</span> components/marketing/faq.test.tsx <span class="t-d">(4 tests) 12ms</span>', ' <span class="t-ok">✓</span> lib/pricing.test.ts <span class="t-d">(23 tests) 8ms</span>', '', ' <span class="t-d">Test Files</span>  <span class="t-ok">4 passed</span> (4)', '      <span class="t-d">Tests</span>  <span class="t-ok">42 passed</span> (42)', '   <span class="t-d">Duration</span>  1.24s'], r, 170);
   Term.idle();
   f3.done({verb:'Ran', meta:'42 passed', detail:X.term('pnpm test', 'Test Files  4 passed (4)\n     Tests  42 passed (42)')});
   patchAgent('forge', {label:'Deploying preview'});
-  const f4 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-  await Term.cmd('aurora deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Building aurora-web <span class="t-d">(feat/landing)</span>…', '<span class="t-ok">✓</span> Build completed in 18.2s'], r, 420);
+  const f4 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
+  await Term.cmd('agents-os deploy --preview', r);
+  await Term.out(['<span class="t-d">›</span> Building agents-os-web <span class="t-d">(feat/landing)</span>…', '<span class="t-ok">✓</span> Build completed in 18.2s'], r, 420);
   await wait(500, r);
   await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.', '<span class="t-d">  Add a token in Workspace › Secrets, or grant the agent access to an existing one.</span>'], r, 140);
   Term.idle();
@@ -2357,14 +2357,14 @@ async function runMain(r) {
   await waitFor(() => !S.blocked, r);
   $('#prob-n').textContent = '0';
   T.status('running');
-  const f5 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-  await Term.cmd('aurora deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Using DEPLOY_TOKEN <span class="t-d">(workspace secret)</span>', '<span class="t-d">›</span> Uploading build output… 214 files', '<span class="t-ok">✓</span> Preview ready: <span class="t-u">https://feat-landing.aurora.example</span> <span class="t-d">(2.9s)</span>'], r, 380);
+  const f5 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
+  await Term.cmd('agents-os deploy --preview', r);
+  await Term.out(['<span class="t-d">›</span> Using DEPLOY_TOKEN <span class="t-d">(workspace secret)</span>', '<span class="t-d">›</span> Uploading build output… 214 files', '<span class="t-ok">✓</span> Preview ready: <span class="t-u">https://feat-landing.agents-os.example</span> <span class="t-d">(2.9s)</span>'], r, 380);
   Term.idle();
-  f5.done({verb:'Deployed preview', arg:'feat-landing.aurora.example', meta:'2.9s'});
+  f5.done({verb:'Deployed preview', arg:'feat-landing.agents-os.example', meta:'2.9s'});
   T.step(5, 'done');
   React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Preview deployed'});
-  guard(streamReply('forge', [{p:'Preview is live. The hero, pricing and FAQ sections are in `page.tsx`, and all 42 tests pass.'}, {refs:`<button class="ref" data-open-tab="file:page.tsx">${ic('code')}page.tsx +${ED.added} −${ED.removed}</button><span class="ref">${ic('globe')}feat-landing.aurora.example</span>`}], {drive:false, think:500}));
+  guard(streamReply('forge', [{p:'Preview is live. The hero, pricing and FAQ sections are in `page.tsx`, and all 42 tests pass.'}, {refs:`<button class="ref" data-open-tab="file:page.tsx">${ic('code')}page.tsx +${ED.added} −${ED.removed}</button><span class="ref">${ic('globe')}feat-landing.agents-os.example</span>`}], {drive:false, think:500}));
   later(() => setAgent('forge', {presence:'available'}), 2000, r);
   if (S.approval) {
     T.status('input');
@@ -2502,8 +2502,8 @@ const SCENE_FNS = {
   async blocked(r) {
     openTab('task:142'); setShellWho(true);
     setAgent('forge', {presence:'tool', tool:'code', label:'Deploying preview'});
-    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'aurora deploy --preview', ind:'spin'});
-    await Term.cmd('aurora deploy --preview', r);
+    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
+    await Term.cmd('agents-os deploy --preview', r);
     await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.'], r);
     Term.idle();
     f.fail({verb:'Deploy failed', meta:'DEPLOY_TOKEN is not set', detail:X.deployErr()});
@@ -2567,7 +2567,7 @@ function setReduced(on, fromUser) {
 }
 
 /* ── Theme: light / dark / system, saved in this browser; the head script applies it before first paint ── */
-const THEME_KEY = 'aurora-theme';
+const THEME_KEY = 'agents-os-theme';
 const mqLight = matchMedia('(prefers-color-scheme: light)');
 const THEME = {pref:'system', resolved:'dark'};
 function readThemePref() {
@@ -2655,7 +2655,7 @@ function wire() {
   $('#sb-motion').onclick = () => setReduced(!M.reduced, true);
   $('#sb-scenes').onclick = e => { e.stopPropagation(); MENU.open ? closeMenu() : scenesMenu($('#sb-scenes')); };
   $('#sb-crew').onclick = () => { if (mqInsp.matches) toggleInsp(); else { $('#app').classList.remove('no-insp'); $('[data-ipane="agents"]').click(); } };
-  $('#me-btn').onclick = e => { e.stopPropagation(); openMenu($('#me-btn'), [{head:true, label:'Signed in to Aurora'}, {label:'Settings', icon:'settings', run:() => openTab('settings')}, {label:'Keyboard shortcuts', icon:'command', run:() => openPalette()}, {sep:true}, {label:'Sign out', icon:'arrowR', run:() => toast({html:'Sign out is disabled in this preview', ms:1800, icon:'user'})}], {alignRight:true}); };
+  $('#me-btn').onclick = e => { e.stopPropagation(); openMenu($('#me-btn'), [{head:true, label:'Signed in to Agents OS'}, {label:'Settings', icon:'settings', run:() => openTab('settings')}, {label:'Keyboard shortcuts', icon:'command', run:() => openPalette()}, {sep:true}, {label:'Sign out', icon:'arrowR', run:() => toast({html:'Sign out is disabled in this preview', ms:1800, icon:'user'})}], {alignRight:true}); };
   document.addEventListener('submit', e => {
     if (e.target.id === 'comp') { e.preventDefault(); const inp = $('#chat-in'); const v = inp.value.trim(); if (!v) return; inp.value = ''; inp.style.height = ''; sendChat(v); }
     if (e.target.id === 'home-comp') { e.preventDefault(); homeSubmit(); }
