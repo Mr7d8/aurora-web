@@ -108,7 +108,7 @@
   --add-fg:#1D7A43; --add-bg:rgba(31,128,72,.09);
   --del-fg:#B5372D; --del-bg:rgba(201,57,46,.07); --del-dim:#A0645E;
 }
-/* Light: pastel agent colours get a darker ink for small dots and glyphs (set per agent in injectCSS). Balls keep the pastel. */
+/* Light: agents switch to their more saturated light set, plus a darker ink for small dots and glyphs (both set per agent in injectCSS). */
 [data-theme="light"] .av[data-state=offline] .av-body{filter:grayscale(.95) brightness(.95);opacity:.5}
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
@@ -942,19 +942,21 @@ const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 16 16" aria-hid
 /* ── Agents ── */
 /* The team. Orc sits at the centre of Home and routes work; the others orbit it.
    duties: what the agent is responsible for. Connections live in CONNECTIONS below.
+   hi / c / lo: the ball's highlight, body and shade in dark mode. light: a more saturated set for light mode,
+   where the soft dark-mode colours wash out against white.
    placeholder: a seat with no role yet. It can't take tasks until it gets one. */
 const AGENTS = [
-  {id:'orc', name:'Orc', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Scheduler','Messages'], idle:'neutral', tool:'route', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', ready:'Ready to route', week:21, perm:'Can assign work to any agent',
+  {id:'orc', name:'Orc', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Scheduler','Messages'], idle:'neutral', tool:'route', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', light:{hi:'#FCE48E', c:'#F0C43C', lo:'#CD9520'}, ready:'Ready to route', week:21, perm:'Can assign work to any agent',
     duties:['Runs the daily pulse every morning','Routes your requests to the right agent','Collects results and flags what needs you']},
-  {id:'atlas', name:'Atlas', role:'AI Studio Brain', model:'Opus 5.5', tools:['Brand kit','Assets','Prompts'], idle:'calm', tool:'design', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', ready:'Ready to create', week:12, perm:'Write to brand assets and the prompt library',
+  {id:'atlas', name:'Atlas', role:'AI Studio Brain', model:'Opus 5.5', tools:['Brand kit','Assets','Prompts'], idle:'calm', tool:'design', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', light:{hi:'#BCC3FF', c:'#7D88F2', lo:'#4E59D6'}, ready:'Ready to create', week:12, perm:'Write to brand assets and the prompt library',
     duties:['Brand and product context','Creative system: guidelines, templates and assets','Prompt library']},
-  {id:'nova', name:'Nova', role:'Web & app performance', model:'Sonnet 5.5', tools:['Crawler','Screenshots','Files'], idle:'bright', tool:'audit', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', ready:'Ready to audit', week:17, perm:'Read web and app, propose changes, needs approval to publish',
+  {id:'nova', name:'Nova', role:'Web & app performance', model:'Sonnet 5.5', tools:['Crawler','Screenshots','Files'], idle:'bright', tool:'audit', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', light:{hi:'#FFB3DA', c:'#F26DB2', lo:'#CC3F8A'}, ready:'Ready to audit', week:17, perm:'Read web and app, propose changes, needs approval to publish',
     duties:['Tracks visuals, banners and products on web and app','Reports best practices and recommendations','Proposes banner changes','Proposes product positions']},
-  {id:'kai', name:'Kai', role:'Performance manager', model:'Opus 5.5', tools:['Data','Python','Reports'], idle:'steady', tool:'analyze', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', ready:'Ready to report', week:15, perm:'Read sales, orders and analytics',
+  {id:'kai', name:'Kai', role:'Performance manager', model:'Opus 5.5', tools:['Data','Python','Reports'], idle:'steady', tool:'analyze', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', light:{hi:'#A3EEC0', c:'#45C882', lo:'#1F9C5A'}, ready:'Ready to report', week:15, perm:'Read sales, orders and analytics',
     duties:['Business KPIs and targets','Business growth tracking','Reporting and insights']},
-  {id:'dex', name:'Dex', role:'SEO & GEO', model:'Sonnet 5.5', tools:['Search','AI answers','Files'], idle:'smirk', tool:'search', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', ready:'Ready to check rankings', week:10, perm:'Read search data and public AI answers',
+  {id:'dex', name:'Dex', role:'SEO & GEO', model:'Sonnet 5.5', tools:['Search','AI answers','Files'], idle:'smirk', tool:'search', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', light:{hi:'#A0DEF8', c:'#3DB2E6', lo:'#1786BF'}, ready:'Ready to check rankings', week:10, perm:'Read search data and public AI answers',
     duties:['Search rankings and keywords','Visibility in AI answers (ChatGPT and others)']},
-  {id:'agent6', name:'Agent #6', role:'Role to be defined', model:'Sonnet 5.5', tools:['None yet'], idle:'shy', tool:'analyze', hi:'#DCDFE4', c:'#AFB5BF', lo:'#8A919C', ready:'Waiting for a role', week:0, perm:'None until it has a role',
+  {id:'agent6', name:'Agent #6', role:'Role to be defined', model:'Sonnet 5.5', tools:['None yet'], idle:'shy', tool:'analyze', hi:'#DCDFE4', c:'#AFB5BF', lo:'#8A919C', light:{hi:'#E0E3E8', c:'#AAB2BE', lo:'#7F8895'}, ready:'Waiting for a role', week:0, perm:'None until it has a role',
     duties:[], placeholder:true},
 ];
 const A = Object.fromEntries(AGENTS.map(a => [a.id, a]));
@@ -1041,8 +1043,9 @@ function faceFor(id, st) {
   /* --c-ind: a darker ink of the agent colour so 6px dots, glyphs and carets stay readable on light surfaces */
   const ink = h => '#' + [1, 3, 5].map(i => Math.round(parseInt(h.slice(i, i + 2), 16) * .72).toString(16).padStart(2, '0')).join('');
   for (const a of AGENTS) {
+    const l = a.light || a;
     css += `[data-agent="${a.id}"],[data-ac="${a.id}"]{--c-hi:${a.hi};--c:${a.c};--c-lo:${a.lo}}`;
-    css += `[data-theme="light"] :is([data-agent="${a.id}"],[data-ac="${a.id}"]){--c-ind:${ink(a.c)}}`;
+    css += `[data-theme="light"] :is([data-agent="${a.id}"],[data-ac="${a.id}"]){--c-hi:${l.hi};--c:${l.c};--c-lo:${l.lo};--c-ind:${ink(l.c)}}`;
   }
   const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
 })();
@@ -1663,10 +1666,9 @@ const Term = {
   get prompt() { return `<span class="t-p">${this.who}@agents-os</span> <span class="t-b">~/pulse</span> <span class="t-d">$</span> `; },
   line(html) { const s = document.createElement('span'); s.className = 'l'; s.innerHTML = html; this.el.appendChild(s); this.scroll(); return s; },
   scroll() { const b = $('#bp-body'); b.scrollTop = b.scrollHeight; },
-  clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Agent console · commands and connector calls run by agents appear here</span>'); this.idle(); },
+  clear() { termSeen(); this.el.innerHTML = ''; this.line('<span class="t-d">Agent console · commands and connector calls run by agents appear here</span>'); this.idle(); },
   idle() { const c = this.el.querySelector('.cursor'); if (c) c.parentElement.remove(); this.line(this.prompt + '<span class="cursor"></span>'); },
   async cmd(text, r) {
-    if (!this.opened) { this.opened = true; showBP(true); }
     const c = this.el.querySelector('.cursor'); const ln = c ? c.parentElement : this.line(this.prompt);
     if (c) c.remove(); termPing();
     const span = document.createElement('span'); span.className = 't-c'; ln.appendChild(span);
@@ -1676,7 +1678,7 @@ const Term = {
   },
   async out(lines, r, gap = 90) { for (const l of lines) { this.line(l); await wait(M.reduced ? 10 : gap * rand(.6, 1.4), r); } },
 };
-/* The panel opens on the first command of a run. If you close it after that, new output just marks the status bar toggle. */
+/* The console stays closed unless you open it (status bar or ⌘J). New output just marks the status bar toggle. */
 function termPing(kind = 'out') { if ($('#center').classList.contains('bp-on')) return; const b = $('#sb-term'); b.dataset.new = kind; b.setAttribute('aria-label', kind === 'err' ? 'Toggle terminal, new error' : 'Toggle terminal, new output'); }
 function termSeen() { const b = $('#sb-term'); delete b.dataset.new; b.setAttribute('aria-label', 'Toggle terminal'); }
 function setShellWho(id) { if (id) Term.who = id; $('#bp-who').innerHTML = id ? `${avatar(id, 14)}<span>${id} · console</span>` : '<span>console</span>'; mountAvatars($('#bp-who')); }
@@ -1970,11 +1972,13 @@ function orbitHook(t, dt) {
   const rx = Math.min(w * .38, 190), ry = Math.min(48, h * .25);
   if (w !== ORBIT.w) { ORBIT.w = w; $('#hero-ring').setAttribute('viewBox', `0 0 ${w} ${h}`); const el = $('#hero-ell'); el.setAttribute('cx', cx); el.setAttribute('cy', cy); el.setAttribute('rx', rx); el.setAttribute('ry', ry); }
   if (!M.reduced) ORBIT.a += dt * .11 * (ORBIT.hover ? .3 : 1);
+  /* Agents behind Orc fade for depth. On white, fading reads as washed-out colour, so light mode fades less. */
+  const fade = THEME.resolved === 'light' ? .66 : .42;
   ORBIT.els.forEach((el, k) => {
     const th = ORBIT.a + k * TAU / ORBIT.els.length + .5;
     const x = cx + rx * Math.cos(th), y = cy + ry * Math.sin(th), d = (Math.sin(th) + 1) / 2;
     el.style.transform = `translate(${r2(x)}px,${r2(y)}px) translate(-50%,-50%) scale(${(.74 + .32 * d).toFixed(3)})`;
-    el.style.opacity = (.42 + .58 * d).toFixed(3);
+    el.style.opacity = (fade + (1 - fade) * d).toFixed(3);
     el.style.zIndex = d > .55 ? 4 : 1;
   });
 }
@@ -2611,7 +2615,12 @@ function toggleNav() {
   if (mqNav.matches) app.classList.toggle('nav-open'); else app.classList.toggle('no-nav');
 }
 function closeDrawers() { $('#app').classList.remove('nav-open', 'insp-open'); }
-function showBP(on) { $('#center').classList.toggle('bp-on', on); if (on) { termSeen(); Term.scroll(); } }
+/* Closed by default. Opening or closing it is remembered in this browser. */
+const BP_KEY = 'agents-os-console';
+function showBP(on, save = true) {
+  $('#center').classList.toggle('bp-on', on); if (on) { termSeen(); Term.scroll(); }
+  if (save) try { localStorage.setItem(BP_KEY, on ? 'open' : 'closed'); } catch (e) {}
+}
 function toggleBP() { showBP(!$('#center').classList.contains('bp-on')); }
 function openConnections() { closeCard(); openTab('settings'); setTimeout(() => { const c = $('#connections'); if (c) c.scrollIntoView({block:'start', behavior: M.reduced ? 'auto' : 'smooth'}); }, 60); }
 function openChat(id) { closeCard(); closeMenu(); S.chatAgent = id; openTab('chat'); paintCompAgent(); setTimeout(() => { const t = $('#chat-in'); if (t) t.focus(); }, 60); }
@@ -2780,6 +2789,8 @@ function init() {
   updateCrew(); navCounts();
   if (mqInsp.matches) $('#insp-toggle').setAttribute('aria-pressed', 'false');
   resetWorld();
+  let bp = null; try { bp = localStorage.getItem(BP_KEY); } catch (e) {}
+  if (bp === 'open') showBP(true, false);
   setTimeout(() => play('run'), 700);
 }
 init();
