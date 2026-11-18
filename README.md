@@ -18,7 +18,7 @@ No platform is connected yet, so every run uses sample data. Each agent's card s
 ## It's built like an IDE
 
 - **Home.** Orc greets you, with the team orbiting around it.
-- **Center.** A tabbed workspace with the task plan and execution log, chat, `homepage.json` and the daily pulse report.
+- **Center.** A tabbed workspace with the task plan and a plain-language activity log, chat, `homepage.json` and the daily pulse report.
 - **Bottom.** The agent console, where commands and connector calls show up. It's hidden by default: open it from the status bar or with `⌘J` (a dot on the toggle marks new output). Your choice is saved in your browser.
 - **Right.** An agent inspector, plus a Context tab with the task, files and connections.
 - **Overlays.** The command palette, menus, agent card and dialogs use a glass material.
@@ -38,7 +38,7 @@ No platform is connected yet, so every run uses sample data. Each agent's card s
 
 Everything lives in `src/workspace.html`:
 
-- `AGENTS`: each agent's name, role, duties, model, tools and colour. `hi`, `c` and `lo` are the soft dark-mode colours; `light` holds a more saturated set for light mode. Give Agent #6 a name, role and duties here, and remove `placeholder:true` so it can take tasks.
+- `AGENTS`: each agent's name, role, sidebar label (`tag`), duties, model, tools and colour. `hi`, `c` and `lo` are the soft dark-mode colours; `light` holds a more saturated set for light mode. Give Agent #6 a name, role and duties here, and remove `placeholder:true` so it can take tasks.
 - `CONNECTIONS`: the platforms and which agents use them.
 - `routeAgent`: the keywords Orc uses to route requests typed on Home.
 

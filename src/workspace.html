@@ -176,9 +176,11 @@ code,.code-i{font-family:var(--mono);font-size:.92em;letter-spacing:0}
 .ni[aria-current=page] .ic{color:var(--fg-2)}
 .ni .cnt{margin-left:auto;font:400 11px var(--mono);color:var(--fg-4)}
 .ni .cnt.attn{color:var(--warn)}
-.ra{display:grid;grid-template-columns:18px minmax(0,1fr) auto;align-items:center;gap:9px;width:100%;height:28px;padding:0 8px;border-radius:6px;transition:background .12s}
+.ra{display:grid;grid-template-columns:18px minmax(0,1fr) auto;grid-template-areas:"av n st" "av r r";align-items:center;gap:0 9px;width:100%;min-height:40px;padding:4px 8px;border-radius:6px;transition:background .12s}
+.ra>.av{grid-area:av}.ra .stw{grid-area:st}
+.ra-r{grid-area:r;font-size:11.5px;line-height:1.35;color:var(--fg-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ra:hover{background:var(--hover)}
-.ra-n{font-size:13px;color:var(--fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ra-n{grid-area:n;font-size:13px;line-height:1.35;color:var(--fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ra:hover .ra-n{color:var(--fg)}
 .nav-foot{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:1px}
 
@@ -412,7 +414,7 @@ button.ref:hover{border-color:var(--line-3);color:var(--fg)}
 .ev{position:relative;border-radius:6px}
 .ev.new{animation:evIn .38s var(--ease) both}
 @keyframes evIn{from{opacity:0;transform:translateY(5px)}}
-.ev-row{display:grid;grid-template-columns:12px 56px 92px minmax(0,1fr) auto 44px 16px;align-items:center;gap:10px;width:100%;min-height:31px;padding:0 6px 0 2px;border-radius:6px;cursor:default;transition:background .12s}
+.ev-row{display:grid;grid-template-columns:12px 40px 92px minmax(0,1fr) auto 16px;align-items:center;gap:10px;width:100%;min-height:31px;padding:0 6px 0 2px;border-radius:6px;cursor:default;transition:background .12s}
 .ev.x .ev-row{cursor:pointer}
 .ev-row:hover{background:rgba(var(--ink),.025)}
 .ev-chev{display:grid;place-items:center;color:var(--fg-4);transition:transform .2s var(--ease)}
@@ -424,17 +426,16 @@ button.ref:hover{border-color:var(--line-3);color:var(--fg)}
 .ev-who>span:last-child{overflow:hidden;text-overflow:ellipsis}
 .ev-what{display:flex;align-items:center;gap:8px;min-width:0;font-size:13px;color:var(--fg)}
 .ev-what .ic{width:13px;height:13px;color:var(--fg-3)}
-.ev-verb{white-space:nowrap}
+.ev-verb{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ev-arg{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 12px var(--mono);color:var(--fg-3)}
-.ev-meta{font:400 11.5px var(--mono);color:var(--fg-3);white-space:nowrap}
-.ev-dur{font:400 11.5px var(--mono);color:var(--fg-4);text-align:right}
+.ev-meta{font-size:12px;font-variant-numeric:tabular-nums;color:var(--fg-3);white-space:nowrap}
 .ev-st{display:grid;place-items:center}
 .ev[data-s=error] .ev-verb{color:var(--err)}
 .ev[data-s=error] .ev-meta{color:color-mix(in srgb,var(--err) 80%,var(--fg-3))}
 .ev[data-s=approval] .ev-verb{color:var(--warn)}
 .ev[data-s=stopped] .ev-verb{color:var(--fg-3)}
 .ev.note .ev-what{color:var(--fg-2)}
-.ev-acts{display:flex;gap:6px;padding:0 0 8px 190px}
+.ev-acts{display:flex;gap:6px;padding:0 0 8px 176px}
 .ho{display:inline-flex;align-items:center;gap:0}
 .ho-track{position:relative;width:22px;height:1px;margin:0 3px;background:var(--line-3)}
 .ho-track i{position:absolute;top:-2px;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--fg);box-shadow:0 0 6px rgba(var(--ink),.6);animation:hoMove .72s .1s var(--ease-io) both}
@@ -442,11 +443,12 @@ button.ref:hover{border-color:var(--line-3);color:var(--fg)}
 .ev-d{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s var(--ease)}
 .ev.open .ev-d{grid-template-rows:1fr}
 .ev-d>div{overflow:hidden;min-height:0}
-.xd{margin:2px 6px 10px 80px;border:1px solid var(--line);border-radius:8px;background:var(--raised);overflow:hidden}
+.xd{margin:2px 6px 10px 64px;border:1px solid var(--line);border-radius:8px;background:var(--raised);overflow:hidden}
 .xd-h{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-bottom:1px solid var(--line);font-size:11.5px;color:var(--fg-3)}
 .xd-h code{color:var(--fg-2)}
 .xd-b{padding:8px 10px 10px;font-size:12.5px;color:var(--fg-2)}
 .xd-b pre{margin:0;font:400 11.5px/1.6 var(--mono);color:var(--fg-2);white-space:pre-wrap}
+.xd-b p+p,.xd-b .src+p{margin-top:6px}
 .src{display:grid;grid-template-columns:14px minmax(0,1fr) auto;align-items:center;gap:9px;height:26px;font-size:12.5px}
 .src i{width:12px;height:12px;border-radius:3px;background:var(--fav-bg);box-shadow:inset 0 0 0 1px rgba(var(--ink),.08)}
 .src span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg-2)}
@@ -735,15 +737,16 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 }
 @media (max-width:860px){
   :root{--nav-w:52px}
-  .nav-h,.ni span:not(.cnt),.ra-n,.ra .stw,.ni .cnt{display:none}
+  .nav-h,.ni span:not(.cnt),.ra-n,.ra-r,.ra .stw,.ni .cnt{display:none}
   .ni,.ra{justify-content:center;padding:0;grid-template-columns:1fr;justify-items:center}
+  .ra{grid-template-areas:"av";min-height:32px}
   .nav-in{padding:8px 6px 6px}
   .search span{display:none}
   .search{position:static;transform:none;width:auto;margin-left:auto}
   .search+.tb-r{margin-left:4px}
   .tv,.pg,.doc{padding-left:20px;padding-right:20px}
   .ev-row{grid-template-columns:12px 92px minmax(0,1fr) auto 16px}
-  .ev-t,.ev-dur{display:none}
+  .ev-t{display:none}
   .xd{margin-left:16px}
   .ev-acts{padding-left:26px}
 }
@@ -753,13 +756,16 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
   .nav-in{width:232px;padding:8px}
   .app.nav-open .nav{transform:none}
   .app.nav-open~.m-scrim{opacity:1;visibility:visible;transition:opacity .25s}
-  .nav-h,.ni span:not(.cnt),.ra-n,.ra .stw,.ni .cnt{display:flex}
+  .nav-h,.ni span:not(.cnt),.ra .stw,.ni .cnt{display:flex}
+  .ra-n,.ra-r{display:block}
   .ni{justify-content:flex-start;padding:0 8px}
-  .ra{display:grid;grid-template-columns:18px minmax(0,1fr) auto;justify-items:stretch;padding:0 8px}
+  .ra{display:grid;grid-template-columns:18px minmax(0,1fr) auto;grid-template-areas:"av n st" "av r r";justify-items:stretch;min-height:40px;padding:4px 8px}
   .crumb .hide-xs{display:none}
   #model-btn .lbl{display:none}
   .ev-row{grid-template-columns:12px minmax(0,1fr) auto 16px}
   .ev-who{display:none}
+  .ev-row{padding-top:5px;padding-bottom:5px}
+  .ev-verb{white-space:normal}
   .ev-meta{max-width:90px;overflow:hidden;text-overflow:ellipsis}
   .ps{grid-template-columns:16px minmax(0,1fr) auto}
   .ps-time{display:none}
@@ -941,22 +947,23 @@ const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 16 16" aria-hid
 
 /* ── Agents ── */
 /* The team. Orc sits at the centre of Home and routes work; the others orbit it.
+   tag: a short, plain label for what the agent covers, shown under its name in the sidebar.
    duties: what the agent is responsible for. Connections live in CONNECTIONS below.
    hi / c / lo: the ball's highlight, body and shade in dark mode. light: a more saturated set for light mode,
    where the soft dark-mode colours wash out against white.
    placeholder: a seat with no role yet. It can't take tasks until it gets one. */
 const AGENTS = [
-  {id:'orc', name:'Orc', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Scheduler','Messages'], idle:'neutral', tool:'route', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', light:{hi:'#FCE48E', c:'#F0C43C', lo:'#CD9520'}, ready:'Ready to route', week:21, perm:'Can assign work to any agent',
+  {id:'orc', name:'Orc', role:'Orchestrator', tag:'Team lead', model:'Opus 5.5', tools:['Planner','Scheduler','Messages'], idle:'neutral', tool:'route', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', light:{hi:'#FCE48E', c:'#F0C43C', lo:'#CD9520'}, ready:'Ready to route', week:21, perm:'Can assign work to any agent',
     duties:['Runs the daily pulse every morning','Routes your requests to the right agent','Collects results and flags what needs you']},
-  {id:'atlas', name:'Atlas', role:'AI Studio Brain', model:'Opus 5.5', tools:['Brand kit','Assets','Prompts'], idle:'calm', tool:'design', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', light:{hi:'#BCC3FF', c:'#7D88F2', lo:'#4E59D6'}, ready:'Ready to create', week:12, perm:'Write to brand assets and the prompt library',
+  {id:'atlas', name:'Atlas', role:'AI Studio Brain', tag:'Brand & creative', model:'Opus 5.5', tools:['Brand kit','Assets','Prompts'], idle:'calm', tool:'design', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', light:{hi:'#BCC3FF', c:'#7D88F2', lo:'#4E59D6'}, ready:'Ready to create', week:12, perm:'Write to brand assets and the prompt library',
     duties:['Brand and product context','Creative system: guidelines, templates and assets','Prompt library']},
-  {id:'nova', name:'Nova', role:'Web & app performance', model:'Sonnet 5.5', tools:['Crawler','Screenshots','Files'], idle:'bright', tool:'audit', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', light:{hi:'#FFB3DA', c:'#F26DB2', lo:'#CC3F8A'}, ready:'Ready to audit', week:17, perm:'Read web and app, propose changes, needs approval to publish',
+  {id:'nova', name:'Nova', role:'Web & app performance', tag:'Website & app', model:'Sonnet 5.5', tools:['Crawler','Screenshots','Files'], idle:'bright', tool:'audit', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', light:{hi:'#FFB3DA', c:'#F26DB2', lo:'#CC3F8A'}, ready:'Ready to audit', week:17, perm:'Read web and app, propose changes, needs approval to publish',
     duties:['Tracks visuals, banners and products on web and app','Reports best practices and recommendations','Proposes banner changes','Proposes product positions']},
-  {id:'kai', name:'Kai', role:'Performance manager', model:'Opus 5.5', tools:['Data','Python','Reports'], idle:'steady', tool:'analyze', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', light:{hi:'#A3EEC0', c:'#45C882', lo:'#1F9C5A'}, ready:'Ready to report', week:15, perm:'Read sales, orders and analytics',
+  {id:'kai', name:'Kai', role:'Performance manager', tag:'Sales & KPIs', model:'Opus 5.5', tools:['Data','Python','Reports'], idle:'steady', tool:'analyze', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', light:{hi:'#A3EEC0', c:'#45C882', lo:'#1F9C5A'}, ready:'Ready to report', week:15, perm:'Read sales, orders and analytics',
     duties:['Business KPIs and targets','Business growth tracking','Reporting and insights']},
-  {id:'dex', name:'Dex', role:'SEO & GEO', model:'Sonnet 5.5', tools:['Search','AI answers','Files'], idle:'smirk', tool:'search', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', light:{hi:'#A0DEF8', c:'#3DB2E6', lo:'#1786BF'}, ready:'Ready to check rankings', week:10, perm:'Read search data and public AI answers',
+  {id:'dex', name:'Dex', role:'SEO & GEO', tag:'Search & AI visibility', model:'Sonnet 5.5', tools:['Search','AI answers','Files'], idle:'smirk', tool:'search', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', light:{hi:'#A0DEF8', c:'#3DB2E6', lo:'#1786BF'}, ready:'Ready to check rankings', week:10, perm:'Read search data and public AI answers',
     duties:['Search rankings and keywords','Visibility in AI answers (ChatGPT and others)']},
-  {id:'agent6', name:'Agent #6', role:'Role to be defined', model:'Sonnet 5.5', tools:['None yet'], idle:'shy', tool:'analyze', hi:'#DCDFE4', c:'#AFB5BF', lo:'#8A919C', light:{hi:'#E0E3E8', c:'#AAB2BE', lo:'#7F8895'}, ready:'Waiting for a role', week:0, perm:'None until it has a role',
+  {id:'agent6', name:'Agent #6', role:'Role to be defined', tag:'No role yet', model:'Sonnet 5.5', tools:['None yet'], idle:'shy', tool:'analyze', hi:'#DCDFE4', c:'#AFB5BF', lo:'#8A919C', light:{hi:'#E0E3E8', c:'#AAB2BE', lo:'#7F8895'}, ready:'Waiting for a role', week:0, perm:'None until it has a role',
     duties:[], placeholder:true},
 ];
 const A = Object.fromEntries(AGENTS.map(a => [a.id, a]));
@@ -1321,7 +1328,7 @@ function buildNav() {
     for (const [k, l, i] of items) h += `<button class="ni" data-nav="${k}" title="${l}">${ic(i)}<span>${l}</span><span class="cnt" id="cnt-${k}"></span></button>`;
   }
   h += `<div class="nav-h"><span>Agents</span><span id="nav-online"></span></div>`;
-  h += AGENTS.map(a => `<button class="ra" data-open-agent="${a.id}" title="${esc(a.name + ' · ' + a.role)}">${avatar(a.id, 18)}<span class="ra-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button>`).join('');
+  h += AGENTS.map(a => `<button class="ra" data-open-agent="${a.id}" title="${esc(a.name + ' · ' + a.role)}">${avatar(a.id, 18)}<span class="ra-n">${a.name}</span><span class="stw" data-st="${a.id}"></span><span class="ra-r">${esc(a.tag)}</span></button>`).join('');
   h += `<div class="nav-foot"><button class="ni" data-nav="settings" title="Settings">${ic('settings')}<span>Settings</span><span class="cnt kbd-hint">${MOD.trim()},</span></button><button class="ni" id="acct-btn" title="Account">${ic('user')}<span>Account</span></button></div>`;
   $('#nav-in').innerHTML = h;
 }
@@ -1518,7 +1525,7 @@ function TaskView(task, o = {}) {
     <div class="tv-prog" data-prog><i></i></div>
     <div class="sh"><span>Plan</span><span class="mono" data-plan-n></span></div>
     <ol class="plan" data-plan><li class="plan-empty">${ind('think')}<span class="shim">Waiting for a plan</span></li></ol>
-    <div class="sh"><span>Execution</span><span class="sh-tools"><button data-tv-act="expand">Expand all</button><button data-tv-act="collapse">Collapse all</button></span></div>
+    <div class="sh"><span>Activity</span><span class="sh-tools"><button data-tv-act="expand">Show all details</button><button data-tv-act="collapse">Hide details</button></span></div>
     <div class="log" data-log></div>
   </div>`;
   const q = s => v.querySelector(s);
@@ -1567,8 +1574,9 @@ function TaskView(task, o = {}) {
       for (const id of TEAM) paintAgent(id);
     },
     row(o) { return logRow(q('[data-log]'), o, v); },
+    /* what: the rest of a sentence that starts with the sender's name, e.g. "asked Nova to audit the website and app" */
     handoff(from, to, what, meta) {
-      return logRow(q('[data-log]'), {kind:'handoff', agent:from, to, verb:'Handoff', arg:what, meta, done:true}, v);
+      return logRow(q('[data-log]'), {kind:'handoff', agent:from, to, verb:what, meta, done:true}, v);
     },
     clear() { q('[data-log]').innerHTML = ''; plan = []; started = ended = 0; q('[data-plan]').innerHTML = `<li class="plan-empty">${ind('think')}<span class="shim">Waiting for a plan</span></li>`; q('[data-plan-n]').textContent = ''; q('[data-prog] i').style.width = '0%'; q('[data-started]').textContent = 'Not started'; q('[data-elapsed]').textContent = '0:00'; const pb = q('[data-tv-act="pause"]'); pb.disabled = false; pb.style.opacity = ''; },
   };
@@ -1577,6 +1585,9 @@ function TaskView(task, o = {}) {
   return tv;
 }
 const ACTIVITY = [];
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+/* One line per thing an agent did, written as a plain sentence. Commands, file names and exit codes stay out of it:
+   they're in the agent console (status bar or ⌘J). Rows with more to show open on click. */
 function logRow(log, o, scroller) {
   const d = document.createElement('div');
   const hasD = !!o.detail;
@@ -1586,10 +1597,9 @@ function logRow(log, o, scroller) {
   const who = o.kind === 'handoff'
     ? `<span class="ho">${avatar(o.agent, 16)}<span class="ho-track"><i></i></span>${avatar(o.to, 16)}</span>`
     : o.agent === 'you' ? `<span class="m-me" style="width:16px;height:16px;font-size:7px">SD</span><span>You</span>` : `${avatar(o.agent, 16)}<span>${A[o.agent].name}</span>`;
-  const verbHTML = v => o.kind === 'handoff' ? `${esc(A[o.agent].name)} → ${esc(A[o.to].name)}` : esc(v);
-  d.innerHTML = `<div class="ev-row" ${hasD ? 'role="button" tabindex="0" aria-expanded="false"' : ''}><span class="ev-chev">${ic('chevR')}</span><span class="ev-t mono">${clock()}</span><span class="ev-who">${who}</span><span class="ev-what">${ic(o.kind === 'handoff' ? 'handoff' : o.icon || 'sparkle')}<span class="ev-verb">${verbHTML(o.verb)}</span>${o.arg ? `<span class="ev-arg">${esc(o.arg)}</span>` : ''}</span><span class="ev-meta">${esc(o.meta || '')}</span><span class="ev-dur"></span><span class="ev-st"></span></div>${o.actions ? `<div class="ev-acts">${o.actions}</div>` : ''}<div class="ev-d"><div>${o.detail || ''}</div></div>`;
-  const verb = d.querySelector('.ev-verb'), meta = d.querySelector('.ev-meta'), st = d.querySelector('.ev-st'), dur = d.querySelector('.ev-dur');
-  const t0 = Date.now();
+  const verbHTML = v => o.kind === 'handoff' ? `${esc(A[o.agent].name)} ${esc(v)}` : esc(v);
+  d.innerHTML = `<div class="ev-row" ${hasD ? 'role="button" tabindex="0" aria-expanded="false"' : ''}><span class="ev-chev">${ic('chevR')}</span><span class="ev-t mono">${clock().slice(0, 5)}</span><span class="ev-who">${who}</span><span class="ev-what">${ic(o.kind === 'handoff' ? 'handoff' : o.icon || 'sparkle')}<span class="ev-verb">${verbHTML(o.verb)}</span>${o.arg ? `<span class="ev-arg">${esc(o.arg)}</span>` : ''}</span><span class="ev-meta">${esc(o.meta || '')}</span><span class="ev-st"></span></div>${o.actions ? `<div class="ev-acts">${o.actions}</div>` : ''}<div class="ev-d"><div>${o.detail || ''}</div></div>`;
+  const verb = d.querySelector('.ev-verb'), meta = d.querySelector('.ev-meta'), st = d.querySelector('.ev-st');
   const setRunning = () => { verb.classList.add('shim'); st.innerHTML = ind(o.ind || 'dot'); };
   if (o.done) { st.innerHTML = o.kind === 'handoff' ? '' : ind('ok'); if (o.kind === 'note') st.innerHTML = ''; }
   else if (o.kind === 'approval') st.innerHTML = ind('ask');
@@ -1597,7 +1607,7 @@ function logRow(log, o, scroller) {
   log.appendChild(d); mountAvatars(d);
   const pinned = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 180;
   if (pinned) requestAnimationFrame(() => scroller.scrollTo({top: scroller.scrollHeight, behavior: M.reduced ? 'auto' : 'smooth'}));
-  const act = {t: clock().slice(0, 5), agent: o.agent, to: o.to, text: o.kind === 'handoff' ? `Handed off ${o.arg} to ${A[o.to].name}` : `${o.verb}${o.arg ? ' ' + o.arg : ''}`};
+  const act = {t: clock().slice(0, 5), agent: o.agent, to: o.to, text: o.kind === 'handoff' ? cap(o.verb) : `${o.verb}${o.arg ? ' ' + o.arg : ''}`};
   ACTIVITY.push(act); refreshLive('activity'); homeLiveSoon(); if (CARD.id) syncCard();
   const h = {
     el: d,
@@ -1606,7 +1616,6 @@ function logRow(log, o, scroller) {
       d.dataset.s = 'done'; verb.classList.remove('shim');
       if (p.verb) verb.textContent = p.verb; if (p.meta != null) meta.textContent = p.meta;
       if (p.arg != null) { const a = d.querySelector('.ev-arg'); if (a) a.textContent = p.arg; }
-      dur.textContent = fmtDur((Date.now() - t0) / 1000);
       st.innerHTML = ind('ok');
       if (p.detail) { d.querySelector('.ev-d>div').innerHTML = p.detail; mountAvatars(d); makeExpandable(); }
       const ac = d.querySelector('.ev-acts'); if (ac) ac.remove();
@@ -1614,14 +1623,12 @@ function logRow(log, o, scroller) {
     fail(p = {}) {
       d.dataset.s = 'error'; verb.classList.remove('shim');
       if (p.verb) verb.textContent = p.verb; if (p.meta != null) meta.textContent = p.meta;
-      dur.textContent = fmtDur((Date.now() - t0) / 1000);
       st.innerHTML = ind('err');
       if (p.detail) { d.querySelector('.ev-d>div').innerHTML = p.detail; makeExpandable(); h.open(true); }
     },
     stop(p = {}) {
       d.dataset.s = 'stopped'; verb.classList.remove('shim');
       if (p.verb) verb.textContent = p.verb; if (p.meta != null) meta.textContent = p.meta;
-      dur.textContent = fmtDur((Date.now() - t0) / 1000);
       st.innerHTML = ind('off');
       const ac = d.querySelector('.ev-acts'); if (ac) ac.remove();
     },
@@ -1634,29 +1641,27 @@ function logRow(log, o, scroller) {
 /* Tool output details */
 const X = {
   plan: steps => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>Plan</span><span class="sp"></span><span class="mono">${steps.length} steps · ${new Set(steps.map(s => s.agent)).size} agents</span></div><div class="xd-b"><ol class="xl">${steps.map(s => `<li><span>${esc(s.title)} <span style="color:var(--fg-4)">· ${A[s.agent].name}</span></span></li>`).join('')}</ol></div></div>`,
-  audit: () => `<div class="xd"><div class="xd-h">${ic('globe')}<code>audit("home", web, app)</code><span class="sp"></span><span class="mono">14 pages · 3 issues</span></div><div class="xd-b">${[
+  audit: () => `<div class="xd"><div class="xd-h">${ic('globe')}<span>What Nova found</span><span class="sp"></span><span class="mono">14 pages · 3 issues</span></div><div class="xd-b">${[
     ['App hero shows an ended campaign','app · home'],['Sold-out product in slot 1','web · home'],
     ['Hero image is 1.8 MB on mobile','web · mobile'],['11 other checks passed','']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}</div></div>`,
-  odooErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>kpi pull --source odoo</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><b>Odoo</b> isn’t connected to this workspace, so Kai can’t read yesterday’s sales and orders.</p><div><button class="btn warn" data-resolve>${ic('plug')}Resolve</button></div></div></div>`,
-  kpis: () => `<div class="xd"><div class="xd-h">${ic('activity')}<code>kpi compare --targets q4</code><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>KPI              Yesterday   Target   Change
+  odooErr: () => `<div class="xd"><div class="xd-h">${ic('plug')}<span style="color:var(--err)">Odoo isn’t connected</span></div><div class="xd-b err-box"><p>Kai reads yesterday’s sales and orders from <b>Odoo</b>, which isn’t connected to this workspace yet. You can carry on with sample data for now.</p><div><button class="btn warn" data-resolve>${ic('plug')}Resolve</button></div></div></div>`,
+  kpis: () => `<div class="xd"><div class="xd-h">${ic('activity')}<span>Yesterday against Q4 targets</span><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>KPI              Yesterday   Target   Change
 Revenue          412k        450k       −8%   off target
 Orders           1,284       1,300      −1%   on track
 Web conversion   2.8%        2.8%        0%   on target
 App conversion   1.9%        2.3%      −17%   off target</pre></div></div>`,
-  aiAnswers: () => `<div class="xd"><div class="xd-h">${ic('sparkle')}<code>ai_answers.check(12 prompts)</code><span class="sp"></span><span class="mono">cited in 5 of 12</span></div><div class="xd-b">${[
-    ['ChatGPT','cited in 2 of 4'],['Gemini','cited in 2 of 4'],['Perplexity','cited in 1 of 4']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}<pre style="margin-top:8px">not cited for: running shoes, smart watches</pre></div></div>`,
-  rankings: () => `<div class="xd"><div class="xd-h">${ic('search')}<code>search_console.query(40 keywords)</code><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>keyword            position   change
+  aiAnswers: () => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>12 questions asked to AI assistants</span><span class="sp"></span><span class="mono">mentioned in 5 of 12</span></div><div class="xd-b">${[
+    ['ChatGPT','mentioned in 2 of 4'],['Gemini','mentioned in 2 of 4'],['Perplexity','mentioned in 1 of 4']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}<p>We’re not mentioned for running shoes or smart watches.</p></div></div>`,
+  rankings: () => `<div class="xd"><div class="xd-h">${ic('search')}<span>Google rankings for 40 keywords</span><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>keyword            position   change
 air fryer          #4         up 2
 wireless earbuds   #7         down 3
 winter jacket      #12        up 5</pre></div></div>`,
-  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>brand/banners/winter-sale</code><span class="sp"></span><span class="mono">3 variants · 1440 × 600</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Snow scene</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Bold type</figcaption></figure></div></div></div>`,
-  term: (cmd, lines) => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>${esc(cmd)}</code><span class="sp"></span><span class="mono">exit 0</span></div><div class="xd-b"><pre>${lines}</pre></div></div>`,
-  diff: () => `<div class="xd"><div class="xd-h">${ic('code')}<code>site/homepage.json</code><span class="sp"></span><span class="mono" style="color:var(--ok)">+${ED.added}</span><span class="mono" style="color:var(--err)">−${ED.removed}</span></div><div class="xd-b diff"><div class="c">@@ hero @@</div><div class="r">-    "banner": "black-friday-teaser",</div><div class="a">+    "banner": "winter-sale-b",</div><div class="a">+    "alt": "Winter sale, up to 30% off",</div><div class="c">@@ products @@</div><div class="r">-    "wireless-earbuds-pro",</div><div class="a">+    "winter-jacket-pro",</div><div style="margin-top:8px"><button class="ref" data-open-tab="file:homepage.json">${ic('code')}Open homepage.json</button></div></div></div>`,
-  pulse: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>fs.write("pulse/daily-pulse.md")</code><span class="sp"></span><span class="mono">4 sections</span></div><div class="xd-b"><pre>## Today
-Revenue 412k, 8% under target
-App conversion 1.9% (target 2.3%)
-"air fryer" up 2 to #4
-1 change waiting for approval</pre></div></div>`,
+  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<span>Winter sale banners</span><span class="sp"></span><span class="mono">3 options · 1440 × 600</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Snow scene</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Bold type</figcaption></figure></div></div></div>`,
+  sales: () => `<div class="xd"><div class="xd-h">${ic('activity')}<span>Yesterday’s sales</span><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><p>1,284 orders and 412k in revenue across web and app.</p><p style="color:var(--fg-3)">This is sample data because Odoo isn’t connected yet.</p></div></div>`,
+  changes: () => `<div class="xd"><div class="xd-h">${ic('globe')}<span>Homepage changes</span><span class="sp"></span><span class="mono">2 changes</span></div><div class="xd-b">${[
+    ['App hero: the ended Black Friday teaser becomes the winter sale banner','app · home'],['Slot 1: sold-out Wireless Earbuds Pro becomes Winter Jacket Pro','web · home']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}<div style="margin-top:8px"><button class="ref" data-open-tab="file:homepage.json">${ic('code')}See the file</button></div></div></div>`,
+  pulse: () => `<div class="xd"><div class="xd-h">${ic('doc')}<span>Today’s pulse</span><span class="sp"></span><span class="mono">4 sections</span></div><div class="xd-b"><ol class="xl">${[
+    'Revenue 412k, 8% under target','App conversion 1.9% (target 2.3%)','“air fryer” up 2 to #4','1 change waiting for approval'].map(t => `<li><span>${t}</span></li>`).join('')}</ol></div></div>`,
 };
 
 /* ── Terminal ── */
@@ -2276,7 +2281,7 @@ async function handoff(tv, from, to, what, meta, r, note) {
   React.nudge(from);
   await wait(M.reduced ? 250 : 720, r);
   React.receive(to);
-  if (note) toast({agent:from, to, html:`<b>${A[from].name}</b> sent ${note} to <b>${A[to].name}</b>`, sub: meta ? `${what} · ${meta}` : what});
+  if (note) toast({agent:from, to, html:`<b>${A[from].name}</b> sent ${note} to <b>${A[to].name}</b>`, sub:cap(meta ? `${what} ${meta}` : what)});
   await wait(260, r);
 }
 const PLAN = [
@@ -2309,87 +2314,87 @@ async function runMain(r) {
   openTab('task:142');
   const T = MAIN;
   await wait(500, r);
-  T.row({agent:'you', kind:'note', icon:'plus', verb:'Created task', arg:'TASK-142', done:true});
+  T.row({agent:'you', kind:'note', icon:'plus', verb:'Started the daily pulse', done:true});
   await taskStart('orc', {presence:'thinking', label:'Planning the pulse…'}, r);
   T.status('running'); S.runStart = Date.now();
-  const p0 = T.row({agent:'orc', icon:'sparkle', verb:'Planning task', ind:'think'});
+  const p0 = T.row({agent:'orc', icon:'sparkle', verb:'Planning the work', ind:'think'});
   await wait(1700, r);
   T.plan(PLAN);
-  p0.done({verb:'Planned task', meta:'6 steps', detail:X.plan(PLAN)});
+  p0.done({verb:'Split the work into 6 steps', meta:'4 agents', detail:X.plan(PLAN)});
   setAgent('orc', {presence:'working', label:'Coordinating 4 agents'});
 
   T.step(0, 'running');
-  await handoff(T, 'orc', 'nova', 'brief.md', null, r);
+  await handoff(T, 'orc', 'nova', 'asked Nova to audit the website and app', null, r);
   await taskStart('nova', {presence:'tool', tool:'audit', label:'Auditing web and app'}, r);
   T.planCount();
-  const n1 = T.row({agent:'nova', icon:'globe', verb:'Auditing pages', arg:'web · app', meta:'0 / 14', ind:'scan'});
+  const n1 = T.row({agent:'nova', icon:'globe', verb:'Checking pages on the website and app', meta:'0 of 14', ind:'scan'});
   guard(streamReply('nova', NOVA_FIND, {drive:false, think:600, tool:['globe','Audited 14 pages','web · app · 4.2s'], toolRunning:'Auditing 14 pages', toolBody:'<p>Homepage, 3 category pages, 6 product pages and 4 app screens · banners, product slots, image weight</p>', toolMs:2800}));
-  for (let k = 1; k <= 14; k++) { await wait(240, r); n1.set({meta:`${k} / 14`}); patchAgent('nova', {label:`Auditing page ${k} of 14`}); }
-  n1.done({verb:'Audited 14 pages', meta:'3 issues', detail:X.audit()});
+  for (let k = 1; k <= 14; k++) { await wait(240, r); n1.set({meta:`${k} of 14`}); patchAgent('nova', {label:`Auditing page ${k} of 14`}); }
+  n1.done({verb:'Checked 14 pages on the website and app', meta:'3 issues found', detail:X.audit()});
   T.step(0, 'done');
   React.celebrate('nova'); setAgent('nova', {presence:'complete', label:'Audit completed'});
   later(() => setAgent('nova', {presence:'available'}), 1800, r);
 
   T.step(1, 'running'); T.step(2, 'running');
-  await Promise.all([handoff(T, 'orc', 'kai', 'kpi-targets.xlsx', null, r), wait(260, r).then(() => handoff(T, 'orc', 'dex', 'keywords.csv', '40 keywords', r))]);
+  await Promise.all([handoff(T, 'orc', 'kai', 'asked Kai to check yesterday’s numbers', null, r), wait(260, r).then(() => handoff(T, 'orc', 'dex', 'asked Dex to check search and AI visibility', '40 keywords', r))]);
   const dexDone = dexWork(T, r); dexDone.catch(() => {});
   setShellWho('kai');
   await taskStart('kai', {presence:'tool', tool:'analyze', label:'Reading yesterday’s sales', progress:.1}, r);
   T.planCount();
-  const k1 = T.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source odoo', ind:'spin'});
+  const k1 = T.row({agent:'kai', icon:'activity', verb:'Getting yesterday’s sales from Odoo', ind:'spin'});
   await Term.cmd('kpi pull --source odoo --day yesterday', r);
   await Term.out(['<span class="t-d">›</span> Connecting to Odoo…'], r, 500);
   await wait(400, r);
   await Term.out(['<span class="t-er">✗ Error:</span> Odoo isn’t connected to this workspace.', '<span class="t-d">  Connect it in Settings › Connections, or run with --source sample.</span>'], r, 140);
   Term.idle();
   $('#prob-n').textContent = '1'; termPing('err');
-  k1.fail({verb:'Couldn’t read sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
+  k1.fail({verb:'Couldn’t get yesterday’s sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
   block(T, 1);
   await waitFor(() => !S.blocked, r);
   $('#prob-n').textContent = '0';
   T.status('running');
-  const k2 = T.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source sample', ind:'spin'});
+  const k2 = T.row({agent:'kai', icon:'activity', verb:'Getting yesterday’s sales from sample data', ind:'spin'});
   await Term.cmd('kpi pull --source sample --day yesterday', r);
   await Term.out(['<span class="t-d">›</span> Using sample data <span class="t-d">(Odoo not connected)</span>', '<span class="t-ok">✓</span> 1,284 orders · revenue 412k · web and app <span class="t-d">(1.4s)</span>'], r, 320);
   Term.idle();
-  k2.done({verb:'Pulled KPIs', arg:'sample data', meta:'1,284 orders', detail:X.term('kpi pull --source sample --day yesterday', 'Using sample data (Odoo not connected)\n1,284 orders · revenue 412k')});
+  k2.done({verb:'Got yesterday’s sales from sample data', meta:'1,284 orders', detail:X.sales()});
   patchAgent('kai', {label:'Comparing with targets', progress:.5});
-  const k3 = T.row({agent:'kai', icon:'activity', verb:'Comparing with targets', arg:'Q4', ind:'bar'});
+  const k3 = T.row({agent:'kai', icon:'activity', verb:'Comparing yesterday with the Q4 targets', ind:'bar'});
   for (let k = 1; k <= 4; k++) { await wait(380, r); k3.set({progress:k / 4}); patchAgent('kai', {progress:.5 + k / 8}); }
-  k3.done({verb:'Compared with targets', meta:'2 off target', detail:X.kpis()});
+  k3.done({verb:'Compared yesterday with the Q4 targets', meta:'2 off target', detail:X.kpis()});
   T.step(1, 'done');
   React.celebrate('kai'); setAgent('kai', {presence:'complete', label:'KPIs checked'});
-  await handoff(T, 'kai', 'orc', 'kpis.md', '2 off target', r);
+  await handoff(T, 'kai', 'orc', 'sent Orc the KPI results', '2 off target', r);
   later(() => setAgent('kai', {presence:'available'}), 1800, r);
 
   T.step(3, 'running');
-  await handoff(T, 'nova', 'atlas', 'banner-brief.md', 'app hero', r, 'a banner brief');
+  await handoff(T, 'nova', 'atlas', 'asked Atlas for a winter sale banner', 'for the app hero', r, 'a banner brief');
   await taskStart('atlas', {presence:'tool', tool:'design', label:'Loading brand context'}, r);
   T.planCount();
-  const a1 = T.row({agent:'atlas', icon:'doc', verb:'Loading brand context', arg:'guidelines · templates', ind:'dot'});
+  const a1 = T.row({agent:'atlas', icon:'doc', verb:'Reading the brand guidelines and templates', ind:'dot'});
   await wait(1000, r);
-  a1.done({verb:'Loaded brand context', meta:'24 pp · 6 templates'});
+  a1.done({verb:'Read the brand guidelines and templates', meta:'6 templates'});
   patchAgent('atlas', {label:'Generating banner variants'});
-  const a2 = T.row({agent:'atlas', icon:'image', verb:'Generating banners', arg:'winter sale · web · app', ind:'gen'});
+  const a2 = T.row({agent:'atlas', icon:'image', verb:'Designing winter sale banners for web and app', ind:'gen'});
   await wait(2400, r);
-  a2.done({verb:'Generated 3 variants', meta:'1440 × 600', detail:X.variants()});
+  a2.done({verb:'Designed 3 winter sale banner options', meta:'web and app', detail:X.variants()});
   T.step(3, 'done');
   React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'3 variants ready'});
-  await handoff(T, 'atlas', 'nova', 'winter-sale-b.png', 'variant B', r);
+  await handoff(T, 'atlas', 'nova', 'sent Nova the winter sale banner', 'option B', r);
   later(() => setAgent('atlas', {presence:'available'}), 1800, r);
 
   T.step(4, 'running');
-  await taskStart('nova', {presence:'working', label:'Editing homepage.json'}, r);
+  await taskStart('nova', {presence:'working', label:'Preparing the homepage changes'}, r);
   T.planCount();
-  const n2 = T.row({agent:'nova', icon:'code', verb:'Editing', arg:'site/homepage.json', ind:'dot'});
-  await edStream(r, () => n2.set({meta:`+${ED.added} −${ED.removed}`}));
-  n2.done({verb:'Edited', meta:`+${ED.added} −${ED.removed}`, detail:X.diff()});
+  const n2 = T.row({agent:'nova', icon:'globe', verb:'Preparing the homepage changes', ind:'dot'});
+  await edStream(r, () => {});
+  n2.done({verb:'Prepared 2 homepage changes', meta:'new banner, new slot 1', detail:X.changes()});
   T.step(4, 'approval');
   setAgent('nova', {presence:'approval', label:'Waiting for approval · homepage changes'});
-  const ap = T.row({agent:'nova', kind:'approval', icon:'globe', verb:'Needs approval', arg:'Publish 2 homepage changes', actions:'<button class="btn pri" data-approve>Approve</button><button class="btn" data-open-tab="file:homepage.json">Review</button>'});
+  const ap = T.row({agent:'nova', kind:'approval', icon:'globe', verb:'Needs your approval to publish 2 homepage changes', actions:'<button class="btn pri" data-approve>Approve</button><button class="btn" data-open-tab="file:homepage.json">Review</button>'});
   const pending = S.approval = {row:ap, tv:T, step:4, agent:'nova', what:'homepage changes', doneLabel:'Changes published',
     autoHtml:'<b>Homepage changes approved automatically</b>', autoSub:'No reply in 20 seconds, so Nova’s changes went live.',
-    after:() => { tabState(ED_TAB, {dirty:false}); T.row({agent:'nova', kind:'note', icon:'globe', verb:'Published', arg:'site/homepage.json', meta:'web · app', done:true}); }};
+    after:() => { tabState(ED_TAB, {dirty:false}); T.row({agent:'nova', kind:'note', icon:'globe', verb:'Published the homepage changes', meta:'web and app', done:true}); }};
   setTimeout(() => { if (S.approval === pending) approve(true); }, AUTO_RESOLVE_MS);
   sayNow(true);
   toast({agent:'nova', kind:'approval', html:'<b>Nova</b> needs your approval', sub:'Publish 2 homepage changes: winter sale banner, new slot 1', action:'Approve', actionCls:'pri', onAction:approve, sticky:true});
@@ -2397,10 +2402,10 @@ async function runMain(r) {
   await dexDone;
   T.step(5, 'running'); T.planCount();
   setAgent('orc', {presence:'tool', tool:'route', label:'Writing the daily pulse'});
-  const o1 = T.row({agent:'orc', icon:'pen', verb:'Writing', arg:'pulse/daily-pulse.md', ind:'dot'});
+  const o1 = T.row({agent:'orc', icon:'pen', verb:'Writing the daily pulse', ind:'dot'});
   await wait(2000, r);
   tabState('file:daily-pulse.md', {dirty:true, ac:'orc'});
-  o1.done({verb:'Wrote', arg:'pulse/daily-pulse.md', meta:'4 sections', detail:X.pulse()});
+  o1.done({verb:'Wrote the daily pulse', meta:'4 sections', detail:X.pulse()});
   T.step(5, 'done');
   guard(streamReply('orc', orcPulse(), {drive:false, think:500}));
   if (S.approval) {
@@ -2410,7 +2415,7 @@ async function runMain(r) {
   }
   await wait(400, r);
   T.status('done'); S.runEnd = Date.now();
-  T.row({agent:'orc', kind:'note', icon:'check', verb:'Completed task', meta:'6 of 6 steps', done:true});
+  T.row({agent:'orc', kind:'note', icon:'check', verb:'Finished the daily pulse', meta:'all 6 steps done', done:true});
   React.celebrate('orc'); setAgent('orc', {presence:'complete', label:'Pulse sent'});
   toast({agent:'orc', kind:'done', html:'<b>Daily pulse</b> is ready', sub:`6 steps · 4 agents · ${$('#rs-time').textContent}`});
   await wait(2600, r);
@@ -2421,21 +2426,21 @@ async function runMain(r) {
 async function dexWork(T, r) {
   await taskStart('dex', {presence:'tool', tool:'search', label:'Checking AI answers'}, r);
   T.planCount();
-  const d1 = T.row({agent:'dex', icon:'sparkle', verb:'Checking AI answers', arg:'ChatGPT · Gemini · Perplexity', meta:'0 / 12', ind:'scan'});
-  for (let k = 2; k <= 12; k += 2) { await wait(520, r); d1.set({meta:`${k} / 12`}); patchAgent('dex', {label:`Checking AI answers · ${k} of 12 prompts`}); }
-  d1.done({verb:'Checked AI answers', meta:'cited in 5 of 12', detail:X.aiAnswers()});
+  const d1 = T.row({agent:'dex', icon:'sparkle', verb:'Checking answers in ChatGPT, Gemini and Perplexity', meta:'0 of 12', ind:'scan'});
+  for (let k = 2; k <= 12; k += 2) { await wait(520, r); d1.set({meta:`${k} of 12`}); patchAgent('dex', {label:`Checking AI answers · ${k} of 12 prompts`}); }
+  d1.done({verb:'Checked answers in ChatGPT, Gemini and Perplexity', meta:'mentioned in 5 of 12', detail:X.aiAnswers()});
   if (S.blocked) {
     setAgent('dex', {presence:'waiting', label:'Waiting on the Search Console data'});
     await waitFor(() => !S.blocked, r);
     React.relief('dex');
   }
   setAgent('dex', {presence:'tool', tool:'search', label:'Checking rankings · sample data'});
-  const d2 = T.row({agent:'dex', icon:'search', verb:'Checking rankings', arg:'40 keywords', ind:'scan'});
+  const d2 = T.row({agent:'dex', icon:'search', verb:'Checking Google rankings for 40 keywords', ind:'scan'});
   await wait(2200, r);
-  d2.done({verb:'Checked rankings', arg:'sample data', meta:'3 moved', detail:X.rankings()});
+  d2.done({verb:'Checked Google rankings from sample data', meta:'3 keywords moved', detail:X.rankings()});
   T.step(2, 'done');
   React.celebrate('dex'); setAgent('dex', {presence:'complete', label:'Rankings checked'});
-  await handoff(T, 'dex', 'orc', 'seo.md', '3 keywords moved', r);
+  await handoff(T, 'dex', 'orc', 'sent Orc the search results', '3 keywords moved', r);
   later(() => setAgent('dex', {presence:'available'}), 1800, r);
 }
 function block(T, stepIdx) {
@@ -2455,7 +2460,7 @@ function resolveBlock(auto) {
   React.relief('kai');
   setAgent('kai', {presence:'tool', tool:'analyze', label:'Retrying with sample data', progress:.3});
   b.tv.step(b.step, 'running');
-  b.tv.row({agent:'you', kind:'note', icon: auto ? 'clock' : 'plug', verb: auto ? 'Auto-chose' : 'Chose', arg:'sample data for this run', meta: auto ? 'no reply in 20s' : '', done:true});
+  b.tv.row({agent:'you', kind:'note', icon: auto ? 'clock' : 'plug', verb: auto ? 'Sample data was chosen for you' : 'You chose sample data for this run', meta: auto ? 'no reply in 20 seconds' : '', done:true});
   if (auto) toast({icon:'clock', html:'<b>Resolved automatically</b>', sub:'No reply in 20 seconds, so the agents use sample data and the run continues.', ms:3600});
   heroReact('happy'); sayNow(true);
   for (const btn of $$('[data-resolve]')) btn.disabled = true;
@@ -2463,7 +2468,7 @@ function resolveBlock(auto) {
 function approve(auto) {
   const ap = S.approval; if (!ap) return;
   S.approval = null; dropToasts('approval');
-  ap.row.done(auto ? {verb:'Auto-approved', meta:'no reply in 20s'} : {verb:'Approved by you', meta:ap.what});
+  ap.row.done(auto ? {verb:`The ${ap.what} were approved automatically`, meta:'no reply in 20 seconds'} : {verb:`You approved the ${ap.what}`, meta:''});
   if (auto) toast({agent:ap.agent, html:ap.autoHtml, sub:ap.autoSub, ms:3600});
   ap.tv.step(ap.step, 'done');
   if (ap.after) ap.after();
@@ -2474,12 +2479,13 @@ function approve(auto) {
 }
 
 /* New task → its own tab with a short plan, picked by the agent's kind of work */
+/* Each step: [plan title, icon, what the log says when it's done, short result] */
 const MINI = {
-  route:[['Read the request','sparkle','Read the request','1 brief'],['Route to agents','handoff','Routed','2 agents'],['Summarize results','doc','Wrote a summary','1 page']],
-  design:[['Load brand context','doc','Loaded brand kit','guidelines · 6 templates'],['Generate variants','image','Generated 3 variants','1440 × 600'],['Save to the asset library','image','Saved','brand/banners/']],
-  audit:[['Crawl pages','globe','Crawled pages','web · app · 14 pages'],['Check best practices','doc','Checked','12 rules · 2 issues'],['Write recommendations','pen','Wrote recommendations','nova/recommendations.md']],
-  analyze:[['Pull KPIs','activity','Pulled KPIs','sample data · 7 days'],['Compare with targets','activity','Compared','2 off target'],['Write insights','pen','Wrote insights','kai/insights.md']],
-  search:[['Check rankings','search','Checked rankings','40 keywords · sample data'],['Check AI answers','sparkle','Checked AI answers','12 prompts'],['Summarize changes','pen','Wrote a summary','seo/notes.md']],
+  route:[['Read the request','sparkle','Read the request',''],['Pass it to the right agents','handoff','Passed it to 2 agents',''],['Sum up the results','doc','Wrote a summary','1 page']],
+  design:[['Read the brand kit','doc','Read the brand guidelines and templates','6 templates'],['Design banner options','image','Designed 3 banner options','1440 × 600'],['Save to the brand library','image','Saved them to the brand library','']],
+  audit:[['Check the pages','globe','Checked 14 pages on the website and app',''],['Check best practices','doc','Checked them against best practices','2 issues found'],['Write recommendations','pen','Wrote recommendations','']],
+  analyze:[['Get the latest KPIs','activity','Got the last 7 days of KPIs','sample data'],['Compare with targets','activity','Compared them with the targets','2 off target'],['Write insights','pen','Wrote insights','']],
+  search:[['Check rankings','search','Checked Google rankings for 40 keywords','sample data'],['Check AI answers','sparkle','Checked answers in ChatGPT, Gemini and Perplexity','12 questions'],['Sum up what changed','pen','Wrote a summary','']],
 };
 /* r is the run token, as in runMain: replaying the run (or any scene that resets the world) bumps RUN,
    so every wait below rejects and the quick task stops instead of driving agents the new run now owns. */
@@ -2490,13 +2496,13 @@ async function assignTask(id, title, r = RUN) {
   TASKS.unshift(t);
   const tv = TaskView(t, {agents:'1 agent', tag:'Ad hoc'});
   openTab(t.key);
-  tv.row({agent:'you', kind:'note', icon:'plus', verb:'Created task', arg:t.id, done:true});
+  tv.row({agent:'you', kind:'note', icon:'plus', verb:'You sent this request', done:true});
   let cur = null, curStep = -1;
   try {
     if (ACTIVE.has(S.agents[id].presence) || ATTN.has(S.agents[id].presence)) {
-      cur = tv.row({agent:id, icon:'clock', verb:`Queued behind ${A[id].name}’s current work`, ind:'wait'});
+      cur = tv.row({agent:id, icon:'clock', verb:`Waiting for ${A[id].name} to finish the current work`, ind:'wait'});
       await waitFor(() => !ACTIVE.has(S.agents[id].presence) && !ATTN.has(S.agents[id].presence), r);
-      cur.done({verb:'Started', meta:'queue cleared'}); cur = null;
+      cur.done({verb:'Started on this request', meta:''}); cur = null;
     }
     await taskStart(id, {presence:'thinking', label:'Planning…'}, r);
     tv.status('running');
@@ -2512,7 +2518,7 @@ async function assignTask(id, title, r = RUN) {
       tv.step(k, 'done'); curStep = -1;
     }
     tv.status('done');
-    tv.row({agent:id, kind:'note', icon:'check', verb:'Completed task', meta:'3 of 3 steps', done:true});
+    tv.row({agent:id, kind:'note', icon:'check', verb:'Finished this request', meta:'all 3 steps done', done:true});
     React.celebrate(id); setAgent(id, {presence:'complete', label:'Task completed'});
     toast({agent:id, kind:'done', html:`<b>${A[id].name}</b> completed ${esc(t.id)}`, sub:title});
     await wait(2200, r);
@@ -2524,7 +2530,7 @@ async function assignTask(id, title, r = RUN) {
     if (cur) cur.stop({meta:'stopped'});
     if (curStep >= 0) tv.step(curStep, 'pending');
     tv.status('stopped');
-    tv.row({agent:'you', kind:'note', icon:'stop', verb:'Stopped', arg:t.id, meta:'run replayed', done:true});
+    tv.row({agent:'you', kind:'note', icon:'stop', verb:'This request was stopped', meta:'the daily pulse restarted', done:true});
   }
 }
 
@@ -2542,10 +2548,10 @@ const SCENE_FNS = {
   async tool(r) {
     openTab('task:142'); setShellWho('kai');
     setAgent('kai', {presence:'tool', tool:'analyze', label:'Pulling KPIs'});
-    const f = MAIN.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source sample', ind:'spin'});
+    const f = MAIN.row({agent:'kai', icon:'activity', verb:'Getting yesterday’s sales from sample data', ind:'spin'});
     await Term.cmd('kpi pull --source sample --day yesterday', r);
     await Term.out(['<span class="t-d">›</span> Using sample data <span class="t-d">(Odoo not connected)</span>', '<span class="t-ok">✓</span> 1,284 orders · revenue 412k · web and app <span class="t-d">(1.4s)</span>'], r, 260);
-    Term.idle(); f.done({verb:'Pulled KPIs', arg:'sample data', meta:'1,284 orders', detail:X.term('kpi pull --source sample --day yesterday', 'Using sample data (Odoo not connected)\n1,284 orders · revenue 412k')});
+    Term.idle(); f.done({verb:'Got yesterday’s sales from sample data', meta:'1,284 orders', detail:X.sales()});
     React.celebrate('kai'); setAgent('kai', {presence:'complete', label:'KPIs pulled'});
     later(() => setAgent('kai', {presence:'available'}), 1800, r);
   },
@@ -2553,7 +2559,7 @@ const SCENE_FNS = {
     openTab('task:142');
     setAgent('nova', {presence:'tool', tool:'audit', label:'Wrapping up the audit'});
     await wait(900, r);
-    await handoff(MAIN, 'nova', 'atlas', 'banner-brief.md', 'app hero', r, 'a banner brief');
+    await handoff(MAIN, 'nova', 'atlas', 'asked Atlas for a winter sale banner', 'for the app hero', r, 'a banner brief');
     React.celebrate('nova'); setAgent('nova', {presence:'complete', label:'Audit completed'});
     later(() => setAgent('nova', {presence:'available'}), 1600, r);
     await taskStart('atlas', {presence:'tool', tool:'design', label:'Generating banner variants'}, r);
@@ -2562,11 +2568,11 @@ const SCENE_FNS = {
   async blocked(r) {
     openTab('task:142'); setShellWho('kai');
     setAgent('kai', {presence:'tool', tool:'analyze', label:'Reading yesterday’s sales'});
-    const f = MAIN.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source odoo', ind:'spin'});
+    const f = MAIN.row({agent:'kai', icon:'activity', verb:'Getting yesterday’s sales from Odoo', ind:'spin'});
     await Term.cmd('kpi pull --source odoo --day yesterday', r);
     await Term.out(['<span class="t-er">✗ Error:</span> Odoo isn’t connected to this workspace.'], r);
     Term.idle();
-    f.fail({verb:'Couldn’t read sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
+    f.fail({verb:'Couldn’t get yesterday’s sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
     S.blocked = null; block(MAIN, 1);
     await waitFor(() => !S.blocked, r);
     await wait(1400, r);
@@ -2576,9 +2582,9 @@ const SCENE_FNS = {
   async complete(r) {
     openTab('task:142');
     setAgent('atlas', {presence:'tool', tool:'design', label:'Finishing banner variants'});
-    const d = MAIN.row({agent:'atlas', icon:'image', verb:'Generating banners', arg:'winter sale', ind:'gen'});
+    const d = MAIN.row({agent:'atlas', icon:'image', verb:'Designing winter sale banners', ind:'gen'});
     await wait(2000, r);
-    d.done({verb:'Generated 3 variants', meta:'winter sale', detail:X.variants()});
+    d.done({verb:'Designed 3 winter sale banner options', meta:'web and app', detail:X.variants()});
     React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'3 variants ready'});
     toast({agent:'atlas', kind:'done', html:'<b>Atlas</b> finished the winter sale banners', sub:'brand/banners/winter-sale · 3 variants'});
     await wait(2200, r); setAgent('atlas', {presence:'available'});
