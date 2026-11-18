@@ -356,6 +356,7 @@ button.sbi:hover{background:var(--hover);color:var(--fg-2)}
 .btn .ic{width:13px;height:13px}
 .btn.pri{background:var(--pri-bg);border-color:transparent;color:var(--pri-fg)}
 .btn.pri:hover{background:var(--pri-hover)}
+.btn:disabled{opacity:.4;cursor:default}
 .btn.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
 .btn.danger{color:var(--err);border-color:color-mix(in srgb,var(--err) 35%,transparent)}
 .btn.attn{animation:attn 2s var(--ease) infinite}
@@ -638,6 +639,20 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 .ac-states button[aria-pressed=true]{background:rgba(var(--ink),.09);color:var(--fg);border-color:transparent}
 .ac-f{display:flex;gap:8px;padding:12px 16px 16px;border-top:1px solid var(--glass-line)}
 .ac-f .btn{flex:1}
+.ac-duties{display:flex;flex-direction:column;gap:4px;padding-left:16px;list-style:disc;font-size:12.5px;line-height:1.45;color:var(--fg-2)}
+.ac-duties li::marker{color:var(--fg-4)}
+.ac-empty{font-size:12.5px;color:var(--fg-4)}
+/* Platforms an agent reads from. Every one starts as "Not connected"; agents use sample data until then. */
+.conn{display:grid;grid-template-columns:16px minmax(0,1fr) auto;align-items:center;gap:9px;min-height:28px;font-size:12.5px;color:var(--fg-2)}
+.conn .ic{width:14px;height:14px;color:var(--fg-3)}
+.conn>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conn em,.set-conn em{font:400 11px var(--mono);font-style:normal;color:var(--fg-4);white-space:nowrap}
+.set-conn{display:flex;align-items:center;gap:10px}
+.set-row .avs{vertical-align:middle;margin-right:6px}
+.set-note{margin:8px 4px 2px;font-size:12px;color:var(--fg-3)}
+@media (max-width:620px){
+  .set-row.conn-row{grid-template-columns:minmax(0,1fr);gap:8px}
+}
 
 .dlg{position:absolute;left:50%;top:50%;width:min(460px,calc(100vw - 32px));translate:-50% -50%;opacity:0;transform:scale(.97);transition:opacity .15s var(--ease),transform .2s var(--ease)}
 .ov[data-open=true] .dlg{opacity:1;transform:none;transition:opacity .2s var(--ease),transform .34s var(--spring)}
@@ -674,7 +689,7 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 .t-pair{display:flex;align-items:center}
 .m-scrim{position:fixed;inset:0;z-index:54;background:var(--scrim-2);opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
 
-/* ── Home: Atlas front and centre ── */
+/* ── Home: Orc front and centre ── */
 .home{max-width:980px;margin:0 auto;padding:6px 32px 56px}
 .hero{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0 6px}
 .hero-stage{position:relative;width:100%;max-width:560px;height:196px}
@@ -683,8 +698,8 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 @keyframes auraB{0%,100%{opacity:.7;scale:.94}50%{opacity:1;scale:1.05}}
 .hero-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .hero-ring ellipse{fill:none;stroke:rgba(var(--ink),.075);stroke-width:1;stroke-dasharray:1.5 6}
-.hero-atlas{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:3;display:grid;place-items:center;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.hero-atlas .av-badge{display:none}
+.hero-orc{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:3;display:grid;place-items:center;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hero-orc .av-badge{display:none}
 .orb{position:absolute;left:0;top:0;z-index:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 6px;border-radius:10px;will-change:transform,opacity}
 .orb-l{font-size:10.5px;color:var(--fg-3);white-space:nowrap;transition:color .15s}
 .orb:hover .orb-l{color:var(--fg)}
@@ -778,7 +793,7 @@ button.tr:hover,.tr.link:hover{background:rgba(var(--ink),.025);cursor:pointer}
 <div class="app" id="app">
   <header class="tb">
     <button class="ib" id="nav-toggle" aria-label="Toggle sidebar" title="Toggle sidebar  ⌘B"></button>
-    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Agents OS</span><span class="sl hide-xs">/</span><b id="crumb-cur">Build landing page</b></div>
+    <div class="crumb"><span class="ws-mark" aria-hidden="true"></span><span class="hide-xs">Agents OS</span><span class="sl hide-xs">/</span><b id="crumb-cur">Home</b></div>
     <button class="search" id="search-btn" aria-label="Search or run a command"><span id="search-ic"></span><span>Search Agents OS</span><kbd id="kbd-k" class="kbd-hint">⌘K</kbd></button>
     <div class="tb-r">
       <button class="pillbtn" id="model-btn" aria-haspopup="menu"><span id="model-ic"></span><span class="lbl" id="model-lbl">Opus 5.5</span><span id="model-chev"></span></button>
@@ -920,30 +935,54 @@ const IC = {
   command:'<path d="M5.8 5.8h4.4v4.4H5.8z"/><path d="M5.8 5.8H4.4a1.4 1.4 0 1 1 1.4-1.4zM10.2 5.8V4.4a1.4 1.4 0 1 1 1.4 1.4zM10.2 10.2h1.4a1.4 1.4 0 1 1-1.4 1.4zM5.8 10.2v1.4a1.4 1.4 0 1 1-1.4-1.4z"/>',
   sun:'<circle cx="8" cy="8" r="2.7"/><path d="M8 1.7v1.4M8 12.9v1.4M1.7 8h1.4M12.9 8h1.4M3.55 3.55l1 1M11.45 11.45l1 1M3.55 12.45l1-1M11.45 4.55l1-1"/>',
   moon:'<path d="M13.3 9.7A5.7 5.7 0 0 1 6.3 2.7a5.7 5.7 0 1 0 7 7z"/>',
+  plug:'<path d="M6 1.9v3.2M10 1.9v3.2"/><path d="M4.3 5.1h7.4v2.3a3.7 3.7 0 0 1-7.4 0z"/><path d="M8 11.1v3"/>',
 };
 const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 16 16" aria-hidden="true">${IC[n]}</svg>`;
 
 /* ── Agents ── */
+/* The team. Orc sits at the centre of Home and routes work; the others orbit it.
+   duties: what the agent is responsible for. Connections live in CONNECTIONS below.
+   placeholder: a seat with no role yet. It can't take tasks until it gets one. */
 const AGENTS = [
-  {id:'atlas', name:'Atlas', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Files','Messages'], idle:'neutral', tool:'analyze', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', ready:'Ready to plan', week:21, perm:'Can assign work to any agent'},
-  {id:'scout', name:'Scout', role:'Research', model:'Sonnet 5.5', tools:['Web','Files'], idle:'bright', tool:'browse', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', ready:'Ready for research', week:17, perm:'Read-only web and files'},
-  {id:'sage', name:'Sage', role:'Analysis', model:'Opus 5.5', tools:['Files','Python','Docs'], idle:'calm', tool:'analyze', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', ready:'Ready to analyze', week:12, perm:'Read files, run sandboxed Python'},
-  {id:'pixel', name:'Pixel', role:'Design', model:'Sonnet 5.5', tools:['Canvas','Images','Files'], idle:'shy', tool:'design', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', ready:'Ready for design task', week:15, perm:'Write to /design'},
-  {id:'quill', name:'Quill', role:'Writing', model:'Haiku 4.5', tools:['Docs','Files'], idle:'smirk', tool:'write', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', ready:'Ready to write', week:10, perm:'Write to /content, needs approval to publish'},
-  {id:'forge', name:'Forge', role:'Engineering', model:'Opus 5.5', tools:['GitHub','Terminal','Files'], idle:'steady', tool:'code', hi:'#F0C6A6', c:'#DB9665', lo:'#BD7542', ready:'Ready to build', week:19, perm:'Write to repo, run commands, deploy previews'},
-  {id:'ward', name:'Ward', role:'QA and security', model:'Sonnet 5.5', tools:['Terminal','Scanner'], idle:'neutral', tool:'browse', hi:'#E3DAEC', c:'#BBA8D3', lo:'#9983BA', ready:'Back at 18:00', week:6, perm:'Read-only repo, run scanners'},
+  {id:'orc', name:'Orc', role:'Orchestrator', model:'Opus 5.5', tools:['Planner','Scheduler','Messages'], idle:'neutral', tool:'route', hi:'#F2E3AE', c:'#DFC066', lo:'#C09D40', ready:'Ready to route', week:21, perm:'Can assign work to any agent',
+    duties:['Runs the daily pulse every morning','Routes your requests to the right agent','Collects results and flags what needs you']},
+  {id:'atlas', name:'Atlas', role:'AI Studio Brain', model:'Opus 5.5', tools:['Brand kit','Assets','Prompts'], idle:'calm', tool:'design', hi:'#C5C9EC', c:'#8F98D5', lo:'#646EB3', ready:'Ready to create', week:12, perm:'Write to brand assets and the prompt library',
+    duties:['Brand and product context','Creative system: guidelines, templates and assets','Prompt library']},
+  {id:'nova', name:'Nova', role:'Web & app performance', model:'Sonnet 5.5', tools:['Crawler','Screenshots','Files'], idle:'bright', tool:'audit', hi:'#EDB9D4', c:'#D582AF', lo:'#B65E8F', ready:'Ready to audit', week:17, perm:'Read web and app, propose changes, needs approval to publish',
+    duties:['Tracks visuals, banners and products on web and app','Reports best practices and recommendations','Proposes banner changes','Proposes product positions']},
+  {id:'kai', name:'Kai', role:'Performance manager', model:'Opus 5.5', tools:['Data','Python','Reports'], idle:'steady', tool:'analyze', hi:'#B8E0C6', c:'#71BD90', lo:'#46976B', ready:'Ready to report', week:15, perm:'Read sales, orders and analytics',
+    duties:['Business KPIs and targets','Business growth tracking','Reporting and insights']},
+  {id:'dex', name:'Dex', role:'SEO & GEO', model:'Sonnet 5.5', tools:['Search','AI answers','Files'], idle:'smirk', tool:'search', hi:'#AAD5E6', c:'#63ADCD', lo:'#3B86A8', ready:'Ready to check rankings', week:10, perm:'Read search data and public AI answers',
+    duties:['Search rankings and keywords','Visibility in AI answers (ChatGPT and others)']},
+  {id:'agent6', name:'Agent #6', role:'Role to be defined', model:'Sonnet 5.5', tools:['None yet'], idle:'shy', tool:'analyze', hi:'#DCDFE4', c:'#AFB5BF', lo:'#8A919C', ready:'Waiting for a role', week:0, perm:'None until it has a role',
+    duties:[], placeholder:true},
 ];
 const A = Object.fromEntries(AGENTS.map(a => [a.id, a]));
-const TEAM = ['atlas','scout','sage','pixel','quill','forge'];
+const TEAM = AGENTS.map(a => a.id);
+/* The agents that take part in the daily pulse */
+const PULSE = ['orc','nova','kai','dex','atlas'];
+const canWork = id => !A[id].placeholder && S.agents[id].presence !== 'offline';
+/* Platforms the agents will read from. None is connected yet, so every run uses sample data.
+   To wire one up later, this is the list to change. */
+const CONNECTIONS = [
+  {id:'odoo', name:'Odoo', what:'Sales, orders, products and stock', agents:['kai','nova']},
+  {id:'ga', name:'Google Analytics', what:'Web and app traffic and conversion', agents:['kai','nova']},
+  {id:'gsc', name:'Google Search Console', what:'Rankings, clicks and keywords', agents:['dex']},
+  {id:'ai', name:'AI answer tracking', what:'Mentions in ChatGPT, Gemini and Perplexity', agents:['dex']},
+  {id:'sheets', name:'Google Sheets', what:'KPI targets', agents:['kai']},
+  {id:'drive', name:'Google Drive', what:'Brand guidelines, templates and assets', agents:['atlas']},
+  {id:'slack', name:'Slack', what:'Where Orc posts the daily pulse', agents:['orc']},
+];
+const connsOf = id => CONNECTIONS.filter(c => c.agents.includes(id));
 const ACTIVE = new Set(['thinking','working','tool']);
 const ATTN = new Set(['approval','blocked']);
 const WORD = {available:'Idle', thinking:'Thinking', working:'Working', waiting:'Waiting', approval:'Needs you', complete:'Done', blocked:'Blocked', offline:'Offline'};
 const TOOLS = {
-  browse:{word:'Researching', label:'Researching…', ind:'scan', icon:'globe'},
-  code:{word:'Running', label:'Running code…', ind:'spin', icon:'terminal'},
-  analyze:{word:'Analyzing', label:'Analyzing…', ind:'bar', icon:'doc'},
-  design:{word:'Generating', label:'Generating design…', ind:'gen', icon:'image'},
-  write:{word:'Writing', label:'Writing…', ind:'dot', icon:'pen'},
+  route:{word:'Coordinating', label:'Routing requests…', ind:'dot', icon:'handoff'},
+  design:{word:'Generating', label:'Generating assets…', ind:'gen', icon:'image'},
+  audit:{word:'Auditing', label:'Auditing pages…', ind:'scan', icon:'globe'},
+  analyze:{word:'Analyzing', label:'Analyzing KPIs…', ind:'bar', icon:'activity'},
+  search:{word:'Searching', label:'Checking rankings…', ind:'scan', icon:'search'},
 };
 const PRES_IND = {available:'idle', thinking:'think', working:'dot', waiting:'wait', approval:'ask', complete:'ok', blocked:'err', offline:'off'};
 
@@ -967,7 +1006,7 @@ const EXPR = {
 };
 const EXPR_KEYS = Object.keys(EXPR.neutral);
 const PRESENCE_FACE = {thinking:'think', working:'focus', approval:'expect', complete:'happy', blocked:'worried', offline:'sleep'};
-const TOOL_FACE = {browse:'curious', code:'focus', analyze:'calm', design:'delight', write:'focus'};
+const TOOL_FACE = {route:'focus', design:'delight', audit:'curious', analyze:'calm', search:'curious'};
 
 /* Motion per state — deliberately small. amp = share of avatar size. */
 const MOTION = {
@@ -981,8 +1020,8 @@ const MOTION = {
   offline:  {amp:0,    freq:.1,  breath:0,    tilt:0,   tiltBias:0,  jitter:0,    blink:null,      glance:'down', hop:null},
 };
 const TOOL_MOTION = {
-  browse:{freq:.32, glance:'scan'}, code:{freq:.46, amp:.018, glance:'read', jitter:.004, tiltBias:2},
-  analyze:{freq:.3, glance:'read-slow'}, design:{freq:.3, breath:.02, glance:'idle'}, write:{freq:.36, glance:'read', jitter:.0015},
+  route:{freq:.36, glance:'read', jitter:.0015}, design:{freq:.3, breath:.02, glance:'idle'},
+  audit:{freq:.32, glance:'scan'}, analyze:{freq:.3, glance:'read-slow'}, search:{freq:.34, glance:'scan'},
 };
 const NUM_KEYS = ['amp','freq','breath','tilt','tiltBias','jitter'];
 const MCACHE = {};
@@ -1019,8 +1058,8 @@ function avatar(id, px = 20, o = {}) {
 }
 
 /* ── Store ── */
-const S = {agents:{}, blocked:null, approval:null, chatAgent:'sage', chatRun:0, tokens:0, runStart:0, runEnd:0, taskN:143, model:'Opus 5.5', autonomy:'ask'};
-for (const a of AGENTS) S.agents[a.id] = {presence: a.id === 'ward' ? 'offline' : 'available', tool:null, label:null, progress:null, step:null};
+const S = {agents:{}, blocked:null, approval:null, chatAgent:'nova', chatRun:0, tokens:0, runStart:0, runEnd:0, taskN:143, model:'Opus 5.5', autonomy:'ask'};
+for (const a of AGENTS) S.agents[a.id] = {presence:'available', tool:null, label:null, progress:null, step:null};
 const FIXED = {};
 function stateOf(i) {
   const f = i.el.dataset.fixed;
@@ -1177,7 +1216,7 @@ function kickBounce(i, k = 1) { if (M.reduced) return; i.sq.v += .9 * k; setTime
 const React = {
   bounce(id, k = 1) { each(id, i => kickBounce(i, k)); },
   receive(id) { each(id, i => { if (!M.reduced) { i.sq.v += 1.4; i.jy.v -= .35; } override(i, 'surprise', .45); }); flashAgent(id); },
-  celebrate(id) { each(id, i => { kickBounce(i, .9); override(i, 'happy', 1.4); }); if (id !== 'atlas') heroReact('happy'); sayNow(); },
+  celebrate(id) { each(id, i => { kickBounce(i, .9); override(i, 'happy', 1.4); }); if (id !== 'orc') heroReact('happy'); sayNow(); },
   nudge(id) { if (M.reduced) return; each(id, i => { i.tk.v += 40; i.sq.v += .4; }); },
   anticipate(id) { if (M.reduced) return; each(id, i => { i.sq.v += 1.8; }); },
   launch(id) { each(id, i => { if (!M.reduced) { i.jy.v -= .8; i.sq.v -= 2; } override(i, 'surprise', .4); }); },
@@ -1279,7 +1318,7 @@ function buildNav() {
     for (const [k, l, i] of items) h += `<button class="ni" data-nav="${k}" title="${l}">${ic(i)}<span>${l}</span><span class="cnt" id="cnt-${k}"></span></button>`;
   }
   h += `<div class="nav-h"><span>Agents</span><span id="nav-online"></span></div>`;
-  h += AGENTS.map(a => `<button class="ra" data-open-agent="${a.id}" title="${a.name} · ${a.role}">${avatar(a.id, 18)}<span class="ra-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button>`).join('');
+  h += AGENTS.map(a => `<button class="ra" data-open-agent="${a.id}" title="${esc(a.name + ' · ' + a.role)}">${avatar(a.id, 18)}<span class="ra-n">${a.name}</span><span class="stw" data-st="${a.id}"></span></button>`).join('');
   h += `<div class="nav-foot"><button class="ni" data-nav="settings" title="Settings">${ic('settings')}<span>Settings</span><span class="cnt kbd-hint">${MOD.trim()},</span></button><button class="ni" id="acct-btn" title="Account">${ic('user')}<span>Account</span></button></div>`;
   $('#nav-in').innerHTML = h;
 }
@@ -1304,21 +1343,21 @@ function buildInspector() {
   placeAgents(true);
   $('#ip-context').innerHTML = `
     <div class="ish"><span>Task</span></div>
-    <div class="ctx-row">${ic('tasks')}<span>TASK-142 · Build landing page</span><em id="ctx-task">running</em></div>
-    <div class="ish"><span>Repository</span></div>
-    <div class="ctx-row">${ic('folder')}<span>agents-os-web</span><em>main</em></div>
-    <div class="ctx-row">${ic('branch')}<span>feat/landing</span><em id="ctx-changes">0 changed</em></div>
+    <div class="ctx-row">${ic('tasks')}<span>TASK-142 · Daily pulse</span><em id="ctx-task">running</em></div>
+    <div class="ctx-row">${ic('clock')}<span>Every day at 08:00</span><em>scheduled</em></div>
     <div class="ish"><span>Attached</span><span>4</span></div>
-    <button class="ctx-row" style="width:100%" data-open-tab="file:research.md">${ic('doc')}<span>docs/research.md</span><em>2.4k words</em></button>
-    <div class="ctx-row">${ic('doc')}<span>customer_feedback.pdf</span><em>3,842 rows</em></div>
-    <div class="ctx-row">${ic('doc')}<span>brand-guidelines.pdf</span><em>24 pp</em></div>
-    <button class="ctx-row" style="width:100%" data-open-tab="file:page.tsx">${ic('code')}<span>app/(marketing)/page.tsx</span><em>tsx</em></button>
-    <div class="ish"><span>Secrets</span></div>
-    <div class="ctx-row">${ic('key')}<span>DEPLOY_TOKEN</span><em id="ctx-secret">not granted</em></div>
-    <div class="ctx-row">${ic('key')}<span>ANALYTICS_KEY</span><em class="good">granted</em></div>
+    <button class="ctx-row" style="width:100%" data-open-tab="file:daily-pulse.md">${ic('doc')}<span>pulse/daily-pulse.md</span><em>today</em></button>
+    <button class="ctx-row" style="width:100%" data-open-tab="file:homepage.json">${ic('code')}<span>site/homepage.json</span><em id="ctx-changes">json</em></button>
+    <div class="ctx-row">${ic('doc')}<span>brand/guidelines.pdf</span><em>24 pp</em></div>
+    <div class="ctx-row">${ic('doc')}<span>kpi/targets-q4.xlsx</span><em>Q4</em></div>
+    <div class="ish"><span>Connections</span><span>0 of ${CONNECTIONS.length}</span></div>
+    <div class="ctx-row">${ic('plug')}<span>Odoo</span><em id="ctx-odoo">not connected</em></div>
+    <div class="ctx-row">${ic('plug')}<span>Google Analytics</span><em>not connected</em></div>
+    <div class="ctx-row">${ic('plug')}<span>Google Search Console</span><em>not connected</em></div>
+    <button class="ctx-row" style="width:100%" data-cmd="connections">${ic('settings')}<span>Manage connections</span><em></em></button>
     <div class="ish"><span>Memory</span></div>
-    <div class="ctx-row">${ic('sparkle')}<span>Tone: confident, plain, no hype</span><em></em></div>
-    <div class="ctx-row">${ic('sparkle')}<span>Pricing is per seat, never per agent</span><em></em></div>`;
+    <div class="ctx-row">${ic('sparkle')}<span>Tone: warm, clear, no hype</span><em></em></div>
+    <div class="ctx-row">${ic('sparkle')}<span>Never put sold-out products in top slots</span><em></em></div>`;
 }
 function sectionOf(id) { const p = S.agents[id].presence; return p === 'offline' ? 'offline' : (ACTIVE.has(p) || ATTN.has(p)) ? 'active' : 'idle'; }
 function placeAgents(instant) {
@@ -1351,7 +1390,7 @@ function flashAgent(id) {
 
 /* ── Status bar ── */
 function buildStatusBar() {
-  $('#sb-branch').innerHTML = `${ic('branch')}<span>feat/landing</span>`;
+  $('#sb-branch').innerHTML = `${ic('clock')}<span>Daily pulse · 08:00</span>`;
   $('#sb-run').innerHTML = `${ic('runs')}<span id="sb-run-t">Run #218</span>`;
   $('#sb-avs').innerHTML = TEAM.map(id => `<span class="sb-av" data-sbav="${id}">${avatar(id, 14)}</span>`).join('');
   $('#sb-scenes').innerHTML = `${ic('play')}<span>Scenes</span>`;
@@ -1377,8 +1416,8 @@ const TABS = [];
 let activeTab = null;
 const VIEW_META = {
   'chat': {title:'Chat', icon:'chat', nav:'conversations'},
-  'file:page.tsx': {title:'page.tsx', icon:'code', nav:'files', ac:'forge'},
-  'file:research.md': {title:'research.md', icon:'doc', nav:'files', ac:'scout'},
+  'file:homepage.json': {title:'homepage.json', icon:'code', nav:'files', ac:'nova'},
+  'file:daily-pulse.md': {title:'daily-pulse.md', icon:'doc', nav:'files', ac:'orc'},
   home:{title:'Home', icon:'home', nav:'home'}, projects:{title:'Projects', icon:'folder', nav:'projects'},
   agents:{title:'Agents', icon:'agent', nav:'agents'}, tasks:{title:'Tasks', icon:'tasks', nav:'tasks'},
   workflows:{title:'Workflows', icon:'flow', nav:'workflows'}, files:{title:'Files', icon:'file', nav:'files'},
@@ -1409,7 +1448,7 @@ function openTab(key, focus = true) {
 }
 function activate(key) {
   activeTab = key;
-  if (TAB_STATE[key] && TAB_STATE[key].dirty && key !== 'file:page.tsx') TAB_STATE[key].dirty = false;
+  if (TAB_STATE[key] && TAB_STATE[key].dirty && key !== 'file:homepage.json') TAB_STATE[key].dirty = false;
   const v = ensureView(key);
   for (const el of $$('.view')) el.classList.toggle('on', el === v);
   if (LIVE_VIEWS.has(key)) { renderView(key, v); }
@@ -1458,11 +1497,11 @@ function paintAll(root) {
 
 /* ── Task views ── */
 const TASKS = [
-  {key:'task:142', id:'TASK-142', title:'Build the Agents OS landing page', short:'Build landing page', owner:'atlas', status:'queued', steps:6, updated:'now'},
-  {key:'task:141', id:'TASK-141', title:'Weekly competitor digest', short:'Competitor digest', owner:'scout', status:'done', steps:3, updated:'Yesterday'},
-  {key:'task:140', id:'TASK-140', title:'Migrate auth to OAuth', short:'OAuth migration', owner:'forge', status:'done', steps:7, updated:'Sep 26'},
-  {key:'task:139', id:'TASK-139', title:'Onboarding illustrations', short:'Onboarding art', owner:'pixel', status:'done', steps:4, updated:'Sep 25'},
-  {key:'task:138', id:'TASK-138', title:'Security review · release 2.3', short:'Security review', owner:'ward', status:'done', steps:5, updated:'Sep 25'},
+  {key:'task:142', id:'TASK-142', title:'Run the daily pulse', short:'Daily pulse', owner:'orc', status:'queued', steps:6, updated:'now'},
+  {key:'task:141', id:'TASK-141', title:'Weekly SEO and AI visibility report', short:'SEO report', owner:'dex', status:'done', steps:3, updated:'Yesterday'},
+  {key:'task:140', id:'TASK-140', title:'Review Q4 KPI targets', short:'Q4 targets', owner:'kai', status:'done', steps:4, updated:'2 days ago'},
+  {key:'task:139', id:'TASK-139', title:'Winter campaign banner set', short:'Winter banners', owner:'atlas', status:'done', steps:5, updated:'2 days ago'},
+  {key:'task:138', id:'TASK-138', title:'Product positions on the app home screen', short:'App positions', owner:'nova', status:'done', steps:4, updated:'Last week'},
 ];
 const TSTAT = {queued:['wait','Queued'], running:['dot','Running'], blocked:['err','Blocked'], input:['ask','Needs input'], done:['ok','Completed'], stopped:['off','Stopped']};
 const TV_ALL = [];
@@ -1472,7 +1511,7 @@ function TaskView(task, o = {}) {
   v.innerHTML = `<div class="tv">
     <div class="tv-top"><span class="mono tv-id">${task.id}</span><span class="tstat" data-s="queued">${ind('wait')}<span>Queued</span></span><span class="sp"></span><button class="btn" data-tv-act="pause">${ic('pause')}Pause</button><button class="ib" data-tv-act="more" aria-label="More actions">${ic('more')}</button></div>
     <h1 class="tv-title">${esc(task.title)}</h1>
-    <div class="tv-meta"><span>${avatar(task.owner, 16)}<span>${task.owner === 'atlas' ? 'Orchestrated by' : 'Assigned to'} <b>${A[task.owner].name}</b></span></span><i class="dot"></i><span class="mono">${o.branch || 'feat/landing'}</span><i class="dot"></i><span data-started>Not started</span><i class="dot"></i><span data-agents>${o.agents || '1 agent'}</span><i class="dot"></i><span class="mono" data-elapsed>0:00</span></div>
+    <div class="tv-meta"><span>${avatar(task.owner, 16)}<span>${task.owner === 'orc' ? 'Orchestrated by' : 'Assigned to'} <b>${A[task.owner].name}</b></span></span><i class="dot"></i><span class="mono">${o.tag || 'Daily · 08:00'}</span><i class="dot"></i><span data-started>Not started</span><i class="dot"></i><span data-agents>${o.agents || '1 agent'}</span><i class="dot"></i><span class="mono" data-elapsed>0:00</span></div>
     <div class="tv-prog" data-prog><i></i></div>
     <div class="sh"><span>Plan</span><span class="mono" data-plan-n></span></div>
     <ol class="plan" data-plan><li class="plan-empty">${ind('think')}<span class="shim">Waiting for a plan</span></li></ol>
@@ -1521,7 +1560,7 @@ function TaskView(task, o = {}) {
         const a = S.agents[id]; const k = plan.findIndex(p => p.agent === id && p.s !== 'done' && p.s !== 'pending');
         if (k >= 0) { a.step = (k + 1) / plan.length; a.stepText = `${k + 1} of ${plan.length} · ${plan[k].title}`; }
       }
-      if (plan.length) { S.agents.atlas.step = done / plan.length; S.agents.atlas.stepText = `${done} of ${plan.length} steps done`; }
+      if (plan.length) { S.agents.orc.step = done / plan.length; S.agents.orc.stepText = `${done} of ${plan.length} steps done`; }
       for (const id of TEAM) paintAgent(id);
     },
     row(o) { return logRow(q('[data-log]'), o, v); },
@@ -1591,30 +1630,40 @@ function logRow(log, o, scroller) {
 
 /* Tool output details */
 const X = {
-  plan: steps => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>Plan</span><span class="sp"></span><span class="mono">${steps.length} steps · 5 agents</span></div><div class="xd-b"><ol class="xl">${steps.map(s => `<li><span>${esc(s.title)} <span style="color:var(--fg-4)">· ${A[s.agent].name}</span></span></li>`).join('')}</ol></div></div>`,
-  sources: () => `<div class="xd"><div class="xd-h">${ic('globe')}<code>web.search("ai workspace landing page 2026")</code><span class="sp"></span><span class="mono">12 results</span></div><div class="xd-b">${[
-    ['How we rebuilt our homepage around the live product','lumen-labs.example'],['Pricing pages that convert: 2026 benchmark','northwind.example'],
-    ['Agents in the product tour: what worked','fabrikam.example'],['Design teardown: 30 AI tool landing pages','contoso.example'],
-    ['Why we stopped charging per agent','tailspin.example'],['+ 7 more','']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}</div></div>`,
-  read: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>fs.write("docs/research.md")</code><span class="sp"></span><span class="mono">2.4k words</span></div><div class="xd-b"><pre>## Summary
-9 of 12 pages lead with a live product view.
-Pages that name each agent's job hold attention longer.
-8 of 12 price per seat; none price per agent.</pre></div></div>`,
-  analysis: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>python analyze.py --inputs 14</code><span class="sp"></span><span class="mono">4 files · 3,842 rows</span></div><div class="xd-b"><div class="src"><i></i><span>docs/research.md</span><em>2.4k words</em></div><div class="src"><i></i><span>customer_feedback.pdf</span><em>3,842 entries</em></div><div class="src"><i></i><span>interviews/ (8 transcripts)</span><em>61k words</em></div><div class="src"><i></i><span>analytics_q3.csv</span><em>14 MB</em></div><pre style="margin-top:8px">patterns: 3   confidence: high   contradictions: 0</pre></div></div>`,
-  copy: () => `<div class="xd"><div class="xd-h">${ic('pen')}<code>content/landing.md</code><span class="sp"></span><span class="mono">3 options</span></div><div class="xd-b"><ol class="xl"><li>Your team, plus a few tireless agents.</li><li>Hand off the busywork. Keep the decisions.</li><li>Research, design and code, delegated.</li></ol></div></div>`,
-  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>design/hero</code><span class="sp"></span><span class="mono">3 variants · 1440 × 900</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Editorial</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Agent-forward</figcaption></figure></div></div></div>`,
+  plan: steps => `<div class="xd"><div class="xd-h">${ic('sparkle')}<span>Plan</span><span class="sp"></span><span class="mono">${steps.length} steps · ${new Set(steps.map(s => s.agent)).size} agents</span></div><div class="xd-b"><ol class="xl">${steps.map(s => `<li><span>${esc(s.title)} <span style="color:var(--fg-4)">· ${A[s.agent].name}</span></span></li>`).join('')}</ol></div></div>`,
+  audit: () => `<div class="xd"><div class="xd-h">${ic('globe')}<code>audit("home", web, app)</code><span class="sp"></span><span class="mono">14 pages · 3 issues</span></div><div class="xd-b">${[
+    ['App hero shows an ended campaign','app · home'],['Sold-out product in slot 1','web · home'],
+    ['Hero image is 1.8 MB on mobile','web · mobile'],['11 other checks passed','']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}</div></div>`,
+  odooErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>kpi pull --source odoo</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><b>Odoo</b> isn’t connected to this workspace, so Kai can’t read yesterday’s sales and orders.</p><div><button class="btn warn" data-resolve>${ic('plug')}Resolve</button></div></div></div>`,
+  kpis: () => `<div class="xd"><div class="xd-h">${ic('activity')}<code>kpi compare --targets q4</code><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>KPI              Yesterday   Target   Change
+Revenue          412k        450k       −8%   off target
+Orders           1,284       1,300      −1%   on track
+Web conversion   2.8%        2.8%        0%   on target
+App conversion   1.9%        2.3%      −17%   off target</pre></div></div>`,
+  aiAnswers: () => `<div class="xd"><div class="xd-h">${ic('sparkle')}<code>ai_answers.check(12 prompts)</code><span class="sp"></span><span class="mono">cited in 5 of 12</span></div><div class="xd-b">${[
+    ['ChatGPT','cited in 2 of 4'],['Gemini','cited in 2 of 4'],['Perplexity','cited in 1 of 4']].map(([t, d]) => `<div class="src"><i></i><span>${t}</span><em>${d}</em></div>`).join('')}<pre style="margin-top:8px">not cited for: running shoes, smart watches</pre></div></div>`,
+  rankings: () => `<div class="xd"><div class="xd-h">${ic('search')}<code>search_console.query(40 keywords)</code><span class="sp"></span><span class="mono">sample data</span></div><div class="xd-b"><pre>keyword            position   change
+air fryer          #4         up 2
+wireless earbuds   #7         down 3
+winter jacket      #12        up 5</pre></div></div>`,
+  variants: () => `<div class="xd"><div class="xd-h">${ic('image')}<code>brand/banners/winter-sale</code><span class="sp"></span><span class="mono">3 variants · 1440 × 600</span></div><div class="xd-b"><div class="var"><figure><div class="wire"><i></i><i></i><i></i><i></i></div><figcaption>A · Snow scene</figcaption></figure><figure><div class="wire b"><i></i><i></i><i></i><i></i></div><figcaption>B · Product-first</figcaption></figure><figure><div class="wire c"><i></i><i></i><i></i><i></i></div><figcaption>C · Bold type</figcaption></figure></div></div></div>`,
   term: (cmd, lines) => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>${esc(cmd)}</code><span class="sp"></span><span class="mono">exit 0</span></div><div class="xd-b"><pre>${lines}</pre></div></div>`,
-  diff: () => `<div class="xd"><div class="xd-h">${ic('code')}<code>app/(marketing)/page.tsx</code><span class="sp"></span><span class="mono" style="color:var(--ok)">+${ED.added}</span><span class="mono" style="color:var(--err)">−${ED.removed}</span></div><div class="xd-b diff"><div class="c">@@ -8,5 +10,27 @@ export default function Page() {</div><div class="r">-      {/* TODO: landing page */}</div><div class="a">+      &lt;section className="hero"&gt;</div><div class="a">+        &lt;h1&gt;Your team, plus a few tireless agents.&lt;/h1&gt;</div><div class="a">+        &lt;AgentActivity agents={["scout", "sage", "forge"]} live /&gt;</div><div class="c">   …</div><div style="margin-top:8px"><button class="ref" data-open-tab="file:page.tsx">${ic('code')}Open page.tsx</button></div></div></div>`,
-  deployErr: () => `<div class="xd"><div class="xd-h">${ic('terminal')}<code>agents-os deploy --preview</code><span class="sp"></span><span class="mono" style="color:var(--err)">exit 1</span></div><div class="xd-b err-box"><p><code>DEPLOY_TOKEN</code> is not set for the preview environment. Forge can't deploy until it has a token.</p><div><button class="btn warn" data-resolve>${ic('key')}Resolve</button></div></div></div>`,
+  diff: () => `<div class="xd"><div class="xd-h">${ic('code')}<code>site/homepage.json</code><span class="sp"></span><span class="mono" style="color:var(--ok)">+${ED.added}</span><span class="mono" style="color:var(--err)">−${ED.removed}</span></div><div class="xd-b diff"><div class="c">@@ hero @@</div><div class="r">-    "banner": "black-friday-teaser",</div><div class="a">+    "banner": "winter-sale-b",</div><div class="a">+    "alt": "Winter sale, up to 30% off",</div><div class="c">@@ products @@</div><div class="r">-    "wireless-earbuds-pro",</div><div class="a">+    "winter-jacket-pro",</div><div style="margin-top:8px"><button class="ref" data-open-tab="file:homepage.json">${ic('code')}Open homepage.json</button></div></div></div>`,
+  pulse: () => `<div class="xd"><div class="xd-h">${ic('doc')}<code>fs.write("pulse/daily-pulse.md")</code><span class="sp"></span><span class="mono">4 sections</span></div><div class="xd-b"><pre>## Today
+Revenue 412k, 8% under target
+App conversion 1.9% (target 2.3%)
+"air fryer" up 2 to #4
+1 change waiting for approval</pre></div></div>`,
 };
 
 /* ── Terminal ── */
+/* The agent console: commands and connector calls show up here under the agent that ran them. */
 const Term = {
-  el: null,
-  prompt: '<span class="t-p">forge@agents-os-web</span> <span class="t-b">~/agents-os-web</span> <span class="t-d">(feat/landing)</span> <span class="t-d">$</span> ',
+  el: null, who: 'kai',
+  get prompt() { return `<span class="t-p">${this.who}@agents-os</span> <span class="t-b">~/pulse</span> <span class="t-d">$</span> `; },
   line(html) { const s = document.createElement('span'); s.className = 'l'; s.innerHTML = html; this.el.appendChild(s); this.scroll(); return s; },
   scroll() { const b = $('#bp-body'); b.scrollTop = b.scrollHeight; },
-  clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Forge’s shell · commands run by agents appear here</span>'); this.idle(); },
+  clear() { termSeen(); this.opened = false; this.el.innerHTML = ''; this.line('<span class="t-d">Agent console · commands and connector calls run by agents appear here</span>'); this.idle(); },
   idle() { const c = this.el.querySelector('.cursor'); if (c) c.parentElement.remove(); this.line(this.prompt + '<span class="cursor"></span>'); },
   async cmd(text, r) {
     if (!this.opened) { this.opened = true; showBP(true); }
@@ -1627,52 +1676,32 @@ const Term = {
   },
   async out(lines, r, gap = 90) { for (const l of lines) { this.line(l); await wait(M.reduced ? 10 : gap * rand(.6, 1.4), r); } },
 };
-/* The panel opens on Forge's first command of a run. If you close it after that, new output just marks the status bar toggle. */
+/* The panel opens on the first command of a run. If you close it after that, new output just marks the status bar toggle. */
 function termPing(kind = 'out') { if ($('#center').classList.contains('bp-on')) return; const b = $('#sb-term'); b.dataset.new = kind; b.setAttribute('aria-label', kind === 'err' ? 'Toggle terminal, new error' : 'Toggle terminal, new output'); }
 function termSeen() { const b = $('#sb-term'); delete b.dataset.new; b.setAttribute('aria-label', 'Toggle terminal'); }
-function setShellWho(on) { $('#bp-who').innerHTML = on ? `${avatar('forge', 14)}<span>forge · zsh</span>` : '<span>zsh</span>'; mountAvatars($('#bp-who')); }
+function setShellWho(id) { if (id) Term.who = id; $('#bp-who').innerHTML = id ? `${avatar(id, 14)}<span>${id} · console</span>` : '<span>console</span>'; mountAvatars($('#bp-who')); }
 
 /* ── Code editor ── */
+const ED_TAB = 'file:homepage.json';
 const ORIG = [
-  'import type { Metadata } from "next";',
-  '',
-  'export const metadata: Metadata = {',
-  '  title: "Agents OS: the AI workspace for teams",',
-  '};',
-  '',
-  'export default function Page() {',
-  '  return (',
-  '    <main className="page">',
-  '      {/* TODO: landing page */}',
-  '    </main>',
-  '  );',
+  '{',
+  '  "page": "home",',
+  '  "hero": {',
+  '    "banner": "black-friday-teaser",',
+  '    "status": "ended"',
+  '  },',
+  '  "products": [',
+  '    "wireless-earbuds-pro",',
+  '    "air-fryer-xl",',
+  '    "running-shoes-v2",',
+  '    "smart-watch-s3"',
+  '  ]',
   '}',
 ];
-const IMPORTS = ['import { Button } from "@/components/button";', 'import { AgentActivity, PlanGrid, Faq } from "@/components/marketing";', 'import { plans, faq } from "./content";'];
-const BODY = [
-  '      <section className="hero">',
-  '        <p className="eyebrow">Agents OS 2.0</p>',
-  '        <h1>Your team, plus a few tireless agents.</h1>',
-  '        <p className="lede">',
-  '          Hand off research, design and code to agents that work',
-  '          inside your repo. Every decision stays yours.',
-  '        </p>',
-  '        <div className="actions">',
-  '          <Button href="/signup">Start free</Button>',
-  '          <Button href="/demo" variant="ghost">Watch the demo</Button>',
-  '        </div>',
-  '        <AgentActivity agents={["scout", "sage", "forge"]} live />',
-  '      </section>',
-  '',
-  '      <section className="pricing" aria-labelledby="pricing">',
-  '        <h2 id="pricing">Priced per seat, not per agent</h2>',
-  '        <PlanGrid plans={plans} highlight="team" />',
-  '      </section>',
-  '',
-  '      <section className="faq">',
-  '        <h2>Questions</h2>',
-  '        <Faq items={faq} />',
-  '      </section>',
+/* Nova's proposal. Each step marks lines as removed, then types the replacement in their place. */
+const ED_OPS = [
+  {find:'black-friday-teaser', del:2, add:['    "banner": "winter-sale-b",', '    "alt": "Winter sale, up to 30% off",', '    "status": "live"']},
+  {find:'wireless-earbuds-pro', del:1, add:['    "winter-jacket-pro",']},
 ];
 const ED = {lines: [], added: 0, removed: 0};
 function hl(src) {
@@ -1694,53 +1723,52 @@ function edRender() {
 function edLineEl(n) { return $('#ed') && $('#ed').children[n]; }
 async function edStream(r, onCount) {
   const chip = $('#edit-chip');
-  tabState('file:page.tsx', {dirty:true, editing:true, ac:'forge'});
+  tabState(ED_TAB, {dirty:true, editing:true, ac:'nova'});
   if (chip) chip.classList.add('on');
+  const renumber = () => { $$('#ed .ln-n').forEach((n, k) => n.textContent = k + 1); };
+  const updChip = () => { const c = $('#edit-chip-n'); if (c) c.innerHTML = `<span class="a">+${ED.added}</span> <span class="r">−${ED.removed}</span>`; };
   const insertAt = async (idx, text) => {
     ED.lines.splice(idx, 0, {t:text, k:'add'}); ED.added++;
     const box = $('#ed');
     if (box) {
       const cur = box.querySelector('.ln.cur'); if (cur) cur.classList.remove('cur');
-      const div = document.createElement('div'); div.className = 'ln add new cur'; div.dataset.ac = 'forge';
+      const div = document.createElement('div'); div.className = 'ln add new cur'; div.dataset.ac = 'nova';
       div.innerHTML = `<span class="ln-n"></span><span class="ln-g"></span><span class="ln-c">${hl(text) || ' '}</span>`;
       box.insertBefore(div, box.children[idx] || null);
       renumber();
     }
     updChip(); onCount && onCount();
-    await wait(M.reduced ? 20 : rand(70, 150), r);
+    await wait(M.reduced ? 20 : rand(110, 190), r);
   };
-  const renumber = () => { $$('#ed .ln-n').forEach((n, k) => n.textContent = k + 1); };
-  const updChip = () => { const c = $('#edit-chip-n'); if (c) c.innerHTML = `<span class="a">+${ED.added}</span> <span class="r">−${ED.removed}</span>`; };
-  for (let k = 0; k < IMPORTS.length; k++) await insertAt(1 + k, IMPORTS[k]);
-  await wait(300, r);
-  const todo = ED.lines.findIndex(l => l.t.includes('TODO'));
-  ED.lines[todo].k = 'del'; ED.removed++;
-  const tl = edLineEl(todo); if (tl) tl.className = 'ln del';
-  updChip(); onCount && onCount();
-  await wait(700, r);
-  ED.lines.splice(todo, 1);
-  if (tl) tl.remove(); renumber();
-  for (let k = 0; k < BODY.length; k++) await insertAt(todo + k, BODY[k]);
+  for (const op of ED_OPS) {
+    const at = ED.lines.findIndex(l => l.t.includes(op.find));
+    const out = [];
+    for (let k = 0; k < op.del; k++) { ED.lines[at + k].k = 'del'; ED.removed++; const el = edLineEl(at + k); if (el) { el.className = 'ln del'; out.push(el); } }
+    updChip(); onCount && onCount();
+    await wait(700, r);
+    ED.lines.splice(at, op.del); for (const el of out) el.remove(); renumber();
+    for (let k = 0; k < op.add.length; k++) await insertAt(at + k, op.add[k]);
+    await wait(450, r);
+  }
   const cur = $('#ed .ln.cur'); if (cur) cur.classList.remove('cur');
   if (chip) chip.classList.remove('on');
-  tabState('file:page.tsx', {editing:false});
-  const cc = $('#ctx-changes'); if (cc) cc.textContent = '3 changed';
+  tabState(ED_TAB, {editing:false});
+  const cc = $('#ctx-changes'); if (cc) cc.textContent = `+${ED.added} −${ED.removed}`;
 }
 
 /* ── Chat ── */
 const CHAT_REPLY = {
-  atlas:{tool:null, blocks:[{p:"I'll fold that into TASK-142. **Forge** picks it up after the deploy, and I'll post here when it's done."}]},
-  scout:{tool:['globe','Searched web','6 results · 2.8s','Searching web'], blocks:[{p:'Six recent launches say the same thing: every one shows the product **moving** above the fold, never a static screenshot.'}, {p:'I can add links and a one-line summary for each to research.md.'}]},
-  sage:{tool:['doc','Analyzed 14 documents','3,842 entries · 4.1s','Analyzing 14 documents'], blocks:[{p:'Three patterns hold across the research:'}, {ol:['**Show agents working.** 9 of 12 pages lead with a live product view.', '**Name each job.** Pages that label who does what hold attention longer.', '**Price per seat.** 8 of 12 avoid charging for agents separately.']}]},
-  pixel:{tool:['image','Generated 3 variants','hero · 1440 × 900 · 6.2s','Generating variants'], blocks:[{p:'Variant **B (product-first)** fits the research best: the live agent activity strip sits right under the headline.'}]},
-  quill:{tool:['pen','Drafted 3 options','content/landing.md','Drafting options'], blocks:[{p:'Plainer option for the headline: **“Hand off the busywork. Keep the decisions.”** Want it swapped in?'}]},
-  forge:{tool:['terminal','Ran pnpm test','42 passed · 1.2s','Running pnpm test'], blocks:[{p:'Tests are green. The hero reads from `content.ts`, so copy changes won’t need a code review.'}, {code:'// app/(marketing)/content.ts\nexport const plans = [\n  { id: "team", seat: 18, agents: "unlimited" },\n];', file:'content.ts'}]},
-  ward:null,
+  orc:{tool:null, blocks:[{p:"I'll add that to today's pulse. **Kai** picks it up after the KPI check, and I'll post here when it's done."}]},
+  atlas:{tool:['doc','Checked brand guidelines','24 pages · 1.6s','Checking brand guidelines'], blocks:[{p:'Banner **B (product-first)** fits the guidelines: the logo keeps its clear space and the headline uses the approved tone.'}, {p:'A and C crop the logo on small screens, so I’d keep them for social only.'}]},
+  nova:{tool:['globe','Audited the homepage','web · app · 4.2s','Auditing the homepage'], blocks:[{p:'The app hero still shows the **Black Friday teaser**, which has ended, and slot 1 on web is a sold-out product.'}, {p:'I’ve drafted both fixes in `homepage.json`. They go live once you approve.'}]},
+  kai:{tool:['activity','Compared KPIs with targets','sample data · 2.1s','Comparing KPIs with targets'], blocks:[{p:'Yesterday against target:'}, {ol:['**Revenue** 412k, 8% under the 450k target.', '**App conversion** 1.9%, down from a 2.3% target.', '**Web conversion** on target at 2.8%.']}, {p:'These are sample numbers until Odoo is connected.'}]},
+  dex:{tool:['search','Checked AI answers','12 prompts · 3 assistants','Checking AI answers'], blocks:[{p:'We show up in **5 of 12** AI answers for our main categories. ChatGPT cites us for air fryers but not for running shoes.'}, {p:'On Google, “air fryer” moved up 2 places to **#4**.'}]},
 };
-const SAGE_FIND = [{p:'I read the 12 sources Scout collected plus 2 internal documents. Three patterns hold:'}, {ol:['**Show agents working.** 9 of 12 pages lead with a live product view instead of a static screenshot.', '**Name each job.** Pages that say who does what (research, design, code) keep visitors reading longer.', '**Price per seat, not per agent.** 8 of 12 avoid charging for agents separately, and customer feedback backs this 3 to 1.']}, {p:'Recommendations are in `recommendations.md`. I’ve passed them to **Pixel** and **Quill**.'}];
+const NOVA_FIND = [{p:'I checked the homepage, 3 category pages, 6 product pages and 4 app screens. Three things need attention:'}, {ol:['**The app hero is out of date.** It still shows the Black Friday teaser, which has ended.', '**Slot 1 on web is sold out.** Wireless Earbuds Pro sits in the top position with a “Sold out” badge.', '**Banners load slowly on mobile.** The hero image is 1.8 MB; under 300 KB is the usual target.']}, {p:'I’ve asked **Atlas** for a winter sale banner that fits the brand. Once it’s ready, I’ll propose the fixes in `homepage.json`.'}];
+const orcPulse = () => [{p:'Here’s today’s pulse. It runs on **sample data** until Odoo, Google Analytics and Search Console are connected.'}, {ol:['**Numbers:** revenue was 412k yesterday, 8% under target. App conversion fell to 1.9%.', `**Web and app:** the app hero was showing an ended campaign, which fits the conversion drop. Nova’s fix ${S.approval ? 'is waiting for your approval' : 'is live'}.`, '**Search:** “air fryer” climbed to #4, and we appear in 5 of 12 AI answers.']}, {refs:`<button class="ref" data-open-tab="file:daily-pulse.md">${ic('doc')}daily-pulse.md</button><button class="ref" data-open-tab="file:homepage.json">${ic('code')}homepage.json +${ED.added} −${ED.removed}</button>`}];
 function chatHTML() {
   return `<div class="chat"><div class="chat-scroll" id="chat-scroll"><div class="chat-col" id="chat-col"></div></div>
-    <form class="comp" id="comp"><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" placeholder="Ask Sage, or type @ to add context"></textarea>
+    <form class="comp" id="comp"><label class="sr" for="chat-in">Message</label><textarea id="chat-in" rows="1" placeholder="Ask Nova, or type @ to add context"></textarea>
     <div class="comp-bar"><button type="button" class="pillbtn" id="comp-ctx">${ic('at')}<span>Context</span></button><button type="button" class="pillbtn" id="comp-agent"></button><button type="button" class="pillbtn" id="comp-model">${ic('cpu')}<span id="comp-model-l">${S.model}</span></button><span class="sp"></span><span class="hint">↵ send · ⇧↵ newline</span><button type="submit" class="send" aria-label="Send">${ic('send')}</button></div></form></div>`;
 }
 function chatCol() { return $('#chat-col'); }
@@ -1753,7 +1781,7 @@ function addUser(text, time) {
 }
 function agentMsg(id, time) {
   const m = document.createElement('article'); m.className = 'm'; m.dataset.ac = id;
-  m.innerHTML = `<header class="m-h">${avatar(id, 20)}<b>${A[id].name}</b><span>${A[id].role}</span><span class="mono">${time || clock().slice(0, 5)}</span></header><div class="m-b"><div class="m-think"><div><div class="m-think-in">${ind('think')}<span class="shim">${A[id].name} is thinking…</span></div></div></div><div class="m-tools"></div><div class="m-text"></div></div>`;
+  m.innerHTML = `<header class="m-h">${avatar(id, 20)}<b>${A[id].name}</b><span>${esc(A[id].role)}</span><span class="mono">${time || clock().slice(0, 5)}</span></header><div class="m-b"><div class="m-think"><div><div class="m-think-in">${ind('think')}<span class="shim">${A[id].name} is thinking…</span></div></div></div><div class="m-tools"></div><div class="m-text"></div></div>`;
   chatCol().appendChild(m); mountAvatars(m); chatScroll(true);
   return {el:m, tools:m.querySelector('.m-tools'), text:m.querySelector('.m-text')};
 }
@@ -1828,9 +1856,9 @@ async function streamReply(id, blocks, o = {}) {
   chatScroll();
 }
 function seedChat() {
-  chatCol().innerHTML = `<div class="chat-head">${ic('chat')}<b>Landing page</b><span>·</span><span>TASK-142</span><span class="sp"></span><span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span></div>`;
-  addUser('Build the landing page for the Agents OS launch. Use the research in /docs and ship a preview today.', '14:01');
-  staticAgent('atlas', [{p:'I’ll run this as **TASK-142** with five agents. Scout researches, Sage turns it into recommendations, Pixel and Quill handle design and copy, and Forge builds and deploys the preview.'}, {refs:`<button class="ref" data-open-tab="task:142">${ic('tasks')}TASK-142</button><button class="ref" data-open-tab="file:research.md">${ic('doc')}docs/</button>`}], {time:'14:01', thought:'Thought for 3s', thoughtText:'Research first so design and copy share the same evidence. Copy needs approval before it ships. Deploy needs a token; check secrets before the last step.'});
+  chatCol().innerHTML = `<div class="chat-head">${ic('chat')}<b>Daily pulse</b><span>·</span><span>TASK-142</span><span class="sp"></span><span class="avs">${PULSE.map(id => avatar(id, 16)).join('')}</span></div>`;
+  addUser('Morning Orc. Run today’s pulse and flag anything that needs me before 10.', '08:01');
+  staticAgent('orc', [{p:'I’ll run this as **TASK-142** with four agents. Nova audits the site and app, Kai checks yesterday against targets, Dex looks at rankings and AI answers, and Atlas keeps any new banner on brand. I’ll post the pulse here when it’s done.'}, {refs:`<button class="ref" data-open-tab="task:142">${ic('tasks')}TASK-142</button><button class="ref" data-open-tab="file:daily-pulse.md">${ic('doc')}daily-pulse.md</button>`}], {time:'08:01', thought:'Thought for 3s', thoughtText:'Audit first so the KPI check can explain any dips. Homepage changes need approval before they go live. Odoo isn’t connected yet, so check before Kai pulls numbers.'});
   mountAvatars(chatCol());
 }
 function sendChat(text) {
@@ -1838,7 +1866,8 @@ function sendChat(text) {
   addUser(text);
   if (S.agents[id].presence === 'offline' || !CHAT_REPLY[id]) {
     const m = agentMsg(id); m.el.classList.add('answering');
-    buildWords(m.text, [{p:`${A[id].name} is offline until 18:00. Your message will be waiting.`}]).forEach(w => w.classList.add('on'));
+    const say = A[id].placeholder ? 'I don’t have a role yet. Once you give me one, I can start taking tasks.' : `${A[id].name} is offline right now. Your message will be waiting.`;
+    buildWords(m.text, [{p:say}]).forEach(w => w.classList.add('on'));
     return;
   }
   const c = CHAT_REPLY[id];
@@ -1854,64 +1883,68 @@ function tbl(cols, rows) {
 }
 const who = (id, px = 16) => `<span class="who">${avatar(id, px)}<span>${A[id].name}</span></span>`;
 const statusCell = s => { const [k, l] = TSTAT[s]; return `<span class="stw" data-p="${s === 'blocked' ? 'blocked' : s === 'input' ? 'approval' : s === 'running' ? 'working' : ''}">${ind(k)}<span>${l}</span></span>`; };
+const avs = ids => `<span class="avs">${ids.map(id => avatar(id, 16)).join('')}</span>`;
 const VIEWS = {
   'chat': chatHTML,
-  'file:page.tsx': () => `<div class="ed-bar">${ic('code')}<span>app</span><span class="sl">›</span><span>(marketing)</span><span class="sl">›</span><b>page.tsx</b></div><div class="glass edit-chip" id="edit-chip" data-ac="forge">${avatar('forge', 18)}<span>Forge is editing</span><span class="mono" id="edit-chip-n"></span></div><div class="ed" id="ed"></div>`,
-  'file:research.md': () => `<article class="doc"><h1>Landing page research</h1><div class="doc-meta">${avatar('scout', 16)}<span>Written by Scout</span><span>·</span><span class="mono">docs/research.md</span><span>·</span><span>12 sources</span></div>
-    <h2>Summary</h2><p>Across twelve recent launches of AI workspace products, the pages that performed best showed the product working instead of describing it. Three patterns repeat.</p>
-    <ul><li><strong>Show agents working.</strong> 9 of 12 pages lead with a live product view above the fold.</li><li><strong>Name each job.</strong> Pages that say which agent does research, design or code keep visitors reading longer.</li><li><strong>Price per seat.</strong> 8 of 12 price per seat; none charge per agent.</li></ul>
-    <h2>What to avoid</h2><p>Abstract illustrations of “AI”, feature grids without a working example, and pricing that makes buyers count agents.</p>
-    <h2>Sources</h2><ul><li>How we rebuilt our homepage around the live product · lumen-labs.example</li><li>Pricing pages that convert: 2026 benchmark · northwind.example</li><li>Agents in the product tour: what worked · fabrikam.example</li><li>Design teardown: 30 AI tool landing pages · contoso.example</li><li>Why we stopped charging per agent · tailspin.example</li></ul></article>`,
+  'file:homepage.json': () => `<div class="ed-bar">${ic('code')}<span>site</span><span class="sl">›</span><b>homepage.json</b></div><div class="glass edit-chip" id="edit-chip" data-ac="nova">${avatar('nova', 18)}<span>Nova is editing</span><span class="mono" id="edit-chip-n"></span></div><div class="ed" id="ed"></div>`,
+  'file:daily-pulse.md': () => `<article class="doc"><h1>Daily pulse</h1><div class="doc-meta">${avatar('orc', 16)}<span>Written by Orc</span><span>·</span><span class="mono">pulse/daily-pulse.md</span><span>·</span><span>Sample data</span></div>
+    <p>This pulse uses sample data. Connect Odoo, Google Analytics and Search Console in Settings to run it on your real numbers.</p>
+    <h2>Numbers · Kai</h2><ul><li><strong>Revenue</strong> was 412k yesterday, 8% under the 450k target.</li><li><strong>Orders</strong> reached 1,284, on track for the 1,300 target.</li><li><strong>App conversion</strong> fell to 1.9% against a 2.3% target. Web held at 2.8%.</li></ul>
+    <h2>Web and app · Nova</h2><ul><li>The app hero still showed the Black Friday teaser after the campaign ended, which fits the drop in app conversion.</li><li>Slot 1 on the web homepage was a sold-out product.</li><li>The hero image is 1.8 MB on mobile; under 300 KB is the usual target.</li></ul>
+    <h2>Search and AI answers · Dex</h2><ul><li>“air fryer” moved up 2 places to #4. “wireless earbuds” dropped 3 places to #7.</li><li>We appear in 5 of 12 AI answers. ChatGPT doesn’t mention us for running shoes yet.</li></ul>
+    <h2>Needs you</h2><ul><li>Approve Nova’s homepage changes: Atlas’s winter sale banner in the app hero, and the winter jacket in slot 1.</li></ul></article>`,
   home: () => {
     const big = innerWidth < 620 ? 72 : 84;
-    const chips = [['globe','Research competitor pricing pages'],['image','Design an onboarding empty state'],['terminal','Fix the flaky checkout test'],['doc','Summarize this week’s customer feedback']];
-    return `<div class="home"><section class="hero" aria-label="Atlas">
+    const chips = [['activity','Why did app conversion drop yesterday?'],['image','Design a banner for the winter sale'],['search','Check where we rank for “air fryer”'],['globe','Audit product positions on the homepage']];
+    return `<div class="home"><section class="hero" aria-label="Orc">
       <div class="hero-stage" id="hero-stage">
-        <div class="hero-aura" data-ac="atlas"></div>
+        <div class="hero-aura" data-ac="orc"></div>
         <svg class="hero-ring" id="hero-ring" aria-hidden="true"><ellipse id="hero-ell"/></svg>
-        ${TEAM.filter(id => id !== 'atlas').map(id => `<button class="orb" data-open-agent="${id}" data-ac="${id}" aria-label="${A[id].name}, ${A[id].role}">${avatar(id, 26)}<span class="orb-l">${A[id].name}</span></button>`).join('')}
-        <button class="hero-atlas" id="hero-atlas" aria-label="Atlas, your orchestrator. Poke to say hi.">${avatar('atlas', big, {attrs:'data-track data-play'})}</button>
+        ${TEAM.filter(id => id !== 'orc').map(id => `<button class="orb" data-open-agent="${id}" data-ac="${id}" aria-label="${esc(A[id].name + ', ' + A[id].role)}">${avatar(id, 26)}<span class="orb-l">${A[id].name}</span></button>`).join('')}
+        <button class="hero-orc" id="hero-orc" aria-label="Orc, your orchestrator. Poke to say hi.">${avatar('orc', big, {attrs:'data-track data-play'})}</button>
       </div>
-      <form class="comp home-comp" id="home-comp"><label class="sr" for="home-in">Ask Atlas</label><textarea id="home-in" rows="1" placeholder="Ask Atlas anything, or describe a task…"></textarea>
-        <div class="comp-bar"><span class="pillbtn" style="pointer-events:none">${avatar('atlas', 16)}<span>Atlas routes it to the right agent</span></span><span class="sp"></span><span class="hint kbd-hint">↵ to start</span><button type="submit" class="send" aria-label="Start task">${ic('send')}</button></div></form>
+      <form class="comp home-comp" id="home-comp"><label class="sr" for="home-in">Ask Orc</label><textarea id="home-in" rows="1" placeholder="Ask Orc anything, or describe a task…"></textarea>
+        <div class="comp-bar"><span class="pillbtn" style="pointer-events:none">${avatar('orc', 16)}<span>Orc routes it to the right agent</span></span><span class="sp"></span><span class="hint kbd-hint">↵ to start</span><button type="submit" class="send" aria-label="Start task">${ic('send')}</button></div></form>
       <div class="hchips">${chips.map(([i, t]) => `<button type="button" class="hchip" data-suggest="${esc(t)}">${ic(i)}${esc(t)}</button>`).join('')}</div>
     </section><div id="home-live"></div></div>`;
   },
-  projects: () => `<div class="pg"><div class="pg-h"><div><h1>Projects</h1><p>3 projects in Agents OS</p></div></div>${tbl([['Project','minmax(0,1fr)'],['Branch','150px'],['Agents','120px'],['Updated','110px']], [
-    {cells:['<span class="pri-c">agents-os-web</span>', '<span class="mono">feat/landing</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
-    {cells:['<span class="pri-c">agents-os-docs</span>', '<span class="mono">main</span>', `<span class="avs">${['quill','sage'].map(id => avatar(id, 16)).join('')}</span>`, '2 days ago']},
-    {cells:['<span class="pri-c">agents-os-brand</span>', '<span class="mono">main</span>', `<span class="avs">${['pixel'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 21']}])}</div>`,
-  agents: () => `<div class="pg"><div class="pg-h"><div><h1>Agents</h1><p>7 agents · models and tools are set per agent</p></div><button class="btn" data-cmd="create-agent">${ic('plus')}Create agent</button></div>${tbl([['Agent','170px'],['State','130px'],['Now','minmax(0,1fr)'],['Model','100px'],['Tools','170px']], AGENTS.map(a => ({btn:true, attrs:`data-open-agent="${a.id}"`, cells:[`<span class="who">${avatar(a.id, 20)}<span class="pri-c">${a.name}</span><span style="color:var(--fg-4)">${a.role}</span></span>`, `<span class="stw" data-st="${a.id}"></span>`, `<span data-now="${a.id}"></span>`, `<span class="mono">${a.model}</span>`, a.tools.join(' · ')]})))}</div>`,
+  projects: () => `<div class="pg"><div class="pg-h"><div><h1>Projects</h1><p>3 projects in Agents OS</p></div></div>${tbl([['Project','minmax(0,1fr)'],['Covers','200px'],['Agents','120px'],['Updated','110px']], [
+    {cells:['<span class="pri-c">Website</span>', 'Home, categories, products', avs(['nova','dex','atlas']), 'Now']},
+    {cells:['<span class="pri-c">Mobile app</span>', 'iOS and Android', avs(['nova','kai']), 'Now']},
+    {cells:['<span class="pri-c">Brand studio</span>', 'Guidelines, templates, prompts', avs(['atlas']), '2 days ago']}])}</div>`,
+  agents: () => `<div class="pg"><div class="pg-h"><div><h1>Agents</h1><p>${AGENTS.length} agents · Orc routes work to the others</p></div><button class="btn" data-cmd="create-agent">${ic('plus')}Create agent</button></div>${tbl([['Agent','250px'],['State','120px'],['Now','minmax(0,1fr)'],['Model','96px'],['Connects to','200px']], AGENTS.map(a => ({btn:true, attrs:`data-open-agent="${a.id}"`, cells:[`<span class="who">${avatar(a.id, 20)}<span class="pri-c">${a.name}</span><span style="color:var(--fg-4)">${esc(a.role)}</span></span>`, `<span class="stw" data-st="${a.id}"></span>`, `<span data-now="${a.id}"></span>`, `<span class="mono">${a.model}</span>`, connsOf(a.id).map(c => esc(c.name)).join(' · ') || '<span style="color:var(--fg-4)">None yet</span>']})))}</div>`,
   tasks: () => `<div class="pg"><div class="pg-h"><div><h1>Tasks</h1><p>${TASKS.length} tasks · ${TASKS.filter(t => t.status === 'running').length} running</p></div><button class="btn pri" data-cmd="new-task">${ic('plus')}New task</button></div>${tbl([['ID','86px'],['Task','minmax(0,1fr)'],['Owner','130px'],['Status','130px'],['Steps','64px'],['Updated','96px']], TASKS.map(t => ({btn:true, attrs:`data-open-tab="${t.key}"`, cells:[`<span class="mono">${t.id}</span>`, `<span class="pri-c">${esc(t.title)}</span>`, who(t.owner), statusCell(t.status), `<span class="mono">${t.done ?? (t.status === 'done' ? t.steps : 0)}/${t.steps}</span>`, t.updated]})))}</div>`,
-  workflows: () => `<div class="pg"><div class="pg-h"><div><h1>Workflows</h1><p>Reusable pipelines. Running one creates a task.</p></div></div>${tbl([['Workflow','minmax(0,1fr)'],['Agents','130px'],['Steps','64px'],['Last run','110px'],['','72px']], [
-    {cells:['<span class="pri-c">Landing page pipeline</span>', `<span class="avs">${TEAM.slice(0, 6).map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">6</span>', 'Running', '<button class="btn" data-scene="run">Run</button>']},
-    {cells:['<span class="pri-c">Weekly research digest</span>', `<span class="avs">${['scout','sage'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">3</span>', 'Yesterday', '<button class="btn" data-cmd="new-task">Run</button>']},
-    {cells:['<span class="pri-c">Release notes</span>', `<span class="avs">${['quill','forge'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">4</span>', 'Sep 24', '<button class="btn" data-cmd="new-task">Run</button>']},
-    {cells:['<span class="pri-c">Security review</span>', `<span class="avs">${['ward'].map(id => avatar(id, 16)).join('')}</span>`, '<span class="mono">5</span>', 'Sep 25', '<button class="btn" data-cmd="new-task">Run</button>']}])}</div>`,
-  files: () => `<div class="pg"><div class="pg-h"><div><h1>Files</h1><p>agents-os-web · feat/landing</p></div></div>${tbl([['Path','minmax(0,1fr)'],['Changed by','130px'],['Size','80px']], [
-    {btn:true, attrs:'data-open-tab="file:page.tsx"', cells:[`<span class="who">${ic('code')}<span class="pri-c">app/(marketing)/page.tsx</span></span>`, who('forge'), '<span class="mono">1.9 KB</span>']},
-    {btn:true, attrs:'data-open-tab="file:research.md"', cells:[`<span class="who">${ic('doc')}<span class="pri-c">docs/research.md</span></span>`, who('scout'), '<span class="mono">14 KB</span>']},
-    {cells:[`<span class="who">${ic('doc')}<span>docs/recommendations.md</span></span>`, who('sage'), '<span class="mono">4 KB</span>']},
-    {cells:[`<span class="who">${ic('doc')}<span>content/landing.md</span></span>`, who('quill'), '<span class="mono">2 KB</span>']},
-    {cells:[`<span class="who">${ic('image')}<span>design/hero/variant-b.png</span></span>`, who('pixel'), '<span class="mono">812 KB</span>']},
-    {cells:[`<span class="who">${ic('code')}<span>components/marketing/index.ts</span></span>`, '<span style="color:var(--fg-4)">—</span>', '<span class="mono">3 KB</span>']}])}</div>`,
+  workflows: () => `<div class="pg"><div class="pg-h"><div><h1>Workflows</h1><p>Reusable routines. Running one creates a task.</p></div></div>${tbl([['Workflow','minmax(0,1fr)'],['Agents','130px'],['Steps','64px'],['Last run','110px'],['','72px']], [
+    {cells:['<span class="pri-c">Daily pulse</span>', avs(PULSE), '<span class="mono">6</span>', 'Running', '<button class="btn" data-scene="run">Run</button>']},
+    {cells:['<span class="pri-c">Weekly SEO and AI visibility</span>', avs(['dex']), '<span class="mono">3</span>', 'Yesterday', '<button class="btn" data-assign="dex">Run</button>']},
+    {cells:['<span class="pri-c">Banner refresh</span>', avs(['nova','atlas']), '<span class="mono">4</span>', '2 days ago', '<button class="btn" data-assign="atlas">Run</button>']},
+    {cells:['<span class="pri-c">Monthly KPI report</span>', avs(['kai','orc']), '<span class="mono">4</span>', '2 weeks ago', '<button class="btn" data-assign="kai">Run</button>']}])}</div>`,
+  files: () => `<div class="pg"><div class="pg-h"><div><h1>Files</h1><p>Shared by the agents in this workspace</p></div></div>${tbl([['Path','minmax(0,1fr)'],['Changed by','130px'],['Size','80px']], [
+    {btn:true, attrs:'data-open-tab="file:daily-pulse.md"', cells:[`<span class="who">${ic('doc')}<span class="pri-c">pulse/daily-pulse.md</span></span>`, who('orc'), '<span class="mono">6 KB</span>']},
+    {btn:true, attrs:'data-open-tab="file:homepage.json"', cells:[`<span class="who">${ic('code')}<span class="pri-c">site/homepage.json</span></span>`, who('nova'), '<span class="mono">1 KB</span>']},
+    {cells:[`<span class="who">${ic('image')}<span>brand/banners/winter-sale-b.png</span></span>`, who('atlas'), '<span class="mono">284 KB</span>']},
+    {cells:[`<span class="who">${ic('doc')}<span>brand/prompt-library.md</span></span>`, who('atlas'), '<span class="mono">9 KB</span>']},
+    {cells:[`<span class="who">${ic('doc')}<span>kpi/targets-q4.xlsx</span></span>`, who('kai'), '<span class="mono">42 KB</span>']},
+    {cells:[`<span class="who">${ic('doc')}<span>seo/keywords.csv</span></span>`, who('dex'), '<span class="mono">12 KB</span>']}])}</div>`,
   conversations: () => `<div class="pg"><div class="pg-h"><div><h1>Conversations</h1><p>Threads with agents in this workspace</p></div></div>${tbl([['Thread','minmax(0,1fr)'],['With','150px'],['Updated','96px']], [
-    {btn:true, attrs:'data-open-tab="chat"', cells:['<span class="pri-c">Landing page</span>', `<span class="avs">${TEAM.map(id => avatar(id, 16)).join('')}</span>`, 'Now']},
-    {cells:['<span class="pri-c">Q3 signup numbers</span>', `<span class="avs">${['atlas','forge'].map(id => avatar(id, 16)).join('')}</span>`, 'Yesterday']},
-    {cells:['<span class="pri-c">Brand refresh feedback</span>', `<span class="avs">${['pixel','quill'].map(id => avatar(id, 16)).join('')}</span>`, 'Sep 23']}])}</div>`,
+    {btn:true, attrs:'data-open-tab="chat"', cells:['<span class="pri-c">Daily pulse</span>', avs(PULSE), 'Now']},
+    {cells:['<span class="pri-c">Winter sale banners</span>', avs(['atlas','nova']), 'Yesterday']},
+    {cells:['<span class="pri-c">Q4 targets</span>', avs(['kai','orc']), '2 days ago']}])}</div>`,
   runs: () => `<div class="pg"><div class="pg-h"><div><h1>Runs</h1><p>Every workflow and task execution</p></div></div>${tbl([['Run','72px'],['Task','minmax(0,1fr)'],['Status','130px'],['Duration','84px'],['Tokens','84px']], [
-    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Build the Agents OS landing page</span>', statusCell(TASKS[0].status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
-    {cells:['<span class="mono">#217</span>', 'Weekly competitor digest', statusCell('done'), '<span class="mono">3:12</span>', '<span class="mono">31.4k</span>']},
-    {cells:['<span class="mono">#216</span>', 'Migrate auth to OAuth', statusCell('done'), '<span class="mono">18:40</span>', '<span class="mono">212k</span>']},
-    {cells:['<span class="mono">#215</span>', 'Onboarding illustrations', statusCell('done'), '<span class="mono">9:05</span>', '<span class="mono">64.0k</span>']}])}</div>`,
+    {btn:true, attrs:'data-open-tab="task:142"', cells:['<span class="mono">#218</span>', '<span class="pri-c">Run the daily pulse</span>', statusCell(TASKS[0].status), `<span class="mono">${$('#rs-time').textContent}</span>`, `<span class="mono">${$('#rs-tok').textContent}</span>`]},
+    {cells:['<span class="mono">#217</span>', 'Weekly SEO and AI visibility report', statusCell('done'), '<span class="mono">4:05</span>', '<span class="mono">28.1k</span>']},
+    {cells:['<span class="mono">#216</span>', 'Run the daily pulse', statusCell('done'), '<span class="mono">6:12</span>', '<span class="mono">54.3k</span>']},
+    {cells:['<span class="mono">#215</span>', 'Winter campaign banner set', statusCell('done'), '<span class="mono">9:40</span>', '<span class="mono">71.0k</span>']}])}</div>`,
   activity: () => `<div class="pg"><div class="pg-h"><div><h1>Activity</h1><p>Everything agents did in Agents OS today</p></div></div>${ACTIVITY.length ? tbl([['Time','60px'],['Agent','130px'],['Event','minmax(0,1fr)']], ACTIVITY.slice().reverse().map(e => ({cells:[`<span class="mono">${e.t}</span>`, e.agent === 'you' ? 'You' : who(e.agent), esc(e.text)]}))) : '<p class="plan-empty">No activity yet today.</p>'}</div>`,
   settings: () => `<div class="pg" style="max-width:720px"><div class="pg-h"><div><h1>Settings</h1><p>Workspace preferences</p></div></div>
     <div class="set-row"><div><b>Theme</b><span>Light, dark, or match your system setting. Saved in this browser.</span></div><div class="segc" id="set-theme" role="group" aria-label="Theme">${[['light','Light'],['dark','Dark'],['system','System']].map(([k, l]) => `<button aria-pressed="${THEME.pref === k}" data-theme-pref="${k}">${l}</button>`).join('')}</div></div>
     <div class="set-row"><div><b>Reduce motion</b><span>Stops floating, bouncing and moving indicators. States still change and stay readable.</span></div><button class="tog" role="switch" id="set-rm" aria-checked="${M.reduced}" aria-label="Reduce motion"></button></div>
     <div class="set-row"><div><b>Default model</b><span>Used by new agents and chats unless an agent sets its own.</span></div><button class="btn" data-cmd="switch-model">${ic('cpu')}<span data-model-l>${S.model}</span>${ic('chevD')}</button></div>
     <div class="set-row"><div><b>Agent autonomy</b><span>What agents may do without asking you first.</span></div><div class="segc" id="set-auto"><button aria-pressed="${S.autonomy === 'ask'}" data-auto="ask">Ask first</button><button aria-pressed="${S.autonomy === 'safe'}" data-auto="safe">Safe actions</button><button aria-pressed="${S.autonomy === 'full'}" data-auto="full">Full</button></div></div>
-    <div class="set-row"><div><b>Secrets</b><span>DEPLOY_TOKEN, ANALYTICS_KEY · granted per agent</span></div><button class="btn">${ic('key')}Manage</button></div></div>`,
-  '__empty': () => `<div class="empty">${avatar('atlas', 96)}<h2>No open tabs</h2><p><span class="kbd-hint">Press <kbd>${MOD.trim()}</kbd> <kbd>K</kbd> to open</span><span class="touch-hint">Tap search to open</span> a task, a file or an agent.</p></div>`,
+    <div class="sh" id="connections"><span>Connections</span><span class="mono">0 of ${CONNECTIONS.length} connected</span></div>
+    <p class="set-note">Agents use sample data until a platform is connected.</p>
+    ${CONNECTIONS.map(c => `<div class="set-row conn-row"><div><b>${esc(c.name)}</b><span>${avs(c.agents)}${esc(c.what)} · used by ${c.agents.map(id => A[id].name).join(' and ')}</span></div><div class="set-conn"><em>Not connected</em><button class="btn" data-connect="${c.id}">${ic('plug')}Connect</button></div></div>`).join('')}</div>`,
+  '__empty': () => `<div class="empty">${avatar('orc', 96)}<h2>No open tabs</h2><p><span class="kbd-hint">Press <kbd>${MOD.trim()}</kbd> <kbd>K</kbd> to open</span><span class="touch-hint">Tap search to open</span> a task, a file or an agent.</p></div>`,
 };
 
 /* ── Home logic: orbiting team, typing narration, pokes, routing ── */
@@ -1922,7 +1955,7 @@ function initHome() {
   const stage = $('#hero-stage');
   stage.addEventListener('pointerenter', () => { ORBIT.hover = true; });
   stage.addEventListener('pointerleave', () => { ORBIT.hover = false; });
-  const hero = $('#hero-atlas');
+  const hero = $('#hero-orc');
   hero.addEventListener('pointerenter', () => heroEach(i => { kickBounce(i, .6); override(i, 'happy', 1); }));
   hero.addEventListener('click', poke);
   const inp = $('#home-in');
@@ -1946,7 +1979,7 @@ function orbitHook(t, dt) {
   });
 }
 M.hooks.push(orbitHook);
-/* Atlas mirrors what needs attention through its face instead of a message box */
+/* Orc mirrors what needs attention through its face instead of a message box */
 function sayNow() {
   if (activeTab !== 'home') return;
   if (S.blocked) heroEach(i => override(i, 'worried', 2.2));
@@ -1962,11 +1995,11 @@ function poke() {
 }
 function routeAgent(text) {
   const s = text.toLowerCase();
-  if (/research|competitor|find|search|sources|compare/.test(s)) return 'scout';
-  if (/analy|summar|feedback|data|insight|metric/.test(s)) return 'sage';
-  if (/design|visual|illustrat|layout|mock|empty state|icon|hero/.test(s)) return 'pixel';
-  if (/write|copy|headline|blog|release notes|announce/.test(s)) return 'quill';
-  return 'forge';
+  if (/seo|geo\b|rank|keyword|google|search|chatgpt|gemini|perplexity|ai answer|visibility/.test(s)) return 'dex';
+  if (/kpi|revenue|\bsales\b|target|conversion|growth|report|odoo|orders?\b|metric|insight|forecast/.test(s)) return 'kai';
+  if (/design|brand|creative|template|asset|prompt|guideline|image|logo/.test(s)) return 'atlas';
+  if (/banner|homepage|home page|website|\bweb\b|\bapp\b|product position|slot|visual|page speed|best practice|audit/.test(s)) return 'nova';
+  return 'orc';
 }
 function homeSubmit() {
   const inp = $('#home-in'), v = inp.value.trim();
@@ -2001,12 +2034,14 @@ function openCard(id) {
   const el = $('#acard');
   el.dataset.ac = id;
   el.innerHTML = `<button class="ib ac-x" id="ac-x" aria-label="Close">${ic('x')}</button>
-    <div class="ac-h">${avatar(id, 64)}<div><h2>${a.name}</h2><p>${a.role} agent</p><div class="stw" data-st="${id}"></div></div></div>
+    <div class="ac-h">${avatar(id, 64)}<div><h2>${esc(a.name)}</h2><p>${esc(a.role)}</p><div class="stw" data-st="${id}"></div></div></div>
     <div class="ac-sec"><div class="lab">Now</div><p class="ac-now" data-now="${id}"></p></div>
+    <div class="ac-sec"><div class="lab">Duties</div>${a.duties.length ? `<ul class="ac-duties">${a.duties.map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : `<p class="ac-empty">No role yet. Once ${esc(a.name)} has a job, its duties show up here.</p>`}</div>
+    <div class="ac-sec"><div class="lab">Connections</div>${connsOf(id).map(c => `<div class="conn">${ic('plug')}<span>${esc(c.name)}</span><em>Not connected</em></div>`).join('') || '<p class="ac-empty">None yet</p>'}</div>
     <div class="ac-sec"><dl class="kv"><dt>Model</dt><dd>${a.model}</dd><dt>Tools</dt><dd>${a.tools.join(' · ')}</dd><dt>Permissions</dt><dd title="${esc(a.perm)}">${esc(a.perm)}</dd><dt>This week</dt><dd>${a.week} tasks</dd></dl></div>
     <div class="ac-sec"><div class="lab">Recent</div><ol class="ac-recent" id="ac-recent"></ol></div>
     <div class="ac-sec"><div class="lab">Preview a state</div><div class="ac-states" id="ac-states">${STATE_CHIPS.map(([s, l]) => `<button data-set-state="${s}" data-ac="${id}" aria-pressed="false">${ind(s === 'tool' ? TOOLS[a.tool].ind : PRES_IND[s])}${l}</button>`).join('')}</div></div>
-    <div class="ac-f"><button class="btn" data-msg="${id}">${ic('chat')}Message</button><button class="btn pri" data-assign="${id}" ${id === 'ward' ? 'disabled' : ''}>${ic('plus')}Assign task</button></div>`;
+    <div class="ac-f"><button class="btn" data-msg="${id}">${ic('chat')}Message</button><button class="btn pri" data-assign="${id}" ${canWork(id) ? '' : `disabled title="${esc(a.name)} needs a role before it can take tasks"`}>${ic('plus')}Assign task</button></div>`;
   mountAvatars(el); paintAll(el); syncCard();
   el.dataset.open = 'true';
   React.bounce(id, .5);
@@ -2022,7 +2057,7 @@ function syncCard() {
 function closeCard() { CARD.id = null; $('#acard').dataset.open = 'false'; }
 function previewState(id, s) {
   if (s === 'complete') { React.celebrate(id); return setAgent(id, {presence:'complete', label:'Completed'}); }
-  if (s === 'blocked') { React.jolt(id); return setAgent(id, {presence:'blocked', label:'Blocked — missing API key'}); }
+  if (s === 'blocked') { React.jolt(id); return setAgent(id, {presence:'blocked', label:'Blocked: a connection is missing'}); }
   if (s === 'tool') { React.launch(id); return setAgent(id, {presence:'tool', tool:A[id].tool}); }
   if (ACTIVE.has(s) && !ACTIVE.has(S.agents[id].presence)) React.launch(id);
   setAgent(id, {presence:s, label: s === 'approval' ? 'Waiting for your approval' : null});
@@ -2054,7 +2089,7 @@ function agentMenu(id, e) {
   openMenu(null, [
     {label:'Open inspector', icon:'panelR', run:() => openCard(id)},
     {label:'Message', icon:'chat', run:() => openChat(id)},
-    {label:'Assign task…', icon:'plus', run:() => openNewTask(id), disabled:id === 'ward'},
+    {label:'Assign task…', icon:'plus', run:() => openNewTask(id), disabled:!canWork(id)},
     {sep:true},
     {label:'Pause', icon:'pause', run:() => setAgent(id, {presence:'waiting', label:'Paused by you'}), disabled:S.agents[id].presence === 'offline'},
     {label:'View runs', icon:'runs', run:() => openTab('runs')},
@@ -2078,18 +2113,19 @@ const PAL = {page:'root', items:[], idx:0, open:false, prev:null};
 function palItems(page) {
   if (page === 'agents') return AGENTS.map(a => ({g:'Agents', l:a.name, sub:a.role, av:a.id, st:a.id, run:() => openCard(a.id)}));
   if (page === 'models') return ['Opus 5.5','Sonnet 5.5','Haiku 4.5'].map(mdl => ({g:'Models', l:mdl, icon:'cpu', h: S.model === mdl ? 'Current' : '', run:() => setModel(mdl)}));
-  if (page === 'files') return [['file:page.tsx','app/(marketing)/page.tsx','code'],['file:research.md','docs/research.md','doc'],['','docs/recommendations.md','doc'],['','content/landing.md','doc'],['','components/marketing/index.ts','code']].map(([k, l, i]) => ({g:'Files', l, icon:i, mono:true, run:() => k ? openTab(k) : toast({html:`<b>${esc(l)}</b> is read-only in this preview`, ms:2200, icon:'file'})}));
-  if (page === 'workflows') return [['Landing page pipeline','6 steps',() => play('run')],['Weekly research digest','3 steps',() => openNewTask('scout')],['Release notes','4 steps',() => openNewTask('quill')]].map(([l, h, run]) => ({g:'Workflows', l, icon:'flow', h, run}));
+  if (page === 'files') return [['file:daily-pulse.md','pulse/daily-pulse.md','doc'],['file:homepage.json','site/homepage.json','code'],['','brand/prompt-library.md','doc'],['','kpi/targets-q4.xlsx','doc'],['','seo/keywords.csv','doc']].map(([k, l, i]) => ({g:'Files', l, icon:i, mono:true, run:() => k ? openTab(k) : toast({html:`<b>${esc(l)}</b> is read-only in this preview`, ms:2200, icon:'file'})}));
+  if (page === 'workflows') return [['Daily pulse','6 steps',() => play('run')],['Weekly SEO and AI visibility','3 steps',() => openNewTask('dex')],['Banner refresh','4 steps',() => openNewTask('atlas')],['Monthly KPI report','4 steps',() => openNewTask('kai')]].map(([l, h, run]) => ({g:'Workflows', l, icon:'flow', h, run}));
   return [
     {g:'Suggestions', l:'New Task', icon:'plus', kbd:['N'], run:() => openNewTask()},
     {g:'Suggestions', l:'Open Agent', icon:'agent', page:'agents'},
     {g:'Suggestions', l:'Run Workflow', icon:'flow', page:'workflows'},
-    {g:'Suggestions', l:'Search Project', icon:'search', h:'agents-os-web', run:() => openTab('files')},
+    {g:'Suggestions', l:'Search Projects', icon:'search', h:'Website · App · Brand', run:() => openTab('projects')},
+    {g:'Suggestions', l:'Manage Connections', icon:'plug', h:`0 of ${CONNECTIONS.length} connected`, run:openConnections},
     {g:'Suggestions', l:'Search Files', icon:'file', page:'files'},
     {g:'Suggestions', l:'Create Agent', icon:'sparkle', run:() => toast({html:'<b>Create agent</b> opens the agent builder', sub:'Not part of this prototype.', ms:2400, icon:'sparkle'})},
     {g:'Suggestions', l:'Switch Model', icon:'cpu', h:S.model, page:'models'},
     {g:'Suggestions', l:'Open Settings', icon:'settings', kbd:[MOD.trim(), ','], run:() => openTab('settings')},
-    {g:'Navigate', l:'Go to Task · Build landing page', icon:'tasks', run:() => openTab('task:142')},
+    {g:'Navigate', l:'Go to Task · Daily pulse', icon:'tasks', run:() => openTab('task:142')},
     {g:'Navigate', l:'Go to Chat', icon:'chat', run:() => openTab('chat')},
     {g:'Navigate', l:'Toggle Terminal', icon:'panelB', kbd:[MOD.trim(), 'J'], run:toggleBP},
     {g:'Navigate', l:'Toggle Inspector', icon:'panelR', kbd:[MOD.trim(), 'I'], run:toggleInsp},
@@ -2168,15 +2204,19 @@ function openDialog(html, focusSel) {
   setTimeout(() => { const f = focusSel && $(focusSel); if (f) f.focus(); }, 60);
 }
 function closeDialog() { $('#dlg-ov').dataset.open = 'false'; }
-let ntAgent = 'forge';
+let ntAgent = 'nova';
+/* A starting suggestion per agent; picking another agent swaps it as long as you haven't typed your own */
+const NT_IDEA = {orc:'Plan this week’s promotions with the team', atlas:'Make a banner set for the new collection', nova:'Check product positions on the app home screen', kai:'Compare this week’s sales with last week', dex:'Find the keywords we lost this month'};
 function openNewTask(id) {
-  if (id && S.agents[id].presence !== 'offline') ntAgent = id;
+  if (id && canWork(id)) ntAgent = id;
   openDialog(`<form id="nt-form"><div class="dlg-h"><div><h2>New task</h2><p>Describe the outcome. The agent plans the steps and asks before anything irreversible.</p></div></div>
-    <div class="dlg-b"><div class="fld"><label for="nt-title">Task</label><input id="nt-title" value="Audit the pricing page for accessibility issues" autocomplete="off"></div>
-    <div class="fld"><span class="lab">Assign to</span><div class="apick" role="radiogroup" aria-label="Agent">${AGENTS.map(a => { const off = S.agents[a.id].presence === 'offline'; const busy = ACTIVE.has(S.agents[a.id].presence); return `<button type="button" role="radio" data-nt="${a.id}" aria-checked="${a.id === ntAgent}" ${off ? 'disabled' : ''}>${avatar(a.id, 18)}<span>${a.name}</span>${off ? '<small>Offline</small>' : busy ? '<small>Busy</small>' : ''}</button>`; }).join('')}</div></div></div>
+    <div class="dlg-b"><div class="fld"><label for="nt-title">Task</label><input id="nt-title" value="${esc(NT_IDEA[ntAgent])}" autocomplete="off"></div>
+    <div class="fld"><span class="lab">Assign to</span><div class="apick" role="radiogroup" aria-label="Agent">${AGENTS.map(a => { const off = !canWork(a.id); const busy = ACTIVE.has(S.agents[a.id].presence); return `<button type="button" role="radio" data-nt="${a.id}" aria-checked="${a.id === ntAgent}" ${off ? 'disabled' : ''}>${avatar(a.id, 18)}<span>${esc(a.name)}</span>${a.placeholder ? '<small>No role</small>' : off ? '<small>Offline</small>' : busy ? '<small>Busy</small>' : ''}</button>`; }).join('')}</div></div></div>
     <div class="dlg-f"><button type="button" class="btn" data-dismiss>Cancel</button><button type="submit" class="btn pri" id="nt-go">Assign to ${A[ntAgent].name}</button></div></form>`, '#nt-title');
 }
 function pickNT(id) {
+  const t = $('#nt-title');
+  if (t && Object.values(NT_IDEA).includes(t.value)) t.value = NT_IDEA[id];
   ntAgent = id;
   for (const b of $$('[data-nt]')) b.setAttribute('aria-checked', b.dataset.nt === id);
   $('#nt-go').textContent = `Assign to ${A[id].name}`;
@@ -2184,9 +2224,9 @@ function pickNT(id) {
 }
 function openResolve() {
   if (!S.blocked) return;
-  openDialog(`<div class="dlg-h">${avatar('forge', 36)}<div><h2>Forge needs a deploy token</h2><p>The preview deploy stopped because <code>DEPLOY_TOKEN</code> isn’t set. Give Forge access to the workspace secret and it will retry the deploy.</p></div></div>
-    <div class="dlg-b"><div class="opt"><span class="opt-ic">${ic('key')}</span><div><b>Workspace secret · DEPLOY_TOKEN</b><span>Added by you on Sep 12 · preview environments only</span></div></div></div>
-    <div class="dlg-f"><button class="btn" data-dismiss>Not now</button><button class="btn pri" id="grant">Grant access and retry</button></div>`, '#grant');
+  openDialog(`<div class="dlg-h">${avatar('kai', 36)}<div><h2>Odoo isn’t connected yet</h2><p>Kai needs yesterday’s sales and orders from Odoo to compare them with your targets. You can connect Odoo in Settings later. For now, agents can use sample data for every platform that isn’t connected.</p></div></div>
+    <div class="dlg-b"><div class="opt"><span class="opt-ic">${ic('plug')}</span><div><b>Odoo · sales, orders, products and stock</b><span>Not connected · used by Kai and Nova</span></div></div></div>
+    <div class="dlg-f"><button class="btn" data-dismiss>Not now</button><button class="btn pri" id="grant">Use sample data</button></div>`, '#grant');
 }
 
 /* ── Toasts (glass) ── */
@@ -2236,196 +2276,215 @@ async function handoff(tv, from, to, what, meta, r, note) {
   await wait(260, r);
 }
 const PLAN = [
-  {title:'Research competitor landing pages', agent:'scout'},
-  {title:'Synthesize findings into recommendations', agent:'sage'},
-  {title:'Generate hero and pricing designs', agent:'pixel'},
-  {title:'Write headline and page copy', agent:'quill'},
-  {title:'Implement page in Next.js', agent:'forge'},
-  {title:'Run tests and deploy preview', agent:'forge'},
+  {title:'Audit banners and product positions on web and app', agent:'nova'},
+  {title:'Compare yesterday’s KPIs with targets', agent:'kai'},
+  {title:'Check search rankings and AI answers', agent:'dex'},
+  {title:'Create a winter sale banner on brand', agent:'atlas'},
+  {title:'Propose homepage changes', agent:'nova'},
+  {title:'Write the daily pulse', agent:'orc'},
 ];
 let MAIN = null;
 function resetWorld() {
   S.chatRun++; S.blocked = null; S.approval = null;
   closeDialog(); dropToasts('blocked'); dropToasts('approval');
-  for (const a of AGENTS) setAgent(a.id, {presence: a.id === 'ward' ? 'offline' : 'available'});
+  for (const a of AGENTS) setAgent(a.id, {presence:'available'});
   MAIN.clear(); MAIN.status('queued');
   Term.clear(); setShellWho(false);
-  edReset(); tabState('file:page.tsx', {dirty:false, editing:false}); tabState('file:research.md', {dirty:false});
-  const cs = $('#ctx-secret'); if (cs) { cs.textContent = 'not granted'; cs.className = ''; }
-  const cc = $('#ctx-changes'); if (cc) cc.textContent = '0 changed';
+  edReset(); tabState(ED_TAB, {dirty:false, editing:false}); tabState('file:daily-pulse.md', {dirty:false});
+  const co = $('#ctx-odoo'); if (co) co.textContent = 'not connected';
+  const cc = $('#ctx-changes'); if (cc) cc.textContent = 'json';
+  $('#prob-n').textContent = '0';
   S.runStart = 0; S.runEnd = 0; S.tokens = 0;
   TASKS[0].done = 0;
 }
+/* The daily pulse. Nova audits first because public pages need no connection. Kai and Dex then work side by side:
+   Kai stops on Odoo, which isn't connected, and the choice you make (sample data) covers Dex's rankings too.
+   Atlas makes a banner, Nova proposes the homepage fix and waits for approval, and Orc writes the pulse. */
 async function runMain(r) {
   resetWorld();
   openTab('task:142');
   const T = MAIN;
   await wait(500, r);
   T.row({agent:'you', kind:'note', icon:'plus', verb:'Created task', arg:'TASK-142', done:true});
-  await taskStart('atlas', {presence:'thinking', label:'Planning task…'}, r);
+  await taskStart('orc', {presence:'thinking', label:'Planning the pulse…'}, r);
   T.status('running'); S.runStart = Date.now();
-  const p0 = T.row({agent:'atlas', icon:'sparkle', verb:'Planning task', ind:'think'});
+  const p0 = T.row({agent:'orc', icon:'sparkle', verb:'Planning task', ind:'think'});
   await wait(1700, r);
   T.plan(PLAN);
   p0.done({verb:'Planned task', meta:'6 steps', detail:X.plan(PLAN)});
-  setAgent('atlas', {presence:'working', label:'Coordinating 5 agents'});
+  setAgent('orc', {presence:'working', label:'Coordinating 4 agents'});
 
   T.step(0, 'running');
-  await handoff(T, 'atlas', 'scout', 'brief.md', null, r);
-  await taskStart('scout', {presence:'tool', tool:'browse', label:'Searching the web'}, r);
+  await handoff(T, 'orc', 'nova', 'brief.md', null, r);
+  await taskStart('nova', {presence:'tool', tool:'audit', label:'Auditing web and app'}, r);
   T.planCount();
-  const s1 = T.row({agent:'scout', icon:'globe', verb:'Searching web', arg:'"ai workspace landing page 2026"', ind:'scan'});
-  for (const n of [4, 9, 12]) { await wait(850, r); s1.set({meta:`${n} sources`}); patchAgent('scout', {label:`Searching the web · ${n} sources`}); }
-  s1.done({verb:'Searched web', meta:'12 sources', detail:X.sources()});
-  const s2 = T.row({agent:'scout', icon:'doc', verb:'Reading sources', meta:'0 / 12', ind:'bar'});
-  for (let k = 2; k <= 12; k += 2) { await wait(260, r); s2.set({meta:`${k} / 12`, progress:k / 12}); patchAgent('scout', {label:`Reading ${k} of 12 sources`, progress:k / 12}); }
-  s2.done({verb:'Wrote', arg:'docs/research.md', meta:'2.4k words', detail:X.read()});
-  tabState('file:research.md', {dirty:true, ac:'scout'});
+  const n1 = T.row({agent:'nova', icon:'globe', verb:'Auditing pages', arg:'web · app', meta:'0 / 14', ind:'scan'});
+  guard(streamReply('nova', NOVA_FIND, {drive:false, think:600, tool:['globe','Audited 14 pages','web · app · 4.2s'], toolRunning:'Auditing 14 pages', toolBody:'<p>Homepage, 3 category pages, 6 product pages and 4 app screens · banners, product slots, image weight</p>', toolMs:2800}));
+  for (let k = 1; k <= 14; k++) { await wait(240, r); n1.set({meta:`${k} / 14`}); patchAgent('nova', {label:`Auditing page ${k} of 14`}); }
+  n1.done({verb:'Audited 14 pages', meta:'3 issues', detail:X.audit()});
   T.step(0, 'done');
-  React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Research completed'});
-  await handoff(T, 'scout', 'sage', 'findings.md', '12 sources', r, 'research');
-  later(() => setAgent('scout', {presence:'available'}), 1800, r);
+  React.celebrate('nova'); setAgent('nova', {presence:'complete', label:'Audit completed'});
+  later(() => setAgent('nova', {presence:'available'}), 1800, r);
 
-  T.step(1, 'running');
-  await taskStart('sage', {presence:'tool', tool:'analyze', label:'Analyzing 14 documents', progress:0}, r);
+  T.step(1, 'running'); T.step(2, 'running');
+  await Promise.all([handoff(T, 'orc', 'kai', 'kpi-targets.xlsx', null, r), wait(260, r).then(() => handoff(T, 'orc', 'dex', 'keywords.csv', '40 keywords', r))]);
+  const dexDone = dexWork(T, r); dexDone.catch(() => {});
+  setShellWho('kai');
+  await taskStart('kai', {presence:'tool', tool:'analyze', label:'Reading yesterday’s sales', progress:.1}, r);
   T.planCount();
-  const s3 = T.row({agent:'sage', icon:'doc', verb:'Analyzing documents', meta:'0 / 14', ind:'bar'});
-  guard(streamReply('sage', SAGE_FIND, {drive:false, think:600, tool:['doc','Analyzed 14 documents','3,842 entries · 4.1s'], toolRunning:'Analyzing 14 documents', toolBody:'<p>docs/research.md · customer_feedback.pdf (3,842 entries) · interviews/ (8 transcripts) · analytics_q3.csv</p>', toolMs:2600}));
-  for (let k = 1; k <= 14; k++) { await wait(240, r); s3.set({meta:`${k} / 14`, progress:k / 14}); patchAgent('sage', {label:`Analyzing ${k} of 14 documents`, progress:k / 14}); }
-  s3.done({verb:'Analyzed 14 documents', meta:'3 patterns', detail:X.analysis()});
-  T.step(1, 'done');
-  React.celebrate('sage'); setAgent('sage', {presence:'complete', label:'Analysis completed'});
-  await Promise.all([handoff(T, 'sage', 'pixel', 'recommendations.md', null, r), wait(260, r).then(() => handoff(T, 'sage', 'quill', 'messaging.md', null, r))]);
-  later(() => setAgent('sage', {presence:'available'}), 1800, r);
-
-  T.step(2, 'running'); T.step(3, 'running');
-  await Promise.all([taskStart('pixel', {presence:'tool', tool:'design', label:'Generating hero variants'}, r), wait(180, r).then(() => taskStart('quill', {presence:'tool', tool:'write', label:'Drafting headline copy'}, r))]);
-  T.planCount();
-  const d1 = T.row({agent:'pixel', icon:'image', verb:'Generating design', arg:'hero · pricing', ind:'gen'});
-  const q1 = T.row({agent:'quill', icon:'pen', verb:'Drafting copy', arg:'headline · subhead', ind:'dot'});
-  await wait(2400, r);
-  q1.done({verb:'Drafted copy', meta:'3 options', detail:X.copy()});
-  T.step(3, 'approval');
-  setAgent('quill', {presence:'approval', label:'Waiting for approval · headline'});
-  const ap = T.row({agent:'quill', kind:'approval', icon:'pen', verb:'Needs approval', arg:'“Your team, plus a few tireless agents.”', actions:'<button class="btn pri" data-approve>Approve</button><button class="btn" data-open-tab="chat">Discuss</button>'});
-  const pending = S.approval = {row:ap, tv:T, step:3, agent:'quill'};
-  setTimeout(() => { if (S.approval === pending) approve(true); }, AUTO_RESOLVE_MS);
-  sayNow(true);
-  toast({agent:'quill', kind:'approval', html:'<b>Quill</b> needs your approval', sub:'“Your team, plus a few tireless agents.”', action:'Approve', actionCls:'pri', onAction:approve, sticky:true});
-  await wait(900, r);
-  d1.done({verb:'Generated 3 variants', meta:'hero · pricing', detail:X.variants()});
-  T.step(2, 'done');
-  React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 variants ready'});
-  await handoff(T, 'pixel', 'forge', 'hero-specs.json', null, r);
-  later(() => setAgent('pixel', {presence:'available'}), 1800, r);
-
-  T.step(4, 'running');
-  setShellWho(true);
-  await taskStart('forge', {presence:'tool', tool:'code', label:'Installing dependencies'}, r);
-  T.planCount();
-  const f1 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm install', ind:'spin'});
-  await Term.cmd('pnpm install', r);
-  await Term.out(['<span class="t-d">Lockfile is up to date, resolution step is skipped</span>', 'Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', '', 'dependencies:', '<span class="t-ok">+</span> @agents-os/agent-activity <span class="t-d">0.4.2</span>', '<span class="t-ok">+</span> clsx <span class="t-d">2.1.1</span>', '', 'Done in 3.8s'], r, 150);
-  Term.idle();
-  f1.done({verb:'Ran', meta:'+3 packages', detail:X.term('pnpm install', 'Packages: +3\nDone in 3.8s')});
-  patchAgent('forge', {label:'Implementing hero section'});
-  const f2 = T.row({agent:'forge', icon:'code', verb:'Editing', arg:'app/(marketing)/page.tsx', ind:'dot'});
-  await edStream(r, () => f2.set({meta:`+${ED.added} −${ED.removed}`}));
-  f2.done({verb:'Edited', meta:`+${ED.added} −${ED.removed}`, detail:X.diff()});
-  T.step(4, 'done');
-
-  T.step(5, 'running'); T.planCount();
-  patchAgent('forge', {label:'Running tests'});
-  const f3 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm test', ind:'spin'});
-  await Term.cmd('pnpm test', r);
-  await Term.out(['', ' <span class="t-b">RUN</span>  v3.2.4 <span class="t-d">~/agents-os-web</span>', '', ' <span class="t-ok">✓</span> app/(marketing)/page.test.tsx <span class="t-d">(6 tests) 41ms</span>', ' <span class="t-ok">✓</span> components/marketing/plan-grid.test.tsx <span class="t-d">(9 tests) 22ms</span>', ' <span class="t-ok">✓</span> components/marketing/faq.test.tsx <span class="t-d">(4 tests) 12ms</span>', ' <span class="t-ok">✓</span> lib/pricing.test.ts <span class="t-d">(23 tests) 8ms</span>', '', ' <span class="t-d">Test Files</span>  <span class="t-ok">4 passed</span> (4)', '      <span class="t-d">Tests</span>  <span class="t-ok">42 passed</span> (42)', '   <span class="t-d">Duration</span>  1.24s'], r, 170);
-  Term.idle();
-  f3.done({verb:'Ran', meta:'42 passed', detail:X.term('pnpm test', 'Test Files  4 passed (4)\n     Tests  42 passed (42)')});
-  patchAgent('forge', {label:'Deploying preview'});
-  const f4 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
-  await Term.cmd('agents-os deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Building agents-os-web <span class="t-d">(feat/landing)</span>…', '<span class="t-ok">✓</span> Build completed in 18.2s'], r, 420);
-  await wait(500, r);
-  await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.', '<span class="t-d">  Add a token in Workspace › Secrets, or grant the agent access to an existing one.</span>'], r, 140);
+  const k1 = T.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source odoo', ind:'spin'});
+  await Term.cmd('kpi pull --source odoo --day yesterday', r);
+  await Term.out(['<span class="t-d">›</span> Connecting to Odoo…'], r, 500);
+  await wait(400, r);
+  await Term.out(['<span class="t-er">✗ Error:</span> Odoo isn’t connected to this workspace.', '<span class="t-d">  Connect it in Settings › Connections, or run with --source sample.</span>'], r, 140);
   Term.idle();
   $('#prob-n').textContent = '1'; termPing('err');
-  f4.fail({verb:'Deploy failed', meta:'DEPLOY_TOKEN is not set', detail:X.deployErr()});
-  block(T, 5);
+  k1.fail({verb:'Couldn’t read sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
+  block(T, 1);
   await waitFor(() => !S.blocked, r);
   $('#prob-n').textContent = '0';
   T.status('running');
-  const f5 = T.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
-  await Term.cmd('agents-os deploy --preview', r);
-  await Term.out(['<span class="t-d">›</span> Using DEPLOY_TOKEN <span class="t-d">(workspace secret)</span>', '<span class="t-d">›</span> Uploading build output… 214 files', '<span class="t-ok">✓</span> Preview ready: <span class="t-u">https://feat-landing.agents-os.example</span> <span class="t-d">(2.9s)</span>'], r, 380);
+  const k2 = T.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source sample', ind:'spin'});
+  await Term.cmd('kpi pull --source sample --day yesterday', r);
+  await Term.out(['<span class="t-d">›</span> Using sample data <span class="t-d">(Odoo not connected)</span>', '<span class="t-ok">✓</span> 1,284 orders · revenue 412k · web and app <span class="t-d">(1.4s)</span>'], r, 320);
   Term.idle();
-  f5.done({verb:'Deployed preview', arg:'feat-landing.agents-os.example', meta:'2.9s'});
+  k2.done({verb:'Pulled KPIs', arg:'sample data', meta:'1,284 orders', detail:X.term('kpi pull --source sample --day yesterday', 'Using sample data (Odoo not connected)\n1,284 orders · revenue 412k')});
+  patchAgent('kai', {label:'Comparing with targets', progress:.5});
+  const k3 = T.row({agent:'kai', icon:'activity', verb:'Comparing with targets', arg:'Q4', ind:'bar'});
+  for (let k = 1; k <= 4; k++) { await wait(380, r); k3.set({progress:k / 4}); patchAgent('kai', {progress:.5 + k / 8}); }
+  k3.done({verb:'Compared with targets', meta:'2 off target', detail:X.kpis()});
+  T.step(1, 'done');
+  React.celebrate('kai'); setAgent('kai', {presence:'complete', label:'KPIs checked'});
+  await handoff(T, 'kai', 'orc', 'kpis.md', '2 off target', r);
+  later(() => setAgent('kai', {presence:'available'}), 1800, r);
+
+  T.step(3, 'running');
+  await handoff(T, 'nova', 'atlas', 'banner-brief.md', 'app hero', r, 'a banner brief');
+  await taskStart('atlas', {presence:'tool', tool:'design', label:'Loading brand context'}, r);
+  T.planCount();
+  const a1 = T.row({agent:'atlas', icon:'doc', verb:'Loading brand context', arg:'guidelines · templates', ind:'dot'});
+  await wait(1000, r);
+  a1.done({verb:'Loaded brand context', meta:'24 pp · 6 templates'});
+  patchAgent('atlas', {label:'Generating banner variants'});
+  const a2 = T.row({agent:'atlas', icon:'image', verb:'Generating banners', arg:'winter sale · web · app', ind:'gen'});
+  await wait(2400, r);
+  a2.done({verb:'Generated 3 variants', meta:'1440 × 600', detail:X.variants()});
+  T.step(3, 'done');
+  React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'3 variants ready'});
+  await handoff(T, 'atlas', 'nova', 'winter-sale-b.png', 'variant B', r);
+  later(() => setAgent('atlas', {presence:'available'}), 1800, r);
+
+  T.step(4, 'running');
+  await taskStart('nova', {presence:'working', label:'Editing homepage.json'}, r);
+  T.planCount();
+  const n2 = T.row({agent:'nova', icon:'code', verb:'Editing', arg:'site/homepage.json', ind:'dot'});
+  await edStream(r, () => n2.set({meta:`+${ED.added} −${ED.removed}`}));
+  n2.done({verb:'Edited', meta:`+${ED.added} −${ED.removed}`, detail:X.diff()});
+  T.step(4, 'approval');
+  setAgent('nova', {presence:'approval', label:'Waiting for approval · homepage changes'});
+  const ap = T.row({agent:'nova', kind:'approval', icon:'globe', verb:'Needs approval', arg:'Publish 2 homepage changes', actions:'<button class="btn pri" data-approve>Approve</button><button class="btn" data-open-tab="file:homepage.json">Review</button>'});
+  const pending = S.approval = {row:ap, tv:T, step:4, agent:'nova', what:'homepage changes', doneLabel:'Changes published',
+    autoHtml:'<b>Homepage changes approved automatically</b>', autoSub:'No reply in 20 seconds, so Nova’s changes went live.',
+    after:() => { tabState(ED_TAB, {dirty:false}); T.row({agent:'nova', kind:'note', icon:'globe', verb:'Published', arg:'site/homepage.json', meta:'web · app', done:true}); }};
+  setTimeout(() => { if (S.approval === pending) approve(true); }, AUTO_RESOLVE_MS);
+  sayNow(true);
+  toast({agent:'nova', kind:'approval', html:'<b>Nova</b> needs your approval', sub:'Publish 2 homepage changes: winter sale banner, new slot 1', action:'Approve', actionCls:'pri', onAction:approve, sticky:true});
+
+  await dexDone;
+  T.step(5, 'running'); T.planCount();
+  setAgent('orc', {presence:'tool', tool:'route', label:'Writing the daily pulse'});
+  const o1 = T.row({agent:'orc', icon:'pen', verb:'Writing', arg:'pulse/daily-pulse.md', ind:'dot'});
+  await wait(2000, r);
+  tabState('file:daily-pulse.md', {dirty:true, ac:'orc'});
+  o1.done({verb:'Wrote', arg:'pulse/daily-pulse.md', meta:'4 sections', detail:X.pulse()});
   T.step(5, 'done');
-  React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Preview deployed'});
-  guard(streamReply('forge', [{p:'Preview is live. The hero, pricing and FAQ sections are in `page.tsx`, and all 42 tests pass.'}, {refs:`<button class="ref" data-open-tab="file:page.tsx">${ic('code')}page.tsx +${ED.added} −${ED.removed}</button><span class="ref">${ic('globe')}feat-landing.agents-os.example</span>`}], {drive:false, think:500}));
-  later(() => setAgent('forge', {presence:'available'}), 2000, r);
+  guard(streamReply('orc', orcPulse(), {drive:false, think:500}));
   if (S.approval) {
     T.status('input');
-    setAgent('atlas', {presence:'waiting', label:'Waiting for your approval'});
+    setAgent('orc', {presence:'waiting', label:'Waiting for your approval'});
     await waitFor(() => !S.approval, r);
   }
   await wait(400, r);
   T.status('done'); S.runEnd = Date.now();
-  T.row({agent:'atlas', kind:'note', icon:'check', verb:'Completed task', meta:'6 of 6 steps', done:true});
-  React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'Task completed'});
-  toast({agent:'atlas', kind:'done', html:'<b>Build landing page</b> is complete', sub:`6 steps · 5 agents · ${$('#rs-time').textContent}`});
+  T.row({agent:'orc', kind:'note', icon:'check', verb:'Completed task', meta:'6 of 6 steps', done:true});
+  React.celebrate('orc'); setAgent('orc', {presence:'complete', label:'Pulse sent'});
+  toast({agent:'orc', kind:'done', html:'<b>Daily pulse</b> is ready', sub:`6 steps · 4 agents · ${$('#rs-time').textContent}`});
   await wait(2600, r);
   for (const id of TEAM) if (['complete','waiting'].includes(S.agents[id].presence)) setAgent(id, {presence:'available'});
 }
+/* Dex runs next to Kai. AI answers are public, so that part goes ahead; rankings come from Search Console,
+   which isn't connected either, so Dex waits for the same sample-data choice that unblocks Kai. */
+async function dexWork(T, r) {
+  await taskStart('dex', {presence:'tool', tool:'search', label:'Checking AI answers'}, r);
+  T.planCount();
+  const d1 = T.row({agent:'dex', icon:'sparkle', verb:'Checking AI answers', arg:'ChatGPT · Gemini · Perplexity', meta:'0 / 12', ind:'scan'});
+  for (let k = 2; k <= 12; k += 2) { await wait(520, r); d1.set({meta:`${k} / 12`}); patchAgent('dex', {label:`Checking AI answers · ${k} of 12 prompts`}); }
+  d1.done({verb:'Checked AI answers', meta:'cited in 5 of 12', detail:X.aiAnswers()});
+  if (S.blocked) {
+    setAgent('dex', {presence:'waiting', label:'Waiting on the Search Console data'});
+    await waitFor(() => !S.blocked, r);
+    React.relief('dex');
+  }
+  setAgent('dex', {presence:'tool', tool:'search', label:'Checking rankings · sample data'});
+  const d2 = T.row({agent:'dex', icon:'search', verb:'Checking rankings', arg:'40 keywords', ind:'scan'});
+  await wait(2200, r);
+  d2.done({verb:'Checked rankings', arg:'sample data', meta:'3 moved', detail:X.rankings()});
+  T.step(2, 'done');
+  React.celebrate('dex'); setAgent('dex', {presence:'complete', label:'Rankings checked'});
+  await handoff(T, 'dex', 'orc', 'seo.md', '3 keywords moved', r);
+  later(() => setAgent('dex', {presence:'available'}), 1800, r);
+}
 function block(T, stepIdx) {
-  const b = S.blocked = {tv:T, step:stepIdx, agent:'forge'};
+  const b = S.blocked = {tv:T, step:stepIdx, agent:'kai'};
   setTimeout(() => { if (S.blocked === b) resolveBlock(true); }, AUTO_RESOLVE_MS);
-  React.jolt('forge');
-  setAgent('forge', {presence:'blocked', label:'Blocked — DEPLOY_TOKEN is not set'});
+  React.jolt('kai');
+  setAgent('kai', {presence:'blocked', label:'Blocked: Odoo isn’t connected'});
   T.step(stepIdx, 'blocked'); T.status('blocked');
   heroReact('worried'); sayNow(true);
-  toast({agent:'forge', kind:'blocked', html:'<b>Forge</b> is blocked', sub:'Missing API key · DEPLOY_TOKEN is not set', action:'Resolve', actionCls:'warn', onAction:openResolve, sticky:true});
+  toast({agent:'kai', kind:'blocked', html:'<b>Kai</b> is blocked', sub:'Odoo isn’t connected, so yesterday’s sales can’t be read', action:'Resolve', actionCls:'warn', onAction:openResolve, sticky:true});
   navCounts();
 }
 function resolveBlock(auto) {
   const b = S.blocked; if (!b) return;
   S.blocked = null; closeDialog(); dropToasts('blocked');
-  const cs = $('#ctx-secret'); if (cs) { cs.textContent = 'granted to Forge'; cs.className = 'good'; }
-  React.relief('forge');
-  setAgent('forge', {presence:'tool', tool:'code', label:'Retrying deploy'});
+  const co = $('#ctx-odoo'); if (co) co.textContent = 'sample data';
+  React.relief('kai');
+  setAgent('kai', {presence:'tool', tool:'analyze', label:'Retrying with sample data', progress:.3});
   b.tv.step(b.step, 'running');
-  b.tv.row({agent:'you', kind:'note', icon: auto ? 'clock' : 'key', verb: auto ? 'Auto-granted' : 'Granted', arg:'DEPLOY_TOKEN → Forge', meta: auto ? 'no reply in 20s' : '', done:true});
-  if (auto) toast({icon:'clock', html:'<b>Resolved automatically</b>', sub:'No reply in 20 seconds, so Forge got DEPLOY_TOKEN and the run continues.', ms:3600});
+  b.tv.row({agent:'you', kind:'note', icon: auto ? 'clock' : 'plug', verb: auto ? 'Auto-chose' : 'Chose', arg:'sample data for this run', meta: auto ? 'no reply in 20s' : '', done:true});
+  if (auto) toast({icon:'clock', html:'<b>Resolved automatically</b>', sub:'No reply in 20 seconds, so the agents use sample data and the run continues.', ms:3600});
   heroReact('happy'); sayNow(true);
   for (const btn of $$('[data-resolve]')) btn.disabled = true;
 }
 function approve(auto) {
   const ap = S.approval; if (!ap) return;
   S.approval = null; dropToasts('approval');
-  ap.row.done(auto ? {verb:'Auto-approved', meta:'no reply in 20s'} : {verb:'Approved by you', meta:'headline'});
-  if (auto) toast({agent:ap.agent, html:'<b>Headline approved automatically</b>', sub:'No reply in 20 seconds, so Quill’s copy went ahead.', ms:3600});
+  ap.row.done(auto ? {verb:'Auto-approved', meta:'no reply in 20s'} : {verb:'Approved by you', meta:ap.what});
+  if (auto) toast({agent:ap.agent, html:ap.autoHtml, sub:ap.autoSub, ms:3600});
   ap.tv.step(ap.step, 'done');
-  React.celebrate(ap.agent); setAgent(ap.agent, {presence:'complete', label:'Copy approved'});
+  if (ap.after) ap.after();
+  React.celebrate(ap.agent); setAgent(ap.agent, {presence:'complete', label:ap.doneLabel});
   setTimeout(() => { if (S.agents[ap.agent].presence === 'complete') setAgent(ap.agent, {presence:'available'}); }, 2200);
   if (ap.tv.task.status === 'input') ap.tv.status('running');
   navCounts(); sayNow(true);
 }
 
-/* New task → its own tab with a short plan */
+/* New task → its own tab with a short plan, picked by the agent's kind of work */
 const MINI = {
-  browse:[['Search sources','globe','Searched web','8 sources'],['Read and compare','doc','Read 8 sources','1.1k words'],['Write summary','pen','Wrote summary','docs/notes.md']],
-  code:[['Inspect repository','terminal','Ran','rg "pricing" -l · 6 files'],['Implement changes','code','Edited','4 files · +61 −12'],['Run tests','terminal','Ran','pnpm test · 42 passed']],
-  analyze:[['Collect inputs','doc','Read 5 documents','1,204 rows'],['Analyze','doc','Analyzed inputs','2 findings'],['Summarize','pen','Wrote summary','findings.md']],
-  design:[['Gather references','image','Collected references','9 images'],['Generate variants','image','Generated 3 variants','1440 × 900'],['Export','image','Exported','design/pricing/']],
-  write:[['Outline','pen','Outlined','5 sections'],['Draft','pen','Drafted','620 words'],['Polish','pen','Edited for tone','−14%']],
+  route:[['Read the request','sparkle','Read the request','1 brief'],['Route to agents','handoff','Routed','2 agents'],['Summarize results','doc','Wrote a summary','1 page']],
+  design:[['Load brand context','doc','Loaded brand kit','guidelines · 6 templates'],['Generate variants','image','Generated 3 variants','1440 × 600'],['Save to the asset library','image','Saved','brand/banners/']],
+  audit:[['Crawl pages','globe','Crawled pages','web · app · 14 pages'],['Check best practices','doc','Checked','12 rules · 2 issues'],['Write recommendations','pen','Wrote recommendations','nova/recommendations.md']],
+  analyze:[['Pull KPIs','activity','Pulled KPIs','sample data · 7 days'],['Compare with targets','activity','Compared','2 off target'],['Write insights','pen','Wrote insights','kai/insights.md']],
+  search:[['Check rankings','search','Checked rankings','40 keywords · sample data'],['Check AI answers','sparkle','Checked AI answers','12 prompts'],['Summarize changes','pen','Wrote a summary','seo/notes.md']],
 };
 /* r is the run token, as in runMain: replaying the run (or any scene that resets the world) bumps RUN,
    so every wait below rejects and the quick task stops instead of driving agents the new run now owns. */
 async function assignTask(id, title, r = RUN) {
-  if (r !== RUN) return;
+  if (r !== RUN || !canWork(id)) return;
   const num = S.taskN++;
   const t = {key:`task:${num}`, id:`TASK-${num}`, title, short: title.length > 26 ? title.slice(0, 24) + '…' : title, owner:id, status:'queued', steps:3, updated:'now'};
   TASKS.unshift(t);
-  const tv = TaskView(t, {agents:'1 agent', branch: A[id].tool === 'code' ? `fix/${num}` : 'main'});
+  const tv = TaskView(t, {agents:'1 agent', tag:'Ad hoc'});
   openTab(t.key);
   tv.row({agent:'you', kind:'note', icon:'plus', verb:'Created task', arg:t.id, done:true});
   let cur = null, curStep = -1;
@@ -2467,68 +2526,68 @@ async function assignTask(id, title, r = RUN) {
 
 /* ── Prototype scenes ── */
 const SCENES = [
-  ['run','Replay the full run'], ['idle','Idle and blinking'], ['assign','Assign a task'], ['stream','Thinking → streaming reply'],
+  ['run','Replay the daily pulse'], ['idle','Idle and blinking'], ['assign','Assign a task'], ['stream','Thinking → streaming reply'],
   ['tool','Tool execution'], ['handoff','Agent handoff'], ['blocked','Blocked state'], ['complete','Task completion'],
   ['multi','Several agents working'], ['palette','Command palette'], ['inspector','Agent inspector'], ['reduced','Toggle reduced motion'],
 ];
 const SCENE_FNS = {
   run: r => runMain(r),
   async idle(r) { openTab('task:142'); await wait(400, r); TEAM.forEach((id, k) => setTimeout(() => React.blink(id), k * 110)); },
-  async assign(r) { openNewTask('pixel'); await wait(300, r); $('#nt-title').value = 'Design three hero variants for the pricing page'; await wait(1300, r); const b = $('#nt-go'); b.classList.add('pressed'); await wait(150, r); b.classList.remove('pressed'); $('#nt-form').requestSubmit(); },
-  async stream(r) { openTab('chat'); S.chatAgent = 'sage'; paintCompAgent(); await wait(300, r); addUser('What did the research show?'); await wait(300, r); streamReply('sage', CHAT_REPLY.sage.blocks, {tool:CHAT_REPLY.sage.tool, toolRunning:'Analyzing 14 documents'}); },
+  async assign(r) { openNewTask('atlas'); await wait(300, r); $('#nt-title').value = 'Design three banner sizes for the winter sale'; await wait(1300, r); const b = $('#nt-go'); b.classList.add('pressed'); await wait(150, r); b.classList.remove('pressed'); $('#nt-form').requestSubmit(); },
+  async stream(r) { openTab('chat'); S.chatAgent = 'kai'; paintCompAgent(); await wait(300, r); addUser('How did yesterday go against target?'); await wait(300, r); streamReply('kai', CHAT_REPLY.kai.blocks, {tool:CHAT_REPLY.kai.tool, toolRunning:'Comparing KPIs with targets'}); },
   async tool(r) {
-    openTab('task:142'); setShellWho(true);
-    setAgent('forge', {presence:'tool', tool:'code', label:'Installing dependencies'});
-    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'pnpm install', ind:'spin'});
-    await Term.cmd('pnpm install', r);
-    await Term.out(['Packages: <span class="t-ok">+3</span>', 'Progress: resolved 412, reused 409, downloaded 3, added 3, <span class="t-ok">done</span>', 'Done in 3.8s'], r, 260);
-    Term.idle(); f.done({verb:'Ran', meta:'+3 packages', detail:X.term('pnpm install', 'Packages: +3\nDone in 3.8s')});
-    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Dependencies installed'});
-    later(() => setAgent('forge', {presence:'available'}), 1800, r);
+    openTab('task:142'); setShellWho('kai');
+    setAgent('kai', {presence:'tool', tool:'analyze', label:'Pulling KPIs'});
+    const f = MAIN.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source sample', ind:'spin'});
+    await Term.cmd('kpi pull --source sample --day yesterday', r);
+    await Term.out(['<span class="t-d">›</span> Using sample data <span class="t-d">(Odoo not connected)</span>', '<span class="t-ok">✓</span> 1,284 orders · revenue 412k · web and app <span class="t-d">(1.4s)</span>'], r, 260);
+    Term.idle(); f.done({verb:'Pulled KPIs', arg:'sample data', meta:'1,284 orders', detail:X.term('kpi pull --source sample --day yesterday', 'Using sample data (Odoo not connected)\n1,284 orders · revenue 412k')});
+    React.celebrate('kai'); setAgent('kai', {presence:'complete', label:'KPIs pulled'});
+    later(() => setAgent('kai', {presence:'available'}), 1800, r);
   },
   async handoff(r) {
     openTab('task:142');
-    setAgent('scout', {presence:'tool', tool:'browse', label:'Wrapping up research'});
+    setAgent('nova', {presence:'tool', tool:'audit', label:'Wrapping up the audit'});
     await wait(900, r);
-    await handoff(MAIN, 'scout', 'sage', 'findings.md', '12 sources', r, 'research');
-    React.celebrate('scout'); setAgent('scout', {presence:'complete', label:'Research completed'});
-    later(() => setAgent('scout', {presence:'available'}), 1600, r);
-    await taskStart('sage', {presence:'tool', tool:'analyze', label:'Analyzing findings.md', progress:.2}, r);
-    await wait(3000, r); setAgent('sage', {presence:'available'});
+    await handoff(MAIN, 'nova', 'atlas', 'banner-brief.md', 'app hero', r, 'a banner brief');
+    React.celebrate('nova'); setAgent('nova', {presence:'complete', label:'Audit completed'});
+    later(() => setAgent('nova', {presence:'available'}), 1600, r);
+    await taskStart('atlas', {presence:'tool', tool:'design', label:'Generating banner variants'}, r);
+    await wait(3000, r); setAgent('atlas', {presence:'available'});
   },
   async blocked(r) {
-    openTab('task:142'); setShellWho(true);
-    setAgent('forge', {presence:'tool', tool:'code', label:'Deploying preview'});
-    const f = MAIN.row({agent:'forge', icon:'terminal', verb:'Running command', arg:'agents-os deploy --preview', ind:'spin'});
-    await Term.cmd('agents-os deploy --preview', r);
-    await Term.out(['<span class="t-er">✗ Error:</span> DEPLOY_TOKEN is not set for the preview environment.'], r);
+    openTab('task:142'); setShellWho('kai');
+    setAgent('kai', {presence:'tool', tool:'analyze', label:'Reading yesterday’s sales'});
+    const f = MAIN.row({agent:'kai', icon:'terminal', verb:'Running command', arg:'kpi pull --source odoo', ind:'spin'});
+    await Term.cmd('kpi pull --source odoo --day yesterday', r);
+    await Term.out(['<span class="t-er">✗ Error:</span> Odoo isn’t connected to this workspace.'], r);
     Term.idle();
-    f.fail({verb:'Deploy failed', meta:'DEPLOY_TOKEN is not set', detail:X.deployErr()});
-    S.blocked = null; block(MAIN, 5);
+    f.fail({verb:'Couldn’t read sales', meta:'Odoo isn’t connected', detail:X.odooErr()});
+    S.blocked = null; block(MAIN, 1);
     await waitFor(() => !S.blocked, r);
     await wait(1400, r);
-    React.celebrate('forge'); setAgent('forge', {presence:'complete', label:'Preview deployed'});
-    later(() => setAgent('forge', {presence:'available'}), 1800, r);
+    React.celebrate('kai'); setAgent('kai', {presence:'complete', label:'KPIs checked'});
+    later(() => setAgent('kai', {presence:'available'}), 1800, r);
   },
   async complete(r) {
     openTab('task:142');
-    setAgent('pixel', {presence:'tool', tool:'design', label:'Finishing variants'});
-    const d = MAIN.row({agent:'pixel', icon:'image', verb:'Generating design', arg:'pricing', ind:'gen'});
+    setAgent('atlas', {presence:'tool', tool:'design', label:'Finishing banner variants'});
+    const d = MAIN.row({agent:'atlas', icon:'image', verb:'Generating banners', arg:'winter sale', ind:'gen'});
     await wait(2000, r);
-    d.done({verb:'Generated 3 variants', meta:'pricing', detail:X.variants()});
-    React.celebrate('pixel'); setAgent('pixel', {presence:'complete', label:'3 variants ready'});
-    toast({agent:'pixel', kind:'done', html:'<b>Pixel</b> finished the pricing variants', sub:'design/pricing · 3 variants'});
-    await wait(2200, r); setAgent('pixel', {presence:'available'});
+    d.done({verb:'Generated 3 variants', meta:'winter sale', detail:X.variants()});
+    React.celebrate('atlas'); setAgent('atlas', {presence:'complete', label:'3 variants ready'});
+    toast({agent:'atlas', kind:'done', html:'<b>Atlas</b> finished the winter sale banners', sub:'brand/banners/winter-sale · 3 variants'});
+    await wait(2200, r); setAgent('atlas', {presence:'available'});
   },
   async multi(r) {
     openTab('task:142');
-    const plan = [['scout','browse','Researching pricing pages'], ['sage','analyze','Analyzing 14 documents'], ['pixel','design','Generating hero variants'], ['quill','write','Drafting subhead options'], ['forge','code','Running the test suite']];
+    const plan = [['nova','audit','Auditing the app home screen'], ['kai','analyze','Comparing KPIs with targets'], ['dex','search','Checking 40 keywords'], ['atlas','design','Generating banner variants']];
     for (const [id, tool, label] of plan) { guard(taskStart(id, {presence:'tool', tool, label, progress:.4}, r)); await wait(240, r); }
-    setAgent('atlas', {presence:'working', label:'Coordinating 5 agents'});
+    setAgent('orc', {presence:'working', label:'Coordinating 4 agents'});
     await wait(6000, r);
   },
   async palette(r) { openPalette(); await wait(650, r); for (const ch of 'agent') { $('#pal-q').value += ch; renderPal(false); await wait(120, r); } await wait(500, r); palRun(PAL.idx); await wait(700, r); palMove(2); },
-  async inspector(r) { openCard('scout'); await wait(2600, r); closeCard(); await wait(500, r); openCard('forge'); },
+  async inspector(r) { openCard('nova'); await wait(2600, r); closeCard(); await wait(500, r); openCard('dex'); },
   async reduced() { setReduced(!M.reduced, true); },
 };
 function play(k) {
@@ -2554,6 +2613,7 @@ function toggleNav() {
 function closeDrawers() { $('#app').classList.remove('nav-open', 'insp-open'); }
 function showBP(on) { $('#center').classList.toggle('bp-on', on); if (on) { termSeen(); Term.scroll(); } }
 function toggleBP() { showBP(!$('#center').classList.contains('bp-on')); }
+function openConnections() { closeCard(); openTab('settings'); setTimeout(() => { const c = $('#connections'); if (c) c.scrollIntoView({block:'start', behavior: M.reduced ? 'auto' : 'smooth'}); }, 60); }
 function openChat(id) { closeCard(); closeMenu(); S.chatAgent = id; openTab('chat'); paintCompAgent(); setTimeout(() => { const t = $('#chat-in'); if (t) t.focus(); }, 60); }
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
 function setReduced(on, fromUser) {
@@ -2619,6 +2679,7 @@ function wire() {
     if (d.approve !== undefined) return approve();
     if (d.nt) return pickNT(d.nt);
     if (d.dismiss !== undefined) { closeDialog(); closePalette(); return; }
+    if (d.connect) { const c = CONNECTIONS.find(x => x.id === d.connect); return toast({icon:'plug', html:`<b>${esc(c.name)}</b> can’t be connected in this preview yet`, sub:'Agents use sample data until it is.', ms:2800}); }
     if (d.scene) return play(d.scene);
     if (d.suggest) { const inp = $('#home-in'); inp.value = d.suggest; inp.focus(); heroEach(i => { i.trk = {dx:0, dy:360, t:M.t}; override(i, 'expect', 1.2); kickBounce(i, .5); }); return; }
     if (d.themePref) return setThemePref(d.themePref);
@@ -2627,6 +2688,7 @@ function wire() {
     if (d.ipane) { for (const b of $$('[data-ipane]')) b.setAttribute('aria-selected', b === el); $('#ip-agents').classList.toggle('on', d.ipane === 'agents'); $('#ip-context').classList.toggle('on', d.ipane === 'context'); return; }
     if (d.cmd === 'new-task') return openNewTask();
     if (d.cmd === 'switch-model') return modelMenu(el);
+    if (d.cmd === 'connections') return openConnections();
     if (d.cmd === 'create-agent') return toast({html:'<b>Create agent</b> opens the agent builder', sub:'Not part of this prototype.', ms:2400, icon:'sparkle'});
     if (el.id === 'set-rm') return setReduced(!M.reduced, true);
     if (el.classList.contains('ev-row')) { const ev = el.closest('.ev'); const on = !ev.classList.contains('open'); ev.classList.toggle('open', on); el.setAttribute('aria-expanded', on); return; }
@@ -2634,7 +2696,7 @@ function wire() {
     if (el.id === 'grant') return resolveBlock();
     if (el.dataset.tvAct === 'expand' || el.dataset.tvAct === 'collapse') { const on = el.dataset.tvAct === 'expand'; for (const ev of $$('.ev.x', el.closest('.view'))) { ev.classList.toggle('open', on); ev.querySelector('.ev-row').setAttribute('aria-expanded', on); } return; }
     if (el.dataset.tvAct === 'pause') return toast({html:'Pausing stops agents after their current step', sub:'Disabled in this preview so the run can finish.', ms:2600, icon:'pause'});
-    if (el.dataset.tvAct === 'more') return openMenu(el, [{label:'Copy task link', icon:'copy', run:() => {}}, {label:'Open in chat', icon:'chat', run:() => openTab('chat')}, {label:'View run #218', icon:'runs', run:() => openTab('runs')}, {sep:true}, {label:'Replay run', icon:'retry', run:() => play('run')}, {label:'Cancel task', icon:'stop', danger:true, run:() => toast({html:'Cancel is disabled in this preview', ms:2000, icon:'stop'})}], {alignRight:true});
+    if (el.dataset.tvAct === 'more') return openMenu(el, [{label:'Copy task link', icon:'copy', run:() => {}}, {label:'Open in chat', icon:'chat', run:() => openTab('chat')}, {label:'View run #218', icon:'runs', run:() => openTab('runs')}, {label:'Manage connections', icon:'plug', run:openConnections}, {sep:true}, {label:'Replay run', icon:'retry', run:() => play('run')}, {label:'Cancel task', icon:'stop', danger:true, run:() => toast({html:'Cancel is disabled in this preview', ms:2000, icon:'stop'})}], {alignRight:true});
     if (el.dataset.bp) return toast({html:`${el.dataset.bp === 'output' ? 'Output' : 'Problems'} panel`, sub:'Terminal is the only live panel in this preview.', ms:2000, icon:'panelB'});
   });
   $('#tabs').addEventListener('keydown', e => { const t = e.target.closest('.tab'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); activate(t.dataset.tab); } });
@@ -2665,7 +2727,7 @@ function wire() {
     e.stopPropagation();
     if (b.id === 'comp-agent') openMenu(b, [{head:true, label:'Ask'}, ...AGENTS.map(a => ({label:a.name, av:a.id, check:S.chatAgent === a.id, run:() => { S.chatAgent = a.id; paintCompAgent(); }}))], {up:true});
     if (b.id === 'comp-model') modelMenu(b);
-    if (b.id === 'comp-ctx') openMenu(b, [{head:true, label:'Add context'}, {label:'docs/research.md', icon:'doc', run:() => {}}, {label:'app/(marketing)/page.tsx', icon:'code', run:() => {}}, {label:'TASK-142', icon:'tasks', run:() => {}}], {up:true});
+    if (b.id === 'comp-ctx') openMenu(b, [{head:true, label:'Add context'}, {label:'pulse/daily-pulse.md', icon:'doc', run:() => {}}, {label:'site/homepage.json', icon:'code', run:() => {}}, {label:'brand/guidelines.pdf', icon:'doc', run:() => {}}, {label:'TASK-142', icon:'tasks', run:() => {}}], {up:true});
   }, true);
   $('#pal-q').addEventListener('input', () => renderPal(false));
   $('#pal-q').addEventListener('keydown', e => {
@@ -2705,9 +2767,9 @@ function init() {
   setReduced(mqRM.matches, false);
   THEME.pref = readThemePref(); applyTheme();
   buildNav(); buildInspector(); buildStatusBar(); wire();
-  MAIN = TaskView(TASKS[0], {agents:'5 agents'});
-  TABS.push('home'); TABS.push('task:142'); TABS.push('chat'); TABS.push('file:page.tsx'); TABS.push('file:research.md');
-  ensureView('chat'); ensureView('file:page.tsx'); ensureView('file:research.md');
+  MAIN = TaskView(TASKS[0], {agents:'4 agents'});
+  TABS.push('home'); TABS.push('task:142'); TABS.push('chat'); TABS.push('file:homepage.json'); TABS.push('file:daily-pulse.md');
+  ensureView('chat'); ensureView('file:homepage.json'); ensureView('file:daily-pulse.md');
   Term.el = $('#term');
   seedChat(); paintCompAgent(); edReset();
   /* Phones open straight on the running task: the run takes over that tab 0.7s after load, and with no sidebar
