@@ -48,7 +48,7 @@ Everything lives in `src/workspace.html`:
 | --- | --- |
 | `src/workspace.html` | The source. HTML, CSS and JS in one file, with no document skeleton. |
 | `build.sh` | Wraps the source into a standalone `dist/index.html`. |
-| `vercel.json` | Tells Vercel to run `build.sh` and serve `dist/`. |
+| `vercel.json` | Tells Vercel to run `build.sh` and serve `dist/`, and to deploy only `main` (other branches don't build, to save build minutes). |
 
 Edit `src/workspace.html` and push. Vercel builds the page on every deploy, so the built file isn't committed.
 
