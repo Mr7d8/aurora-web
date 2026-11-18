@@ -38,7 +38,7 @@ No platform is connected yet, so every run uses sample data. Each agent's card s
 
 Everything lives in `src/workspace.html`:
 
-- `AGENTS`: each agent's name, role, sidebar label (`tag`), duties, model, tools and colour. `hi`, `c` and `lo` are the soft dark-mode colours; `light` holds a more saturated set for light mode. Give Agent #6 a name, role and duties here, and remove `placeholder:true` so it can take tasks.
+- `AGENTS`: each agent's name, role, sidebar label (`tag`), duties, model, tools and colour. `hi`, `c` and `lo` are the ball's highlight, body and shade, used in both themes. Give Agent #6 a name, role and duties here, and remove `placeholder:true` so it can take tasks.
 - `CONNECTIONS`: the platforms and which agents use them.
 - `routeAgent`: the keywords Orc uses to route requests typed on Home.
 
